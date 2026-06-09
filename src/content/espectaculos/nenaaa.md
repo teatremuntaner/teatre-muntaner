@@ -4,6 +4,7 @@ category: "Teatro"
 genres:
   - "Teatro"
   - "Comedia"
+lang: "Catalán"
 poster: "./nenaaa.jpg"
 accent: "#cb6ab2"
 accentInk: "#ffffff"

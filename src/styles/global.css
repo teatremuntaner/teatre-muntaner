@@ -150,6 +150,15 @@ h1, h2, h3 { font-family: var(--f-title); font-weight: 600; line-height: 1.05; m
   transform: translateX(-130%); transition: transform .7s ease;
 }
 .show-card:hover .show-card__img::after { transform: translateX(130%); }
+/* Badge de idioma de la función (diferenciador castellano/catalán) */
+.show-card__lang {
+  position: absolute; top: 10px; right: 10px; z-index: 2;
+  font-family: var(--f-display); font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+  padding: 5px 10px; border-radius: 999px; box-shadow: 0 4px 12px rgba(0,0,0,0.28);
+}
+.show-card__lang.is-ca { background: var(--c-gold); color: #2a1410; }
+.show-card__lang.is-es { background: rgba(20,12,10,0.82); color: #fff; }
+.show-card__lang.is-bi { background: var(--c-red); color: #fff; }
 @media (prefers-reduced-motion: reduce) {
   .show-card:hover { transform: none; }
   .show-card__img::after { display: none; }

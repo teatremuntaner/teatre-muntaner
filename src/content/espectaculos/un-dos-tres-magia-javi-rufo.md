@@ -5,6 +5,7 @@ category: "Magia"
 genres:
   - "Magia"
   - "Familiar"
+lang: "Castellano"
 poster: "./un-dos-tres-magia-javi-rufo.jpg"
 accent: "#f12d31"
 accentInk: "#ffffff"

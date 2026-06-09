@@ -5,6 +5,7 @@ category: "Comedia"
 genres:
   - "Comedia"
   - "Monólogos"
+lang: "Castellano"
 poster: "./toni-cano-traficante-de-endorfinas.jpg"
 accent: "#8f60be"
 accentInk: "#ffffff"

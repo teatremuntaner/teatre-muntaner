@@ -206,6 +206,11 @@ const gallery = [
               <div class="show-card__bar"></div>
               <div class="show-card__img">
                 <Image src={d.poster} alt={`Cartel de ${d.title}`} widths={[300, 500]} sizes="(max-width: 600px) 50vw, 280px" />
+                {d.lang && (
+                  <span class={`show-card__lang ${d.lang === 'Catalán' ? 'is-ca' : d.lang === 'Bilingüe' ? 'is-bi' : 'is-es'}`}>
+                    {d.lang === 'Catalán' ? 'Català' : d.lang === 'Bilingüe' ? 'ES · CA' : 'Castellano'}
+                  </span>
+                )}
               </div>
               <div class="show-card__body">
                 <span class="show-card__cat">{genre}</span>

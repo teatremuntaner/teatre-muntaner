@@ -129,6 +129,7 @@ const eventsLd = d.dates.map(mkEvent);
       <aside class="show__meta">
         <dl>
           {d.duration && (<><dt>Duración</dt><dd>{d.duration}</dd></>)}
+          {d.lang && (<><dt>Idioma</dt><dd>{d.lang}</dd></>)}
           {d.price && (<><dt>Precio</dt><dd>{d.price}</dd></>)}
           <dt>Lugar</dt><dd>{d.venue}</dd>
         </dl>

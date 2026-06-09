@@ -51,6 +51,12 @@ collections:
         widget: "list"
         required: false
         field: { name: "genero", label: "Género", widget: "string" }
+      - name: "lang"
+        label: "Idioma de la función"
+        widget: "select"
+        required: false
+        options: ["Castellano", "Catalán", "Bilingüe"]
+        hint: "Idioma en el que se representa el espectáculo (se muestra en la cartelera)."
       - name: "priority"
         label: "Prioridad en cartelera"
         widget: "number"

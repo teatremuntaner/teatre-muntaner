@@ -4,6 +4,7 @@ category: "Teatro"
 genres:
   - "Teatro"
   - "Familiar"
+lang: "Catalán"
 poster: "./el-petit-princep.jpg"
 accent: "#4453da"
 accentInk: "#ffffff"

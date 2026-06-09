@@ -5,6 +5,7 @@ category: "Comedia"
 genres:
   - "Comedia"
   - "Monólogos"
+lang: "Castellano"
 poster: "./me-veo-en-wallapop-diego-arjona.jpg"
 accent: "#89bbcf"
 accentInk: "#0c0a0f"

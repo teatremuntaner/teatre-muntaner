@@ -5,6 +5,7 @@ category: "Teatro"
 genres:
   - "Teatro"
   - "Familiar"
+lang: "Catalán"
 poster: "./laneguet-lleig.jpg"
 accent: "#6060be"
 accentInk: "#ffffff"

@@ -4,6 +4,7 @@ category: "Comedia"
 genres:
   - "Improvisación"
   - "Comedia"
+lang: "Castellano"
 poster: "./corta-el-cable-rojo.jpg"
 accent: "#ef2e31"
 accentInk: "#ffffff"

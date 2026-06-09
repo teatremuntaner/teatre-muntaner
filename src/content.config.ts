@@ -15,6 +15,7 @@ const espectaculos = defineCollection({
       artist: z.string().optional(), // intérprete/compañía
       category: z.string().default('Espectáculo'),
       genres: z.array(z.string()).default([]), // géneros (varios); si vacío, se usa category
+      lang: z.string().optional(), // idioma de la función: "Castellano" | "Catalán" | "Bilingüe"
       priority: z.number().default(0), // jerarquía en cartelera (mayor = más arriba)
 
       // Cartel del espectáculo (se optimiza solo a WebP/AVIF en el build)
