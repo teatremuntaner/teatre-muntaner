@@ -44,9 +44,11 @@ Clon del sistema del Teatro Sofía (`C:\Users\carlo\dev\teatro-sofia`), adaptado
 - **Verificado en el cutover:** HTTPS ok, robots Allow+sitemap, sin noindex (salvo /admin y /actualizar), 301s de shows/legales, netlify.app→dominio, www→apex.
 - **Correos (decidido):** footer/contacto visible = `info@teatremuntaner.com`; avisos de Netlify Forms (newsletter + "Avísame") = `entradas@teatremuntaner.com`.
 
-## Pendiente
-- `GH_DISPATCH_TOKEN` para el botón "Actualizar cartelera" (opcional).
-- Valorar carteles A4 propios vs el oficial 2:3 de Qwantic.
+## Actualización automática de la cartelera (validado 2026-06-10)
+- **Cron diario:** `.github/workflows/sync-qwantic.yml` corre cada día ~06:00 UTC (08 h España): sincroniza con Qwantic y SOLO commitea/despliega si hay cambios. Al pasar una fecha, el sync la elimina del `.md` (solo guarda funciones futuras) → ese diff ya provoca el deploy que oculta el show pasado y actualiza la "próxima fecha" de las tarjetas.
+- **Botón del personal:** `/actualizar/` (Netlify Identity) → función `trigger-sync.js` → dispara el workflow. Usa la variable `GH_DISPATCH_TOKEN` en Netlify (fine-grained PAT `teatre-muntaner-trigger-sync`, org teatremuntaner, solo este repo, Actions read+write). **Caduca el 11-jun-2027** → regenerar en GitHub y actualizar la variable en Netlify.
+- **Caso no cubierto (revisión manual):** si un show desaparece del feed de Qwantic ("baja") o su página deja de exponer sesiones, su ficha NO se toca — sale avisado en el log del workflow (pestaña Actions).
+- Carteles: se usa el oficial 2:3 de Qwantic (decidido 2026-06-10; descartados A4 propios).
 
 ## Hecho
 - Catálogo: 11 shows desde Qwantic (sync_qwantic.py), géneros+artista clasificados (set_generos.py), títulos sin repetir el artista (fix_titulos.py).
