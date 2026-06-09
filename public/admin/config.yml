@@ -15,7 +15,8 @@ local_backend: true        # permite editar en local sin login
 media_folder: "src/content/espectaculos"   # dónde se guardan los carteles subidos
 public_folder: "/"
 
-publish_mode: editorial_workflow   # borradores antes de publicar
+# Sin flujo editorial: al guardar se publica directo (tras el deploy).
+# La visibilidad la controla la casilla "draft" de cada ficha (más intuitivo).
 
 locale: es                         # interfaz del panel en español
 

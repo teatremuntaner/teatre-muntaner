@@ -21,6 +21,7 @@ DATA = {
     "corta-el-cable-rojo":                           ("Comedia", ["Improvisación", "Comedia"],                 ""),
     "edu-mutante-saludos-cordiales":                 ("Comedia", ["Comedia", "Monólogos"],                     "Edu Mutante"),
     "el-petit-princep":                              ("Teatro",  ["Teatro", "Familiar"],                       ""),
+    "laneguet-lleig":                                ("Teatro",  ["Teatro", "Familiar"],                       "NS Dansa"),
     "joaquin-caserza-conversaciones-con-mi-mente":   ("Comedia", ["Comedia", "Monólogos", "Bienestar emocional"], "Joaquín Caserza"),
     "me-veo-en-wallapop-diego-arjona":               ("Comedia", ["Comedia", "Monólogos"],                     "Diego Arjona"),
     "nenaaa":                                        ("Teatro",  ["Teatro", "Comedia"],                        ""),

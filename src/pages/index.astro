@@ -214,11 +214,14 @@ const gallery = [
                 {when && <p class="show-card__date">{when}</p>}
               </div>
             </a>
-            {d.ticketAlarm ? (
-              <a class="show-card__buy" href={`${base}espectaculos/${show.id}/`}>Avísame</a>
-            ) : d.ticketUrl && (
-              <a class="show-card__buy" href={d.ticketUrl} target="_blank" rel="noopener">Comprar entradas</a>
-            )}
+            <div class="show-card__actions">
+              <a class="show-card__more" href={d.externalUrl ?? `${base}espectaculos/${show.id}/`}>Ver más</a>
+              {d.ticketAlarm ? (
+                <a class="show-card__buy" href={`${base}espectaculos/${show.id}/`}>Avísame</a>
+              ) : d.ticketUrl && (
+                <a class="show-card__buy" href={d.ticketUrl} target="_blank" rel="noopener">Comprar entradas</a>
+              )}
+            </div>
           </article>
         );
       })}
