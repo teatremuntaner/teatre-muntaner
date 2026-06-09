@@ -1,0 +1,106 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  accent?: string;        // color predominante del cartel
+  accentInk?: string;     // color de texto legible sobre el acento
+  titleFont?: string;     // nombre CSS de la tipografía del título (como la del cartel)
+  titleFontUrl?: string;  // <link> de Google Fonts para esa tipografía
+  image?: string;         // og:image
+}
+const {
+  title,
+  description = 'Teatre Muntaner · Carrer de Muntaner 4, Barcelona. La casa de la comedia: monólogos, magia, improvisación y teatro de humor.',
+  accent = '#bd221f',
+  accentInk = '#ffffff',
+  titleFont,
+  titleFontUrl,
+  image,
+} = Astro.props;
+
+const SITE = Astro.site ?? new URL('https://teatremuntaner.com');
+const canonical = new URL(Astro.url.pathname, SITE).href;
+const ogImage = image ?? new URL('og.jpg', SITE).href;
+// Web de pruebas: noindex. Al pasar a teatremuntaner.com se pone INDEXABLE=true.
+const indexable = process.env.INDEXABLE === 'true';
+// Weglot (traducción automática al catalán). Latente hasta poner WEGLOT_API_KEY
+// como variable de entorno en Netlify; entonces se inyecta el script solo.
+const weglotKey = process.env.WEGLOT_API_KEY;
+
+const bodyStyle =
+  `--accent:${accent};--accent-ink:${accentInk};` +
+  (titleFont ? `--f-title:'${titleFont}', var(--f-display);` : '');
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Google Tag Manager -->
+    <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-TR52LK75');</script>
+    <!-- End Google Tag Manager -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#14100e" />
+    <title>{title} · Teatre Muntaner</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {!indexable && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <link rel="icon" type="image/png" sizes="64x64" href={`${import.meta.env.BASE_URL}favicon-64.png`} />
+    <link rel="apple-touch-icon" href={`${import.meta.env.BASE_URL}favicon-180.png`} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Reddit+Sans:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    {titleFontUrl && <link href={titleFontUrl} rel="stylesheet" />}
+    {weglotKey && (
+      <>
+        <script is:inline src="https://cdn.weglot.com/weglot.min.js"></script>
+        <script is:inline set:html={`Weglot.initialize({ api_key: '${weglotKey}' });`}></script>
+      </>
+    )}
+    <meta property="og:title" content={`${title} · Teatre Muntaner`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:site_name" content="Teatre Muntaner" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${title} · Teatre Muntaner`} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+  </head>
+  <body style={bodyStyle}>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TR52LK75" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+
+    <!-- Animación (gratis): GSAP + SplitText para los títulos. Sin smooth scroll. -->
+    <script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+
+    <!-- Login del CMS para el personal (Netlify Identity; invisible si no está en Netlify) -->
+    <script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script define:vars={{ adminUrl: import.meta.env.BASE_URL + 'admin/' }}>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on('init', (user) => {
+          if (!user) {
+            window.netlifyIdentity.on('login', () => {
+              document.location.href = adminUrl;
+            });
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

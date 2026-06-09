@@ -1,0 +1,52 @@
+---
+import damasco from '../assets/venue/damasco.jpg';
+const year = new Date().getFullYear();
+const base = import.meta.env.BASE_URL;
+const footerBg = `linear-gradient(rgba(22,7,5,0.62), rgba(32,10,8,0.66)), url(${damasco.src}) center/cover`;
+---
+<footer class="site-footer site-footer--damask" style={`background:${footerBg}`}>
+  <div class="site-footer__bar"></div>
+  <div class="wrap">
+    <div class="site-footer__cols">
+      <div>
+        <img src={`${base}logo-muntaner.png`} alt="Teatre Muntaner" style="height:58px;width:auto;margin-bottom:16px" />
+        <p style="color:rgba(255,255,255,0.78);max-width:34ch">
+          La casa de la comedia en Barcelona: monólogos, magia, improvisación y teatro de humor, en Carrer de Muntaner 4.
+        </p>
+        <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/aviso-recibido/" style="margin-top:18px;max-width:320px">
+          <input type="hidden" name="form-name" value="newsletter" />
+          <p hidden><label>No rellenar <input name="bot-field" /></label></p>
+          <label for="nl-email" style="display:block;font-family:var(--f-display);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:8px">Newsletter</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <input id="nl-email" type="email" name="email" required placeholder="tu@email.com" style="flex:1 1 150px;min-width:0;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--paper);font:inherit" />
+            <button type="submit" class="btn btn--accent" style="padding:10px 16px">Suscribirme</button>
+          </div>
+        </form>
+      </div>
+      <div>
+        <h4>Visitar</h4>
+        <a href={`${base}#cartelera`}>Cartelera</a>
+        <a href={`${base}#calendario`}>Calendario</a>
+        <a href={`${base}#galeria`}>Galería</a>
+        <a href={`${base}alquiler/`}>Alquiler</a>
+        <a href={`${base}#contacto`}>Contacto</a>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <a href="/aviso-legal/">Aviso legal</a>
+        <a href="/politica-de-privacidad/">Política de privacidad</a>
+        <a href="/politica-de-cookies/">Política de cookies</a>
+      </div>
+      <div>
+        <h4>Otros teatros</h4>
+        <a href="https://teatrosofia.es" target="_blank" rel="noopener">Teatro Sofía</a>
+        <a href="https://clapshow.es" target="_blank" rel="noopener">Clap Show</a>
+        <h4 style="margin-top:22px">Síguenos</h4>
+        <a href="https://www.instagram.com/teatremuntaner/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.tiktok.com/@teatremuntaner" target="_blank" rel="noopener">TikTok</a>
+        <a href="https://www.google.com/maps/place/Teatre+Muntaner/data=!4m7!3m6!1s0x12a4a31493c798f3:0x12a7966c424af8f6!8m2!3d41.3841653!4d2.1630793!16s%2Fg%2F11w9gjbjvn" target="_blank" rel="noopener">Google</a>
+      </div>
+    </div>
+    <p class="site-footer__legal">© {year} La Muntaner Teatre, S.L. · Carrer de Muntaner 4, 08011 Barcelona · CIF B55438550 · info@teatremuntaner.com</p>
+  </div>
+</footer>

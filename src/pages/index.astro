@@ -1,0 +1,560 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { summarize } from '../lib/schedule';
+
+import hero from '../assets/venue/platea.jpg';            // patio de butacas con cortina roja
+import escenario from '../assets/venue/escenario.jpg';    // escenario con pantallas LED
+import fachada from '../assets/venue/fachada-muntaner.jpg'; // fachada con cola de público
+import emporium from '../assets/venue/emporium.jpg';      // pared histórica Emporium 1927-1979
+import foyer from '../assets/venue/foyer.jpg';            // bar / vestíbulo
+import ambienteMun from '../assets/venue/ambiente-muntaner.jpg'; // elenco con público
+import damasco from '../assets/venue/damasco.jpg';        // textura damasco rojo/oro (pared real)
+
+const base = import.meta.env.BASE_URL;
+const today = new Date().toISOString().slice(0, 10);
+const isArchived = (d: { dates: { date: string }[] }) =>
+  d.dates.length > 0 && !d.dates.some((x) => x.date >= today);
+const nextDate = (d: { dates: { date: string }[] }) => {
+  const all = d.dates.map((x) => x.date).sort();
+  return all.find((x) => x >= today) ?? all[all.length - 1] ?? '9999';
+};
+const shows = (await getCollection('espectaculos', ({ data }) => !data.draft && !isArchived(data))).sort(
+  (a, b) =>
+    (b.data.priority ?? 0) - (a.data.priority ?? 0) ||
+    nextDate(a.data).localeCompare(nextDate(b.data)),
+);
+// Destacados: shows marcados como featured en el CMS (hasta 2).
+const featured = shows.filter((s) => s.data.featured).slice(0, 2);
+
+// Filtro de géneros: solo los presentes en la cartelera, en orden preferente.
+const GENRE_ORDER = ['Comedia', 'Monólogos', 'Improvisación', 'Magia', 'Teatro', 'Familiar', 'Música', 'Flamenco', 'Bienestar emocional'];
+const presentGenres = new Set(shows.flatMap((s) => s.data.genres));
+const genreFilters = GENRE_ORDER.filter((g) => presentGenres.has(g));
+
+// Temporada Verano: shows con alguna función dentro del rango (ajustable).
+const SUMMER_START = '2026-06-21';
+const SUMMER_END = '2026-09-22';
+const veranoShows = shows.filter((s) =>
+  s.data.dates?.some((x) => x.date >= SUMMER_START && x.date <= SUMMER_END),
+);
+
+// Filtro "Esta semana": shows con función en los próximos 7 días.
+const weekEnd = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
+const isThisWeek = (data: { dates: { date: string }[] }) =>
+  data.dates?.some((x) => x.date >= today && x.date <= weekEnd);
+const hasThisWeek = shows.some((s) => isThisWeek(s.data));
+
+const gallery = [
+  { img: hero, alt: 'Patio de butacas con la cortina roja del Teatre Muntaner' },
+  { img: escenario, alt: 'Escenario del Teatre Muntaner con pantallas LED' },
+  { img: fachada, alt: 'Fachada del Teatre Muntaner en Carrer de Muntaner 4' },
+  { img: foyer, alt: 'Bar y vestíbulo del Teatre Muntaner' },
+  { img: emporium, alt: 'Pared histórica Emporium 1927-1979 del Teatre Muntaner' },
+  { img: ambienteMun, alt: 'Elenco y público en el Teatre Muntaner' },
+];
+---
+
+<BaseLayout
+  title="La casa de la comedia en Barcelona"
+  description="Teatre Muntaner, la casa de la comedia en Barcelona. Monólogos, magia, improvisación y teatro de humor en Carrer de Muntaner 4."
+>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'PerformingArtsTheater',
+    name: 'Teatre Muntaner',
+    url: 'https://teatremuntaner.com',
+    logo: 'https://teatremuntaner.com/logo-muntaner.png',
+    image: 'https://teatremuntaner.com/og.jpg',
+    description: 'La casa de la comedia en Barcelona: monólogos, magia, improvisación y teatro de humor.',
+    address: { '@type': 'PostalAddress', streetAddress: 'Carrer de Muntaner 4', addressLocality: 'Barcelona', postalCode: '08011', addressCountry: 'ES' },
+    geo: { '@type': 'GeoCoordinates', latitude: 41.3841653, longitude: 2.1630793 },
+    sameAs: ['https://www.instagram.com/teatremuntaner/', 'https://www.tiktok.com/@teatremuntaner'],
+  })} />
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero" id="inicio">
+    <Image class="hero__img" src={fachada} alt="Cola de público de noche en la fachada del Teatre Muntaner" widths={[1200, 1800, 2600]} sizes="100vw" loading="eager" fetchpriority="high" />
+    <div class="hero__scrim"></div>
+    <span class="starburst hero__star" style="width:min(46vw,560px);top:-12%;right:-8%"></span>
+    <div class="wrap hero__inner">
+      <p class="hero__eyebrow"><span class="dots"><i></i><i></i><i></i><i></i></span> La casa de la comedia · Barcelona</p>
+      <h1 class="hero__title" data-split>La casa<br />de la comedia</h1>
+      <p class="hero__lead">Disfruta de la comedia más actual y divertida en nuestro teatro centenario, en el corazón de Barcelona.</p>
+      <div class="hero__cta">
+        <a class="btn btn--accent" href="#cartelera">Ver cartelera</a>
+        <a class="btn btn--ghost" href="#calendario">Calendario</a>
+      </div>
+    </div>
+    <a class="hero__scroll" href="#destacados" aria-label="Bajar"><span></span></a>
+  </section>
+
+  <!-- ===================== MARQUESINA ===================== -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      {Array.from({ length: 2 }).map(() => (
+        <div class="marquee__item">
+          Teatre Muntaner <span class="marquee__star">✦</span>
+          La casa de la comedia <span class="marquee__star">✦</span>
+          Monólogos <span class="marquee__star">✦</span>
+          Magia <span class="marquee__star">✦</span>
+          Improvisación <span class="marquee__star">✦</span>
+          Teatre de humor <span class="marquee__star">✦</span>
+          Barcelona <span class="marquee__star">✦</span>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- ===================== DESTACADOS ===================== -->
+  {featured.length > 0 && (
+    <section class="wrap section" id="destacados">
+      <header class="section__head reveal">
+        <p class="kicker kicker--yellow">Destacados</p>
+        <h2 class="section__title">No te los pierdas</h2>
+      </header>
+      <div class="featured">
+        {featured.map((s) => {
+          const sd = s.data;
+          const fwhen = sd.dates.length ? summarize(sd.dates).card : (sd.dateText ?? '');
+          return (
+            <a class="featured__card reveal" href={`${base}espectaculos/${s.id}/`} style={`--fc:${sd.accent}`}>
+              <Image class="featured__bg" src={sd.poster} alt={`Cartel de ${sd.title}`} widths={[600, 1100]} sizes="(max-width: 880px) 100vw, 560px" />
+              <span class="featured__veil"></span>
+              <div class="featured__body">
+                {(sd.artist ?? fwhen) && <span class="featured__tag">{sd.artist ?? fwhen}</span>}
+                <h3>{sd.title}</h3>
+                {sd.tagline && <p>{sd.tagline}</p>}
+                <span class="featured__more">Más información →</span>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+  )}
+
+  <!-- ===================== TEMPORADA VERANO ===================== -->
+  {veranoShows.length > 0 && (
+    <section class="season" id="verano">
+      <div class="wrap">
+        <header class="section__head reveal">
+          <p class="kicker kicker--yellow">☀ Temporada Verano</p>
+          <h2 class="section__title">El verano sube al escenario</h2>
+        </header>
+        <div class="season__row">
+          {veranoShows.map((s) => {
+            const sd = s.data;
+            const swhen = sd.dates.length ? summarize(sd.dates).card : (sd.dateText ?? '');
+            return (
+              <a class="season__card reveal" href={`${base}espectaculos/${s.id}/`} style={`--card-accent:${sd.accent}`}>
+                <div class="season__img">
+                  <Image src={sd.poster} alt={`Cartel de ${sd.title}`} widths={[200, 400]} sizes="180px" />
+                </div>
+                <div class="season__body">
+                  <h3 class="season__name">{sd.title}</h3>
+                  {swhen && <p class="season__when">{swhen}</p>}
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <style>
+    .season { padding: clamp(34px, 5vw, 64px) 0; background: linear-gradient(180deg, rgba(213,168,70,0.08), rgba(189,34,31,0.06)); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .season__row { display: grid; grid-auto-flow: column; grid-auto-columns: 180px; gap: 16px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x proximity; }
+    .season__card { scroll-snap-align: start; display: block; text-decoration: none; }
+    .season__img { aspect-ratio: 2 / 3; border-radius: 10px; overflow: hidden; box-shadow: 0 14px 30px rgba(0,0,0,0.4); border: 1px solid var(--line); }
+    .season__img :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+    .season__card:hover .season__img :global(img) { transform: scale(1.05); }
+    .season__body { padding: 10px 2px 0; }
+    .season__name { font-size: 16px; line-height: 1.2; }
+    .season__when { color: var(--card-accent, var(--accent)); font-size: 13px; margin-top: 4px; font-family: var(--f-display); }
+  </style>
+
+  <!-- ===================== CARTELERA ===================== -->
+  <section class="wrap section" id="cartelera">
+    <header class="section__head reveal">
+      <p class="kicker kicker--coral">En cartel</p>
+      <h2 class="section__title">Mira nuestra cartelera</h2>
+    </header>
+    {(genreFilters.length > 1 || hasThisWeek) && (
+      <div class="genre-filter" role="group" aria-label="Filtrar cartelera">
+        <button class="genre-chip is-active" data-genre="*" aria-pressed="true" type="button">Todos</button>
+        {hasThisWeek && (
+          <button class="genre-chip genre-chip--week" data-genre="__week" aria-pressed="false" type="button">Esta semana</button>
+        )}
+        {genreFilters.map((g) => (
+          <button class="genre-chip" data-genre={g} aria-pressed="false" type="button">{g}</button>
+        ))}
+      </div>
+    )}
+    <div class="shows-grid">
+      {shows.map((show) => {
+        const d = show.data;
+        const sub = d.artist ?? d.tagline;
+        const cardGenres = d.genres.length ? d.genres : [d.category];
+        const genre = cardGenres.join(' · ');
+        const when = d.ticketAlarm ? 'Próximamente' : (d.dates.length ? summarize(d.dates).card : (d.dateText ?? 'Consultar fechas'));
+        return (
+          <article class="show-card reveal" style={`--card-accent:${d.accent}`} data-genres={cardGenres.join('|')} data-week={isThisWeek(d) ? '1' : '0'}>
+            <a class="show-card__main" href={d.externalUrl ?? `${base}espectaculos/${show.id}/`}>
+              <div class="show-card__bar"></div>
+              <div class="show-card__img">
+                <Image src={d.poster} alt={`Cartel de ${d.title}`} widths={[300, 500]} sizes="(max-width: 600px) 50vw, 280px" />
+              </div>
+              <div class="show-card__body">
+                <span class="show-card__cat">{genre}</span>
+                <h3 class="show-card__title">{d.title}</h3>
+                {sub && <p class="show-card__artist">{sub}</p>}
+                {when && <p class="show-card__date">{when}</p>}
+              </div>
+            </a>
+            {d.ticketAlarm ? (
+              <a class="show-card__buy" href={`${base}espectaculos/${show.id}/`}>Avísame</a>
+            ) : d.ticketUrl && (
+              <a class="show-card__buy" href={d.ticketUrl} target="_blank" rel="noopener">Comprar entradas</a>
+            )}
+          </article>
+        );
+      })}
+    </div>
+
+    <script>
+      const chips = document.querySelectorAll('.genre-filter .genre-chip');
+      const cards = Array.from(document.querySelectorAll('#cartelera .show-card'));
+      chips.forEach((chip) =>
+        chip.addEventListener('click', () => {
+          const g = chip.getAttribute('data-genre');
+          chips.forEach((c) => {
+            const on = c === chip;
+            c.classList.toggle('is-active', on);
+            c.setAttribute('aria-pressed', on ? 'true' : 'false');
+          });
+          cards.forEach((card) => {
+            let visible;
+            if (g === '*') visible = true;
+            else if (g === '__week') visible = card.getAttribute('data-week') === '1';
+            else visible = (card.getAttribute('data-genres') || '').split('|').includes(g);
+            card.classList.toggle('is-hidden', !visible);
+          });
+        }),
+      );
+    </script>
+
+    <style>
+      .genre-filter { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 30px; }
+      .genre-chip {
+        font-family: var(--f-display); font-size: 13px; letter-spacing: 0.04em;
+        padding: 8px 16px; border-radius: 999px; cursor: pointer;
+        background: transparent; color: var(--paper); border: 1px solid var(--line);
+        transition: border-color .2s ease, background .2s ease, color .2s ease;
+      }
+      .genre-chip:hover { border-color: var(--accent); }
+      .genre-chip.is-active { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+      .genre-chip--week { border-color: var(--c-red, #bd221f); color: var(--c-red, #bd221f); }
+      .genre-chip--week.is-active { background: var(--c-red, #bd221f); color: #0c0a0f; border-color: var(--c-red, #bd221f); }
+      .show-card.is-hidden { display: none; }
+    </style>
+  </section>
+
+  <!-- ===================== CALENDARIO ===================== -->
+  <section class="section calend" id="calendario">
+    <div class="wrap">
+      <header class="section__head reveal">
+        <p class="kicker kicker--blue">Agenda</p>
+        <h2 class="section__title">Calendario de funciones</h2>
+      </header>
+      <div class="calend__embed reveal">
+        <iframe src="https://embed.styledcalendar.com/#k4TqAJ4YIdvOlxa0B0yM" title="Calendario de funciones del Teatre Muntaner" loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== EL TEATRO ===================== -->
+  <section class="section teatro teatro--damask" id="teatro" style={`background-image: url(${damasco.src})`}>
+    <div class="wrap split">
+      <div class="split__media reveal">
+        <Image src={emporium} alt="Pared histórica Emporium 1927-1979 del Teatre Muntaner" widths={[600, 1000]} sizes="(max-width: 880px) 100vw, 520px" />
+      </div>
+      <div class="split__text reveal">
+        <p class="kicker kicker--purple">El Teatro</p>
+        <h2 class="section__title">Un teatro centenario,<br /><em>con historia y carácter.</em></h2>
+        <p class="lead">Con sus tres plantas y 800 m² de espacio, en el Teatre Muntaner hemos cuidado cada rincón para que cada visita sea una experiencia memorable. Desde el logotipo al papel de la pared, buscamos la renovación práctica y cómoda de un teatro con más de un siglo de vida, en pleno centro de Barcelona.</p>
+        <ul class="pillars">
+          <li><strong>Comedia</strong><span>Monólogos y shows que llenan la sala de risas.</span></li>
+          <li><strong>Improvisación</strong><span>Espectáculos vivos, distintos cada noche.</span></li>
+          <li><strong>Magia</strong><span>Ilusionismo y espectáculos para todos los públicos.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===================== GALERÍA ===================== -->
+  <section class="wrap section" id="galeria">
+    <header class="section__head reveal">
+      <p class="kicker kicker--blue">El local</p>
+      <h2 class="section__title">Galería</h2>
+    </header>
+    <div class="gallery">
+      {gallery.map((g) => (
+        <a class="gallery__item glightbox reveal" href={g.img.src} data-gallery="venue">
+          <Image src={g.img} alt={g.alt} widths={[400, 800]} sizes="(max-width: 700px) 50vw, 360px" />
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ===================== CONTACTO + UBICACIÓN ===================== -->
+  <section class="section contacto" id="contacto">
+    <div class="wrap">
+      <header class="section__head reveal">
+        <p class="kicker kicker--purple">Contacto</p>
+        <h2 class="section__title">Cuéntanos.<br /><em>Te responderemos cuanto antes.</em></h2>
+      </header>
+      <div class="contacto__grid">
+        <form class="cform reveal" id="contactForm">
+          <input type="text" name="nombre" placeholder="Nombre" required />
+          <input type="email" name="email" placeholder="Email" required />
+          <textarea name="mensaje" placeholder="Tu mensaje" rows="5" required></textarea>
+          <button class="btn btn--accent" type="submit">Enviar</button>
+          <p class="cform__msg cform__ok" hidden>¡Gracias! Hemos recibido tu mensaje y te responderemos cuanto antes.</p>
+          <p class="cform__msg cform__err" hidden>No se ha podido enviar. Escríbenos a <a href="mailto:info@teatremuntaner.com">info@teatremuntaner.com</a>.</p>
+        </form>
+        <aside class="contacto__info reveal">
+          <div class="info-card">
+            <div class="info-card__bar"></div>
+            <p class="addr"><strong>Dirección</strong>Carrer de Muntaner, 4 · 08011 Barcelona</p>
+            <p class="addr"><strong>Taquilla</strong><a href="tel:+34614402738">+34 614 402 738</a></p>
+            <p class="addr"><strong>Horario taquilla</strong>Abierta desde 1 h 30 min antes de cada función</p>
+            <p class="addr"><strong>Email</strong><a href="mailto:info@teatremuntaner.com">info@teatremuntaner.com</a></p>
+            <p class="addr"><strong>Síguenos</strong><span class="social-row"><a href="https://www.instagram.com/teatremuntaner/" target="_blank" rel="noopener">Instagram ↗</a><a href="https://www.tiktok.com/@teatremuntaner" target="_blank" rel="noopener">TikTok ↗</a><a href="https://www.google.com/maps/place/Teatre+Muntaner/data=!4m7!3m6!1s0x12a4a31493c798f3:0x12a7966c424af8f6!8m2!3d41.3841653!4d2.1630793!16s%2Fg%2F11w9gjbjvn" target="_blank" rel="noopener">Google ↗</a></span></p>
+            <a class="btn btn--ghost" href="https://www.google.com/maps/dir/?api=1&destination=Teatre+Muntaner+Carrer+de+Muntaner+4+Barcelona" target="_blank" rel="noopener">Cómo llegar</a>
+          </div>
+        </aside>
+      </div>
+      <div class="contacto__map reveal">
+        <iframe src="https://maps.google.com/maps?q=Carrer+de+Muntaner+4+Barcelona&z=16&output=embed" loading="lazy" title="Mapa del Teatre Muntaner en Carrer de Muntaner 4, Barcelona"></iframe>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .kicker { font-family: var(--f-display); font-size: 13px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--c-red); font-weight: 700; margin: 0 0 14px; }
+  .kicker--yellow { color: var(--c-wine); }
+  .kicker--coral { color: var(--c-red); }
+  .kicker--blue { color: var(--c-wine); }
+  .kicker--purple { color: var(--c-wine); }
+  .kicker--gold { color: var(--c-wine); }
+  .section { padding: clamp(44px, 6vw, 92px) 0; }
+  .section__head { margin-bottom: clamp(26px, 4vw, 44px); }
+  .section__title { font-size: clamp(34px, 5.5vw, 68px); text-transform: uppercase; line-height: 1; }
+  .section__title em { font-family: var(--f-body); font-style: italic; font-weight: 400; text-transform: none; color: var(--paper-dim); }
+  .lead { font-family: var(--f-body); font-size: clamp(16px, 1.5vw, 19px); line-height: 1.7; color: var(--paper-dim); max-width: 48ch; }
+  .lead strong { color: var(--paper); }
+
+  /* HERO */
+  .hero { position: relative; min-height: 100svh; display: flex; align-items: flex-end; overflow: hidden; }
+  .hero__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+  .hero__scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(12,10,15,0.55) 0%, rgba(12,10,15,0.1) 30%, rgba(12,10,15,0.35) 65%, rgba(12,10,15,0.96) 100%); }
+  .hero__inner { position: relative; z-index: 2; padding-bottom: clamp(60px, 10vw, 120px); padding-top: 120px; }
+  .hero__eyebrow { display: flex; align-items: center; gap: 12px; font-family: var(--f-display); letter-spacing: 0.26em; text-transform: uppercase; font-size: 13px; color: #fdf7ea; font-weight: 500; margin: 0 0 18px; }
+  .dots { display: inline-flex; gap: 4px; }
+  .dots i { width: 7px; height: 18px; border-radius: 2px; display: block; }
+  .dots i:nth-child(1) { background: var(--c-gold); }
+  .dots i:nth-child(2) { background: var(--c-red); }
+  .dots i:nth-child(3) { background: var(--c-wine); }
+  .dots i:nth-child(4) { background: var(--c-gold); }
+  .hero__title { font-size: clamp(52px, 10vw, 132px); text-transform: uppercase; line-height: 0.92; color: #fff; text-shadow: 0 6px 40px rgba(0,0,0,0.55); }
+  .hero__lead { font-family: var(--f-body); font-size: clamp(17px, 1.8vw, 21px); line-height: 1.6; color: rgba(255,255,255,0.94); max-width: 40ch; margin-top: 22px; text-shadow: 0 2px 16px rgba(0,0,0,0.6); }
+  .hero__cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
+  .hero__cta .btn--ghost { border-color: rgba(255,255,255,0.55); color: #fff; }
+  .hero__cta .btn--ghost:hover { border-color: #fff; color: #fff; }
+  .hero__scroll { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 3; width: 26px; height: 42px; border: 1px solid var(--paper-faint); border-radius: 14px; }
+  .hero__scroll span { position: absolute; left: 50%; top: 8px; width: 3px; height: 8px; background: var(--paper); border-radius: 2px; transform: translateX(-50%); animation: scrollDot 1.8s ease-in-out infinite; }
+  @keyframes scrollDot { 0%,100% { opacity: 0; transform: translate(-50%, 0); } 50% { opacity: 1; transform: translate(-50%, 12px); } }
+  .hero__star { z-index: 1; mix-blend-mode: screen; opacity: 0.22; }
+  .dots i { animation: dotpulse 2.4s ease-in-out infinite; transform-origin: center; }
+  .dots i:nth-child(2) { animation-delay: .2s; } .dots i:nth-child(3) { animation-delay: .4s; } .dots i:nth-child(4) { animation-delay: .6s; }
+  @keyframes dotpulse { 0%, 100% { transform: scaleY(1); opacity: .85; } 50% { transform: scaleY(1.4); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .dots i { animation: none; } .hero__star { animation: none; } }
+
+  /* DESTACADOS */
+  .featured { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .featured__card { position: relative; display: block; min-height: 380px; border-radius: 12px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,0.4); }
+  .featured__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s ease; }
+  .featured__card:hover .featured__bg { transform: scale(1.05); }
+  .featured__veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(12,10,15,0.1) 0%, rgba(12,10,15,0.55) 55%, rgba(12,10,15,0.95) 100%); }
+  .featured__body { position: absolute; inset: auto 0 0 0; padding: clamp(22px, 3vw, 36px); }
+  .featured__tag { display: inline-block; font-family: var(--f-display); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink); background: var(--fc); padding: 5px 12px; border-radius: 999px; margin-bottom: 12px; font-weight: 600; }
+  .featured__body h3 { font-size: clamp(32px, 4vw, 52px); text-transform: uppercase; color: #fff; }
+  .featured__body p { font-family: var(--f-body); font-style: italic; color: rgba(255,255,255,0.92); margin: 8px 0 0; font-size: 18px; }
+  .featured__more { display: inline-block; margin-top: 16px; font-family: var(--f-display); font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fc); }
+  @media (max-width: 880px) { .featured { grid-template-columns: 1fr; } }
+
+  /* SPLIT */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: center; }
+  .split--reverse .split__media { order: 2; }
+  .split__media { border-radius: 10px; overflow: hidden; box-shadow: 0 30px 70px rgba(0,0,0,0.45); }
+  .split__media :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; aspect-ratio: 4/3; transition: transform 0.8s ease; }
+  .split__media:hover :global(img) { transform: scale(1.04); }
+  .pillars { list-style: none; padding: 0; margin: 30px 0 0; display: grid; gap: 16px; }
+  .pillars li { display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: baseline; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+  .pillars strong { font-family: var(--f-display); text-transform: uppercase; letter-spacing: 0.08em; color: var(--c-red); }
+  .pillars span { color: var(--paper-dim); font-size: 15px; }
+
+  /* Banda "El Teatro" con textura damasco (la pared real del teatro) */
+  .teatro--damask { position: relative; background-size: cover; background-position: center; overflow: hidden; }
+  .teatro--damask::before { content: ""; position: absolute; inset: 0; z-index: 0;
+    background: linear-gradient(180deg, rgba(26,8,6,0.5) 0%, rgba(38,13,10,0.42) 100%); }
+  .teatro--damask > .wrap { position: relative; z-index: 1; }
+  .teatro--damask .kicker { color: var(--c-gold); text-shadow: 0 2px 10px rgba(0,0,0,0.6); }
+  .teatro--damask .section__title { color: #fff; text-shadow: 0 2px 16px rgba(0,0,0,0.6); }
+  .teatro--damask .section__title em { color: rgba(255,255,255,0.85); }
+  .teatro--damask .lead { color: #fff; text-shadow: 0 1px 10px rgba(0,0,0,0.65); }
+  .teatro--damask .lead strong { color: #fff; }
+  .teatro--damask .pillars li { border-color: rgba(255,255,255,0.16); }
+  .teatro--damask .pillars strong { color: var(--c-gold); }
+  .teatro--damask .pillars span { color: rgba(255,255,255,0.8); }
+  .teatro--damask .split__media { border: 1px solid rgba(213,168,70,0.55); border-radius: 12px; box-shadow: 0 30px 70px rgba(0,0,0,0.55); }
+  .chips { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+  .chip { font-family: var(--f-display); font-size: 13px; letter-spacing: 0.06em; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--line); color: var(--paper); }
+  .chip--y { border-color: var(--c-gold); color: var(--c-gold); }
+  .chip--c { border-color: var(--c-red); color: var(--c-red); }
+  .chip--p { border-color: #a98cd6; color: #a98cd6; }
+  @media (max-width: 880px) {
+    .split { grid-template-columns: 1fr; }
+    .split--reverse .split__media { order: 0; }
+    .pillars li { grid-template-columns: 1fr; gap: 2px; }
+  }
+
+  /* CALENDARIO */
+  .calend { background: linear-gradient(180deg, var(--ink) 0%, var(--ink-soft) 100%); }
+  .calend__embed { border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: #fff; }
+  .calend__embed iframe { width: 100%; height: 760px; border: 0; display: block; }
+  @media (max-width: 600px) { .calend__embed iframe { height: 600px; } }
+
+  /* BAND */
+  .band { position: relative; padding: clamp(70px, 11vw, 150px) 0; overflow: hidden; }
+  .band__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+  .band__scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(12,10,15,0.92) 0%, rgba(12,10,15,0.7) 45%, rgba(12,10,15,0.4) 100%); }
+  .band__inner { position: relative; z-index: 2; max-width: 600px; }
+  .band__inner .btn { margin-top: 28px; }
+
+  /* GALERÍA */
+  .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .gallery__item { display: block; border-radius: 8px; overflow: hidden; aspect-ratio: 4/3; }
+  .gallery__item :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s ease, filter 0.5s ease; filter: brightness(0.9); }
+  .gallery__item:hover :global(img) { transform: scale(1.06); filter: brightness(1.05); }
+  @media (max-width: 700px) { .gallery { grid-template-columns: repeat(2, 1fr); } }
+
+  /* CONTACTO */
+  .contacto { position: relative; background:
+    radial-gradient(900px 500px at 12% 0%, rgba(189,34,31,0.18), transparent 60%),
+    radial-gradient(900px 500px at 88% 100%, rgba(213,168,70,0.14), transparent 60%),
+    var(--ink); }
+  .contacto__grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: clamp(28px, 5vw, 60px); align-items: start; }
+  .cform { display: grid; gap: 14px; }
+  .cform input, .cform textarea {
+    width: 100%; font: inherit; color: var(--paper); background: #fff;
+    border: 1px solid var(--line); border-radius: 8px; padding: 15px 16px; transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .cform input::placeholder, .cform textarea::placeholder { color: var(--paper-faint); }
+  .cform input:focus, .cform textarea:focus { outline: none; border-color: var(--c-red); box-shadow: 0 0 0 3px rgba(189,34,31,0.12); }
+  .cform .btn { justify-self: start; }
+  .cform__msg { font-family: var(--f-body); font-size: 16px; line-height: 1.5; margin: 4px 0 0; }
+  .cform__ok { color: #1c7c3f; }
+  .cform__err { color: var(--c-red); }
+  .cform__err a { color: var(--c-red); text-decoration: underline; }
+  .info-card { position: relative; background: var(--ink-soft); border: 1px solid var(--line); border-radius: 12px; padding: 28px; overflow: hidden; }
+  .info-card__bar { position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--c-gold) 0 25%, var(--c-red) 25% 50%, var(--c-wine) 50% 75%, var(--c-gold) 75% 100%); }
+  .addr { font-family: var(--f-body); font-size: 17px; color: var(--paper); margin: 14px 0 0; line-height: 1.5; }
+  .addr:first-of-type { margin-top: 6px; }
+  .addr strong { display: block; font-family: var(--f-display); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--c-red); margin-bottom: 4px; }
+  .addr a { color: var(--paper); }
+  .addr a:hover { color: var(--c-red); }
+  .social-row { display: flex; flex-wrap: wrap; gap: 16px; }
+  .social-row a { font-weight: 600; }
+  .info-card .btn { margin-top: 22px; }
+  .contacto__map { margin-top: clamp(28px, 4vw, 48px); border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+  .contacto__map iframe { width: 100%; height: 380px; border: 0; display: block; filter: saturate(1.05) brightness(0.95); }
+  @media (max-width: 760px) { .contacto__grid { grid-template-columns: 1fr; } }
+
+  /* reveal */
+  .reveal { opacity: 0; transform: translateY(34px); transition: opacity 0.9s ease, transform 0.9s ease; }
+  .reveal.is-visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+</style>
+
+<script>
+  import GLightbox from 'glightbox';
+  import 'glightbox/dist/css/glightbox.min.css';
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+  GLightbox({ selector: '.glightbox', loop: true, touchNavigation: true });
+
+  // Animaciones del hero: título letra a letra (GSAP) + parallax suave de la imagen
+  (function () {
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+    const h = document.querySelector('.hero__title[data-split]');
+    const w = window as any;
+    if (h && w.gsap && w.SplitText) {
+      try {
+        const split = new w.SplitText(h, { type: 'lines,chars' });
+        w.gsap.from(split.chars, { yPercent: 120, opacity: 0, stagger: 0.02, duration: 0.8, ease: 'power3.out', delay: 0.15 });
+      } catch (e) {}
+    }
+    const img = document.querySelector('.hero__img') as HTMLElement | null;
+    if (img) {
+      let ticking = false;
+      addEventListener('scroll', () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          const y = Math.min(window.scrollY, window.innerHeight);
+          img.style.transform = 'translate3d(0,' + (y * 0.18).toFixed(1) + 'px,0) scale(1.08)';
+          ticking = false;
+        });
+      }, { passive: true });
+    }
+  })();
+
+  // Formulario de contacto: envío en segundo plano (sin salir de la web ni mostrar terceros)
+  const form = document.getElementById('contactForm');
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('button');
+    const ok = form.querySelector('.cform__ok');
+    const err = form.querySelector('.cform__err');
+    ok.hidden = true; err.hidden = true;
+    const original = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Enviando…';
+    const data = Object.fromEntries(new FormData(form).entries());
+    try {
+      const res = await fetch('https://formsubmit.co/ajax/info@teatremuntaner.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ ...data, _subject: 'Mensaje desde la web del Teatre Muntaner', _template: 'box' }),
+      });
+      const json = await res.json();
+      if (String(json.success) === 'true') {
+        form.querySelectorAll('input, textarea, button').forEach((el) => (el.style.display = 'none'));
+        ok.hidden = false;
+      } else {
+        throw new Error('fail');
+      }
+    } catch (_) {
+      btn.disabled = false; btn.textContent = original;
+      err.hidden = false;
+    }
+  });
+</script>

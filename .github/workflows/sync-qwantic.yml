@@ -1,0 +1,40 @@
+name: Sync Qwantic
+
+# Comprueba shows nuevos / fechas en Qwantic y, SOLO si hay cambios, los sube
+# (lo que dispara el deploy en Netlify). Así no se gastan créditos en vano.
+on:
+  schedule:
+    - cron: "0 6 * * *"      # cada día ~06:00 UTC (07-08 h España)
+  workflow_dispatch: {}       # botón de ejecución manual (pestaña Actions)
+
+permissions:
+  contents: write             # para poder commitear los cambios al repo
+
+concurrency:
+  group: sync-qwantic
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Ejecutar sincronizador
+        run: python scripts/sync_qwantic.py
+      - name: Subir cambios si los hay
+        run: |
+          if [ -n "$(git status --porcelain src/content/espectaculos)" ]; then
+            git config user.name "Teatre Muntaner (bot)"
+            git config user.email "info@teatremuntaner.com"
+            git add src/content/espectaculos
+            git commit -m "Auto-sync Qwantic: fechas y altas de shows"
+            git push
+            echo "Cambios subidos -> Netlify desplegará."
+          else
+            echo "Sin cambios; no se despliega."
+          fi

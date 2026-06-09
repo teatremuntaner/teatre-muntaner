@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "astro-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 4321
+    },
+    {
+      "name": "decap-cms-proxy",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["decap-server"],
+      "port": 8081
+    }
+  ]
+}

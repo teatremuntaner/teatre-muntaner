@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title="Página no encontrada (404)" description="La página que buscas no existe o se ha movido.">
+  <section class="nf">
+    <p class="nf__big" aria-hidden="true">404</p>
+    <h1>Esta página no está en cartel</h1>
+    <p class="nf__lead">La página que buscas no existe o se ha movido. Puede que el espectáculo ya terminara su temporada.</p>
+    <div class="nf__cta">
+      <a class="btn btn--accent" href={base}>Ir al inicio</a>
+      <a class="btn btn--ghost" href={`${base}#cartelera`}>Ver la cartelera</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf { max-width: 680px; margin: 0 auto; padding: clamp(60px, 12vw, 150px) 20px; text-align: center; }
+  .nf__big { font-family: var(--f-display); font-weight: 700; font-size: clamp(90px, 20vw, 220px); line-height: 1; color: var(--accent); margin: 0; letter-spacing: 0.02em; }
+  .nf h1 { font-size: clamp(28px, 5vw, 48px); margin: 6px 0 14px; }
+  .nf__lead { color: var(--paper-dim); font-size: 18px; line-height: 1.6; max-width: 46ch; margin: 0 auto; }
+  .nf__cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+</style>

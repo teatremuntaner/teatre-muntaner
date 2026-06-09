@@ -1,0 +1,44 @@
+---
+const base = import.meta.env.BASE_URL; // p. ej. "/V1/"
+const items = [
+  { href: base, label: 'Inicio' },
+  { href: `${base}#cartelera`, label: 'Cartelera' },
+  { href: `${base}#calendario`, label: 'Calendario' },
+  { href: `${base}#galeria`, label: 'Galería' },
+  { href: `${base}alquiler/`, label: 'Alquiler' },
+  { href: `${base}#contacto`, label: 'Contacto' },
+];
+const path = Astro.url.pathname;
+---
+<header class="site-header">
+  <div class="wrap">
+    <a class="site-header__logo" href={base} aria-label="Teatre Muntaner · Inicio">
+      <img src={`${base}logo-muntaner.png`} alt="Teatre Muntaner" />
+    </a>
+    <nav class="site-nav" aria-label="Navegación principal">
+      {items.map((i) => (
+        <a
+          href={i.href}
+          class={i.accent ? 'is-accent' : undefined}
+          aria-current={path === i.href ? 'page' : undefined}
+        >{i.label}</a>
+      ))}
+    </nav>
+    <button class="site-nav__burger" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<script>
+  // Menú móvil
+  const header = document.querySelector('.site-header');
+  const burger = document.querySelector('.site-nav__burger');
+  burger?.addEventListener('click', () => {
+    const open = header?.classList.toggle('is-open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.querySelectorAll('.site-nav a').forEach((a) =>
+    a.addEventListener('click', () => header?.classList.remove('is-open')),
+  );
+</script>

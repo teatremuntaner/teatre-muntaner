@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Actualizar cartelera · Teatre Muntaner</title>
+    <link rel="icon" href="/favicon.svg" />
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <style>
+      :root { --y:#d5a846; --b:#bd221f; --co:#bd221f; --pu:#8a1a18; }
+      * { box-sizing: border-box; }
+      body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+             background:#14100e; color:#fff; font-family:'Helvetica Neue',Arial,sans-serif; padding:24px; }
+      .card { width:100%; max-width:460px; background:#15121c; border:1px solid rgba(255,255,255,.08);
+              border-radius:16px; padding:34px 30px; box-shadow:0 20px 50px rgba(0,0,0,.5); text-align:center; }
+      .bar { height:5px; border-radius:3px; margin:-34px -30px 26px; border-radius:16px 16px 0 0;
+             background:linear-gradient(90deg,var(--y),var(--b) 50%,var(--y)); }
+      h1 { font-size:24px; margin:0 0 6px; }
+      p.sub { color:#b9b3c4; margin:0 0 26px; font-size:15px; line-height:1.5; }
+      button { font:inherit; font-weight:800; cursor:pointer; border:0; border-radius:999px;
+               padding:14px 26px; font-size:16px; transition:transform .12s ease, opacity .2s ease; }
+      button:active { transform:scale(.98); }
+      .btn-main { background:var(--y); color:#14100e; }
+      .btn-login { background:transparent; color:#fff; border:1px solid rgba(255,255,255,.3); }
+      button[disabled] { opacity:.5; cursor:default; }
+      .msg { margin-top:22px; font-size:15px; line-height:1.5; min-height:1.2em; }
+      .msg.ok { color:#7be38f; } .msg.err { color:#bd221f; } .msg.info { color:#b9b3c4; }
+      .who { margin-top:18px; font-size:13px; color:#7a7488; }
+      .who a { color:#9a93aa; }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <div class="bar"></div>
+      <h1>Actualizar cartelera</h1>
+      <p class="sub">Trae de Qwantic los shows nuevos y las fechas actualizadas.
+        Solo se publica si hay cambios. Puede tardar 2-3 minutos.</p>
+
+      <div id="logged-out" hidden>
+        <button class="btn-login" id="loginBtn">Iniciar sesión</button>
+      </div>
+      <div id="logged-in" hidden>
+        <button class="btn-main" id="syncBtn">Actualizar ahora</button>
+        <div class="who">Sesión: <span id="email"></span> · <a href="#" id="logoutBtn">salir</a></div>
+      </div>
+
+      <div class="msg info" id="msg">Cargando…</div>
+    </main>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const msg = (text, cls) => { const m = $("msg"); m.textContent = text; m.className = "msg " + (cls || "info"); };
+      const idn = window.netlifyIdentity;
+
+      function render(user) {
+        $("logged-out").hidden = !!user;
+        $("logged-in").hidden = !user;
+        if (user) {
+          $("email").textContent = user.email || "";
+          msg("Listo para actualizar.", "info");
+        } else {
+          msg("Inicia sesión con tu cuenta del Teatre Muntaner.", "info");
+        }
+      }
+
+      idn.on("init", render);
+      idn.on("login", (u) => { render(u); idn.close(); });
+      idn.on("logout", () => render(null));
+
+      $("loginBtn").addEventListener("click", () => idn.open("login"));
+      $("logoutBtn").addEventListener("click", (e) => { e.preventDefault(); idn.logout(); });
+
+      $("syncBtn").addEventListener("click", async () => {
+        const user = idn.currentUser();
+        if (!user) { idn.open("login"); return; }
+        const btn = $("syncBtn");
+        btn.disabled = true;
+        msg("Lanzando actualización…", "info");
+        try {
+          const token = await user.jwt();
+          const r = await fetch("/.netlify/functions/trigger-sync", {
+            method: "POST",
+            headers: { Authorization: "Bearer " + token },
+          });
+          const j = await r.json().catch(() => ({}));
+          if (r.ok) {
+            msg(j.message || "Actualización lanzada.", "ok");
+          } else {
+            msg(j.error || "No se pudo actualizar.", "err");
+          }
+        } catch (e) {
+          msg("Error de conexión. Inténtalo de nuevo.", "err");
+        } finally {
+          setTimeout(() => { btn.disabled = false; }, 8000);
+        }
+      });
+
+      if (idn.currentUser() !== undefined) render(idn.currentUser());
+    </script>
+  </body>
+</html>

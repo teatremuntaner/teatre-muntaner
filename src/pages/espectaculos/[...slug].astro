@@ -1,0 +1,314 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { summarize } from '../../lib/schedule';
+
+export async function getStaticPaths() {
+  const shows = await getCollection('espectaculos', ({ data }) => !data.draft && !data.externalUrl);
+  return shows.map((show) => ({ params: { slug: show.id }, props: { show } }));
+}
+
+const { show } = Astro.props;
+const { Content } = await render(show);
+const d = show.data;
+
+const sch = d.dates.length ? summarize(d.dates) : null;
+const today = new Date().toISOString().slice(0, 10);
+const archived = d.dates.length > 0 && !d.dates.some((x) => x.date >= today);
+const genre = d.genres.length ? d.genres.join(' · ') : d.category;
+// Acepta ID o cualquier URL de YouTube (watch, youtu.be, embed, shorts)
+const ytId = d.youtube
+  ? (d.youtube.match(/(?:youtu\.be\/|v=|embed\/|shorts\/|^)([A-Za-z0-9_-]{11})/)?.[1] ?? '')
+  : '';
+
+// Descripción SEO: tagline si existe; si no, un extracto de la sinopsis.
+const plain = (show.body ?? '')
+  .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+  .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+  .replace(/[#*_>`~]/g, '')
+  .replace(/\s+/g, ' ')
+  .trim();
+const desc =
+  d.tagline ??
+  (plain ? (plain.length > 155 ? plain.slice(0, 152).replace(/\s+\S*$/, '') + '…' : plain) : `${d.title} en el Teatre Muntaner`);
+
+// Datos estructurados: un TheaterEvent por función.
+const SITE = Astro.site ?? new URL('https://teatremuntaner.com');
+const posterUrl = new URL(d.poster.src, SITE).href;
+const mkEvent = (dt: { date: string; time?: string }) => ({
+  '@context': 'https://schema.org',
+  '@type': 'TheaterEvent',
+  name: d.title,
+  ...(d.artist ? { performer: { '@type': 'PerformingGroup', name: d.artist } } : {}),
+  startDate: dt.date + (dt.time ? 'T' + dt.time : ''),
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  image: posterUrl,
+  description: desc,
+  location: {
+    '@type': 'Place',
+    name: 'Teatre Muntaner',
+    address: { '@type': 'PostalAddress', streetAddress: 'Carrer de Muntaner 4', addressLocality: 'Barcelona', postalCode: '08011', addressCountry: 'ES' },
+  },
+  organizer: { '@type': 'Organization', name: 'Teatre Muntaner', url: 'https://teatremuntaner.com' },
+  ...(d.ticketUrl ? { offers: { '@type': 'Offer', url: d.ticketUrl, availability: 'https://schema.org/InStock' } } : {}),
+});
+const eventsLd = d.dates.map(mkEvent);
+---
+
+<BaseLayout
+  title={d.title}
+  description={desc}
+  accent={d.accent}
+  accentInk={d.accentInk}
+  titleFont={d.titleFont}
+  titleFontUrl={d.titleFontUrl}
+>
+  <article class="show">
+    <!-- HERO tematizado con el color del cartel -->
+    <section class="show__hero">
+      <div class="show__hero-bg" aria-hidden="true"></div>
+      <div class="wrap show__hero-inner">
+        <div class="show__poster" data-tilt>
+          <Image src={d.poster} alt={`Cartel de ${d.title}`} widths={[400, 700]} sizes="(max-width: 760px) 70vw, 360px" />
+          <span class="show__poster-sheen" aria-hidden="true"></span>
+        </div>
+        <div class="show__head">
+          <p class="eyebrow">{genre}</p>
+          <h1 class="show__title" data-split>{d.title}</h1>
+          {(d.artist ?? d.tagline) && <p class="show__tagline">{d.artist ?? d.tagline}</p>}
+
+          {d.ticketAlarm ? (
+            <p class="show__schedule">Próximamente · entradas aún no a la venta</p>
+          ) : archived ? (
+            <p class="show__schedule show__schedule--ended">Funciones finalizadas · vuelve pronto</p>
+          ) : (
+            <>
+              {sch?.full && <p class="show__schedule">{sch.full}</p>}
+              {sch && sch.loose.length > 0 && (
+                <p class="show__loose">{sch.full ? 'Funciones especiales: ' : ''}{sch.loose.join(' · ')}</p>
+              )}
+              {!sch && d.dateText && <p class="show__schedule">{d.dateText}</p>}
+            </>
+          )}
+
+          {d.promo && <p class="show__promo">🎟 {d.promo}</p>}
+
+          {d.ticketAlarm ? (
+            <form class="ticketalarm" name="ticketalarm" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/aviso-recibido/">
+              <input type="hidden" name="form-name" value="ticketalarm" />
+              <input type="hidden" name="show" value={d.title} />
+              <p hidden><label>No rellenar <input name="bot-field" /></label></p>
+              <p class="ticketalarm__lead">Déjanos tu email y te avisamos en cuanto salgan las entradas.</p>
+              <div class="ticketalarm__row">
+                <input type="email" name="email" required placeholder="tu@email.com" aria-label="Tu email" />
+                <button class="btn btn--accent" type="submit">Avísame</button>
+              </div>
+            </form>
+          ) : (
+            <div class="show__cta">
+              {!archived && d.ticketUrl && (
+                <a class="btn btn--accent" href={d.ticketUrl} target="_blank" rel="noopener">Comprar entradas</a>
+              )}
+              <a class="btn btn--ghost" href={`${import.meta.env.BASE_URL}#espectaculos`}>Volver a cartelera</a>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+
+    <!-- CUERPO -->
+    <section class="wrap show__body">
+      <div class="show__prose">
+        {d.photo && (
+          <Image class="show__photo" src={d.photo} alt={`Foto de ${d.title}`} widths={[400, 800]} sizes="(max-width: 760px) 100vw, 480px" />
+        )}
+        <Content />
+      </div>
+      <aside class="show__meta">
+        <dl>
+          {d.duration && (<><dt>Duración</dt><dd>{d.duration}</dd></>)}
+          {d.price && (<><dt>Precio</dt><dd>{d.price}</dd></>)}
+          <dt>Lugar</dt><dd>{d.venue}</dd>
+        </dl>
+        {d.links.length > 0 && (
+          <div class="show__links">
+            <span class="show__links-title">Enlaces y redes</span>
+            <div class="show__links-row">
+              {d.links.map((l) => (
+                <a href={l.url} target="_blank" rel="noopener">{l.label} ↗</a>
+              ))}
+            </div>
+          </div>
+        )}
+      </aside>
+    </section>
+
+    {(d.video || ytId) && (
+      <section class="wrap">
+        <div class="show__video">
+          {d.video ? (
+            <video controls preload="metadata" src={d.video} aria-label={`Vídeo de ${d.title}`}></video>
+          ) : (
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${ytId}`}
+              title={`Vídeo de ${d.title}`}
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          )}
+        </div>
+      </section>
+    )}
+
+    {d.gallery.length > 0 && (
+      <section class="show__gallery">
+        <h2 class="show__gallery-title">Galería</h2>
+        <div class="show__gallery-grid">
+          {d.gallery.map((img, i) => (
+            <a class="glightbox show__gallery-item" href={img.src} data-gallery="show" aria-label={`Foto ${i + 1} de ${d.title}`}>
+              <Image src={img} alt={`Foto ${i + 1} de ${d.title}`} widths={[300, 600]} sizes="(max-width: 700px) 45vw, 280px" />
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+  </article>
+
+  <!-- SEO: datos estructurados (un TheaterEvent por función) -->
+  {eventsLd.length > 0 && (
+    <script type="application/ld+json" set:html={JSON.stringify(eventsLd.length === 1 ? eventsLd[0] : eventsLd)} />
+  )}
+</BaseLayout>
+
+<style>
+  .show__hero { position: relative; overflow: hidden; padding: clamp(40px, 7vw, 90px) 0; }
+  .show__hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(1200px 600px at 20% -10%, color-mix(in srgb, var(--accent) 75%, transparent), transparent 60%),
+      linear-gradient(180deg, color-mix(in srgb, var(--accent) 32%, var(--ink)) 0%, var(--ink) 80%);
+  }
+  .show__hero-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 360px 1fr; gap: clamp(28px, 5vw, 64px); align-items: center; perspective: 1100px; }
+  .show__poster {
+    position: relative; border-radius: 8px; overflow: hidden;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
+    transform: rotateX(0) rotateY(0);
+    transform-style: preserve-3d; will-change: transform;
+    transition: transform 0.3s ease-out, box-shadow 0.35s ease;
+  }
+  .show__poster :global(img) { width: 100%; height: auto; display: block; }
+  .show__poster-sheen {
+    position: absolute; inset: 0; pointer-events: none; z-index: 2;
+    background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.28) 50%, transparent 65%);
+    background-size: 250% 250%; background-position: 130% 0;
+    opacity: 0; transition: opacity 0.35s ease; mix-blend-mode: screen;
+  }
+  .show__poster.is-tilting { box-shadow: 0 45px 95px rgba(0,0,0,0.55), 0 0 75px -6px var(--accent); }
+  .show__poster.is-tilting .show__poster-sheen { opacity: 1; }
+  /* Móvil/táctil: sin tilt, flotación sutil */
+  @media (hover: none) { .show__poster { animation: posterFloat 6s ease-in-out infinite; } }
+  @keyframes posterFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+  @media (prefers-reduced-motion: reduce) { .show__poster { animation: none; } }
+  .show__title { font-size: clamp(48px, 8vw, 104px); letter-spacing: 0.01em; text-transform: uppercase; overflow-wrap: normal; word-break: keep-all; text-wrap: balance; }
+  .show__title :global(.word) { display: inline-block; }
+  .show__tagline { font-family: var(--f-display); font-size: clamp(17px, 2vw, 22px); color: var(--paper-dim); margin-top: 14px; max-width: 40ch; }
+  .show__dates { list-style: none; padding: 0; margin: 26px 0 0; display: flex; flex-direction: column; gap: 8px; }
+  .show__dates li { font-family: var(--f-display); font-size: 18px; }
+  .show__date-day { text-transform: capitalize; }
+  .show__date-time { color: var(--accent); font-weight: 600; }
+  .show__schedule { font-family: var(--f-display); font-size: 19px; margin: 24px 0 0; color: var(--accent); letter-spacing: 0.02em; }
+  .show__schedule--ended { color: var(--paper-faint); }
+  .show__loose { font-family: var(--f-body); font-size: 15px; margin: 8px 0 0; color: var(--paper-dim); }
+  .show__cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 32px; }
+  .show__promo { display: inline-block; background: var(--c-gold, #d5a846); color: #14100e; font-weight: 800; font-family: var(--f-display); letter-spacing: 0.02em; padding: 9px 16px; border-radius: 999px; margin: 22px 0 0; font-size: 16px; }
+  .ticketalarm { margin-top: 30px; max-width: 460px; }
+  .ticketalarm__lead { font-family: var(--f-body); font-size: 15px; color: var(--paper-dim); margin: 0 0 12px; }
+  .ticketalarm__row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .ticketalarm__row input[type="email"] { flex: 1 1 200px; min-width: 0; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--line); background: rgba(255,255,255,0.04); color: var(--paper); font: inherit; }
+  .ticketalarm__row input[type="email"]:focus { outline: none; border-color: var(--accent); }
+
+  .show__body { display: grid; grid-template-columns: 1fr 280px; gap: clamp(30px, 5vw, 60px); padding-top: clamp(40px, 6vw, 70px); }
+  .show__prose { font-size: 18px; line-height: 1.8; color: var(--paper-dim); }
+  .show__prose :global(strong) { color: var(--paper); }
+  .show__photo { float: right; width: 300px; max-width: 42%; height: auto; margin: 4px 0 18px 28px; border-radius: 6px; box-shadow: 0 18px 40px rgba(0,0,0,0.45); }
+  .show__video { position: relative; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); margin-top: 10px; }
+  .show__video iframe, .show__video video { position: absolute; inset: 0; width: 100%; height: 100%; background: #000; }
+  .show__gallery { padding: clamp(34px, 5vw, 60px) clamp(16px, 4vw, 48px) clamp(56px, 9vw, 110px); }
+  .show__gallery-title { font-family: var(--f-display); font-size: clamp(22px, 3vw, 32px); margin: 0 0 22px; }
+  .show__gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  .show__gallery-item { display: block; border-radius: 10px; overflow: hidden; aspect-ratio: 3 / 2; border: 1px solid var(--line); }
+  .show__gallery-item :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
+  .show__gallery-item:hover :global(img) { transform: scale(1.05); }
+  @media (max-width: 760px) { .show__photo { float: none; width: 100%; max-width: 100%; margin: 0 0 18px; } }
+  .show__meta dl { margin: 0; border-top: 2px solid var(--accent); padding-top: 18px; }
+  .show__meta dt { font-family: var(--f-display); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper-faint); margin-top: 14px; }
+  .show__meta dd { margin: 4px 0 0; font-size: 16px; }
+  .show__links { margin-top: 28px; }
+  .show__links-title { font-family: var(--f-display); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper-faint); display: block; margin-bottom: 12px; }
+  .show__links-row { display: flex; flex-wrap: wrap; gap: 10px; }
+  .show__links-row a {
+    font-family: var(--f-display); font-size: 13px; letter-spacing: 0.04em;
+    padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px;
+    color: var(--paper); transition: border-color 0.25s ease, color 0.25s ease;
+  }
+  .show__links-row a:hover { border-color: var(--accent); color: var(--accent-ink); }
+
+  @media (max-width: 760px) {
+    .show__hero-inner { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+    .show__poster { max-width: 260px; }
+    .show__cta { justify-content: center; }
+    .show__body { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  // Galería con lightbox a pantalla completa
+  import GLightbox from 'glightbox';
+  import 'glightbox/dist/css/glightbox.min.css';
+  GLightbox({ selector: '.glightbox', loop: true, touchNavigation: true });
+</script>
+
+<script is:inline>
+  // Efectos de la ficha: tilt 3D + brillo en el cartel, y título letra a letra.
+  // Todo degradado en móvil y desactivado con "reducir movimiento".
+  window.addEventListener('load', function () {
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    // 1) Tilt 3D del cartel siguiendo el cursor (solo escritorio)
+    if (!reduce && fine) {
+      var card = document.querySelector('[data-tilt]');
+      var hero = document.querySelector('.show__hero');
+      if (card && hero) {
+        var MAX = 9;
+        hero.addEventListener('pointermove', function (e) {
+          var r = card.getBoundingClientRect();
+          var px = (e.clientX - r.left) / r.width - 0.5;
+          var py = (e.clientY - r.top) / r.height - 0.5;
+          card.classList.add('is-tilting');
+          card.style.transform = 'rotateY(' + (px * MAX) + 'deg) rotateX(' + (-py * MAX) + 'deg)';
+          var sheen = card.querySelector('.show__poster-sheen');
+          if (sheen) sheen.style.backgroundPosition = ((px + 0.5) * 100) + '% 0';
+        });
+        hero.addEventListener('pointerleave', function () {
+          card.classList.remove('is-tilting');
+          card.style.transform = '';
+        });
+      }
+    }
+
+    // 2) Título letra a letra (SplitText, ya gratis en GSAP)
+    if (!reduce && window.gsap && window.SplitText) {
+      var h = document.querySelector('[data-split]');
+      if (h) {
+        try {
+          var split = new window.SplitText(h, { type: 'words,chars' });
+          window.gsap.from(split.chars, { yPercent: 110, opacity: 0, stagger: 0.022, duration: 0.7, ease: 'power3.out' });
+        } catch (e) {}
+      }
+    }
+  });
+</script>

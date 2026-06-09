@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title="¡Recibido!" description="Gracias, hemos recibido tus datos.">
+  <section class="ok">
+    <p class="ok__big" aria-hidden="true">✓</p>
+    <h1>¡Gracias!</h1>
+    <p class="ok__lead">Hemos recibido tu email. Te avisaremos por correo. Mientras, echa un vistazo a la cartelera.</p>
+    <div class="ok__cta">
+      <a class="btn btn--accent" href={base}>Volver al inicio</a>
+      <a class="btn btn--ghost" href={`${base}#cartelera`}>Ver la cartelera</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .ok { max-width: 640px; margin: 0 auto; padding: clamp(60px, 12vw, 150px) 20px; text-align: center; }
+  .ok__big { font-size: clamp(60px, 12vw, 120px); line-height: 1; color: var(--accent); margin: 0; }
+  .ok h1 { font-size: clamp(28px, 5vw, 48px); margin: 6px 0 14px; }
+  .ok__lead { color: var(--paper-dim); font-size: 18px; line-height: 1.6; max-width: 46ch; margin: 0 auto; }
+  .ok__cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
+</style>

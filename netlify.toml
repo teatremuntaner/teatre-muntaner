@@ -1,0 +1,16 @@
+# Configuración para desplegar en Netlify (la web nueva).
+# En Netlify el sitio va en la raíz del dominio, así que base = "/".
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  SITE_BASE = "/"
+  NODE_VERSION = "22"
+  # Web de pruebas: NO indexar (evita contenido duplicado con teatremuntaner.com).
+  # AL PASAR A PRODUCCIÓN en teatremuntaner.com: poner INDEXABLE = "true".
+  INDEXABLE = "false"
+
+# Funciones serverless (botón "Actualizar cartelera" del centro de control)
+[functions]
+  directory = "netlify/functions"

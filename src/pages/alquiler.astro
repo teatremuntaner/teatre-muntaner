@@ -1,0 +1,132 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import escenario from '../assets/venue/escenario.jpg';
+import platea from '../assets/venue/platea.jpg';
+import foyer from '../assets/venue/foyer.jpg';
+
+const usos = [
+  'Presentaciones de empresa y lanzamientos de producto',
+  'Convenciones, congresos y reuniones corporativas',
+  'Formaciones, conferencias y charlas profesionales',
+  'Eventos internos de empresa y reuniones de equipo',
+  'Entregas de premios y actos institucionales',
+  'Eventos para clientes, partners o distribuidores',
+  'Grabaciones, rodajes y eventos híbridos (presencial / streaming)',
+  'Espectáculos privados para empresas y eventos de incentivo',
+  'Showcases, pases privados y presentaciones de marca',
+];
+const ventajas = [
+  ['Ubicación céntrica', 'En Carrer de Muntaner 4, en pleno corazón de Barcelona, con transporte público a pocos pasos.'],
+  ['Totalmente equipado', 'Pantalla gigante, iluminación y sonido profesional, escenario y equipo técnico.'],
+  ['Aforo cómodo', 'Capacidad para hasta 200 personas, perfecto para cualquier evento profesional.'],
+  ['A tu medida', 'Personalización del evento, bar y espacio para catering, y asesoramiento durante todo el acto.'],
+];
+---
+<BaseLayout
+  title="Alquiler del teatro para eventos de empresa"
+  description="Alquila el Teatre Muntaner para eventos de empresa en Barcelona: presentaciones, convenciones, lanzamientos y actos profesionales. Sala céntrica y totalmente equipada, hasta 200 personas."
+>
+  <article class="rent">
+    <!-- HERO -->
+    <section class="rent__hero">
+      <Image class="rent__hero-img" src={escenario} alt="Escenario del Teatre Muntaner preparado para un evento" widths={[900, 1600, 2200]} sizes="100vw" loading="eager" />
+      <div class="rent__hero-scrim"></div>
+      <div class="wrap rent__hero-inner">
+        <p class="kicker kicker--coral">Alquiler del teatro</p>
+        <h1 class="rent__title">Tu evento, a lo grande</h1>
+        <p class="rent__lead">El Teatre Muntaner es un espacio ideal para eventos de empresa, presentaciones corporativas, convenciones, lanzamientos de producto y actos profesionales. Una sala céntrica, totalmente equipada y con equipo técnico profesional, para empresas que buscan un teatro con personalidad.</p>
+        <a class="btn btn--accent" href="#alquiler-contacto">Pedir información</a>
+      </div>
+    </section>
+
+    <!-- USOS -->
+    <section class="wrap section">
+      <header class="section__head reveal">
+        <p class="kicker kicker--coral">Para qué</p>
+        <h2 class="section__title">Un espacio versátil y profesional</h2>
+      </header>
+      <ul class="rent__uses reveal">
+        {usos.map((u) => <li>{u}</li>)}
+      </ul>
+    </section>
+
+    <!-- VENTAJAS -->
+    <section class="wrap section rent__why">
+      <header class="section__head reveal">
+        <p class="kicker kicker--coral">Por qué el Muntaner</p>
+        <h2 class="section__title">Ideal para empresas</h2>
+      </header>
+      <div class="rent__grid">
+        {ventajas.map(([t, d]) => (
+          <div class="rent__card reveal">
+            <h3>{t}</h3>
+            <p>{d}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- GALERÍA -->
+    <section class="wrap section">
+      <div class="rent__gallery reveal">
+        <Image src={platea} alt="Patio de butacas del Teatre Muntaner" widths={[500, 1000]} sizes="(max-width: 760px) 100vw, 600px" />
+        <Image src={foyer} alt="Bar y vestíbulo del Teatre Muntaner" widths={[400, 800]} sizes="(max-width: 760px) 100vw, 360px" />
+      </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section class="rent__cta" id="alquiler-contacto">
+      <div class="wrap reveal">
+        <h2 class="section__title">¿Hablamos de tu evento?</h2>
+        <p class="lead">Pídenos información concreta y te contestaremos rápidamente. Cuéntanos qué necesitas y lo preparamos a tu medida.</p>
+        <div class="rent__cta-row">
+          <a class="btn btn--accent" href="mailto:info@teatremuntaner.com?subject=Alquiler%20del%20Teatre%20Muntaner">Escríbenos</a>
+          <a class="btn btn--ghost" href="tel:+34614402738">+34 614 402 738</a>
+        </div>
+      </div>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .rent__hero { position: relative; overflow: hidden; min-height: 70svh; display: flex; align-items: flex-end; }
+  .rent__hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+  .rent__hero-scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(20,12,10,0.35) 0%, rgba(20,12,10,0.25) 40%, rgba(20,12,10,0.92) 100%); }
+  .rent__hero-inner { position: relative; z-index: 2; padding: 120px 0 clamp(40px, 7vw, 80px); }
+  .rent__title { font-size: clamp(40px, 8vw, 96px); text-transform: uppercase; line-height: 0.95; color: #fff; text-shadow: 0 6px 40px rgba(0,0,0,0.5); }
+  .rent__lead { font-family: var(--f-body); font-size: clamp(16px, 1.7vw, 20px); line-height: 1.6; color: rgba(255,255,255,0.94); max-width: 56ch; margin: 18px 0 28px; text-shadow: 0 2px 14px rgba(0,0,0,0.55); }
+
+  .rent__uses { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+  .rent__uses li { position: relative; padding: 16px 18px 16px 44px; background: var(--ink-soft); border: 1px solid var(--line); border-radius: 10px; font-size: 16px; }
+  .rent__uses li::before { content: "✦"; position: absolute; left: 16px; top: 16px; color: var(--c-gold); }
+
+  .rent__why { background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--c-gold) 8%, transparent)); border-radius: 20px; }
+  .rent__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+  .rent__card { background: var(--ink-soft); border: 1px solid var(--line); border-radius: 12px; padding: 24px; border-top: 3px solid var(--c-red); }
+  .rent__card h3 { font-family: var(--f-display); font-size: 20px; text-transform: uppercase; margin-bottom: 8px; }
+  .rent__card p { color: var(--paper-dim); line-height: 1.6; font-size: 15px; }
+
+  .rent__gallery { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; margin: clamp(28px, 6vw, 72px) 0; }
+  .rent__gallery :global(img) { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; aspect-ratio: 3/2; box-shadow: 0 20px 50px -24px rgba(0,0,0,0.5); }
+  @media (max-width: 760px) { .rent__gallery { grid-template-columns: 1fr; } }
+
+  .rent__cta { background: var(--c-red); color: #fff; padding: clamp(48px, 7vw, 96px) 0; text-align: center; border-top: 2px solid var(--c-gold); }
+  .rent__cta .section__title { color: #fff; }
+  .rent__cta .lead { color: rgba(255,255,255,0.92); margin: 14px auto 0; max-width: 52ch; }
+  .rent__cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
+  .rent__cta .btn--accent { background: #fff; color: var(--c-red); }
+  .rent__cta .btn--ghost { border-color: rgba(255,255,255,0.5); color: #fff; }
+  .rent__cta .btn--ghost:hover { border-color: #fff; color: #fff; }
+
+  .reveal { opacity: 0; transform: translateY(34px); transition: opacity 0.9s ease, transform 0.9s ease; }
+  .reveal.is-visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+</style>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+</script>

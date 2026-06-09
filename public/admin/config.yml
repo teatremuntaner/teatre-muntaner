@@ -1,0 +1,103 @@
+# ============================================================
+# CMS de Teatre Muntaner (Decap CMS)
+# El backend/autenticación se termina de configurar al publicar
+# (depende del hosting elegido). Para probar en local:
+#   1) npm run dev
+#   2) en otra terminal: npx decap-server
+#   3) abrir http://localhost:4321/admin/
+# ============================================================
+backend:
+  name: git-gateway        # se cambia según hosting (Netlify Identity, GitHub OAuth, etc.)
+  branch: main
+
+local_backend: true        # permite editar en local sin login
+
+media_folder: "src/content/espectaculos"   # dónde se guardan los carteles subidos
+public_folder: "/"
+
+publish_mode: editorial_workflow   # borradores antes de publicar
+
+locale: es                         # interfaz del panel en español
+
+collections:
+  - name: "espectaculos"
+    label: "Espectáculos"
+    label_singular: "Espectáculo"
+    folder: "src/content/espectaculos"
+    create: true
+    slug: "{{slug}}"
+    media_folder: ""        # guarda el cartel junto a la ficha
+    public_folder: ""
+    # Resalta los borradores (shows nuevos o sin completar) con un aviso visible
+    summary: "{{fields.draft | ternary('🔴 BORRADOR — ', '')}}{{title}}"
+    # Filtros y agrupación para que la lista sea más útil
+    view_filters:
+      - { label: "Borradores (a completar)", field: draft, pattern: true }
+      - { label: "Publicados", field: draft, pattern: false }
+    view_groups:
+      - { label: "Categoría", field: category }
+    fields:
+      - { name: "title", label: "Título", widget: "string" }
+      - { name: "tagline", label: "Subtítulo / gancho", widget: "string", required: false }
+      - { name: "promo", label: "Promoción / descuento (se muestra destacado)", widget: "string", required: false, hint: "Ej: 20% de descuento" }
+      - name: "category"
+        label: "Categoría"
+        widget: "select"
+        options: ["Comedia", "Música", "Magia", "Flamenco", "Teatro", "Infantil", "Otros"]
+        default: "Espectáculo"
+      - name: "genres"
+        label: "Géneros (varios; ej. Comedia, Música, Impro)"
+        widget: "list"
+        required: false
+        field: { name: "genero", label: "Género", widget: "string" }
+      - name: "priority"
+        label: "Prioridad en cartelera"
+        widget: "number"
+        default: 0
+        value_type: "int"
+        hint: "Mayor = más arriba. A igual prioridad, sale antes el de fecha más próxima."
+      - { name: "poster", label: "Cartel", widget: "image" }
+      - { name: "photo", label: "Foto para la sinopsis (distinta del cartel, opcional)", widget: "image", required: false }
+      - name: "gallery"
+        label: "Galería de fotos (varias, opcional)"
+        widget: "list"
+        required: false
+        field: { name: "image", label: "Foto", widget: "image" }
+
+      # --- Arte por espectáculo (automático; oculto en el editor para no saturar) ---
+      - { name: "accent", widget: "hidden", default: "#bd221f" }
+      - { name: "accentInk", widget: "hidden", default: "#ffffff" }
+      - { name: "titleFont", widget: "hidden", required: false }
+      - { name: "titleFontUrl", widget: "hidden", required: false }
+
+      # --- Fechas y entradas ---
+      - name: "dates"
+        label: "Funciones"
+        widget: "list"
+        required: false
+        fields:
+          - { name: "date", label: "Fecha", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: true }
+          - { name: "time", label: "Hora (HH:MM)", widget: "string", required: false }
+      - { name: "ticketUrl", label: "Enlace de entradas (Qwantic)", widget: "string", required: false }
+      - { name: "qwanticEventId", widget: "hidden", required: false }
+      - { name: "youtube", label: "Vídeo de YouTube (pega el enlace o el ID)", widget: "string", required: false }
+      - { name: "video", label: "Vídeo subido (.mp4, opcional; si no, usa YouTube)", widget: "file", required: false, media_folder: "/public/uploads/video", public_folder: "/uploads/video" }
+
+      - name: "links"
+        label: "Enlaces / Redes / Dossier"
+        widget: "list"
+        required: false
+        summary: "{{fields.label}}"
+        fields:
+          - { name: "label", label: "Texto (Instagram, Web, Dossier…)", widget: "string" }
+          - { name: "url", label: "URL", widget: "string" }
+
+      - { name: "venue", label: "Lugar", widget: "string", default: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona" }
+      - { name: "duration", label: "Duración", widget: "string", required: false }
+      - { name: "price", label: "Precio", widget: "string", required: false }
+
+      - { name: "featured", label: "Destacado en portada", widget: "boolean", default: false }
+      - { name: "ticketAlarm", label: "Próximamente — aún sin venta (mostrar 'Avísame' y captar emails)", widget: "boolean", default: false }
+      - { name: "draft", label: "Borrador (no publicar)", widget: "boolean", default: false }
+
+      - { name: "body", label: "Descripción", widget: "markdown" }

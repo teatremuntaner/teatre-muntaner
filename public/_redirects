@@ -1,0 +1,49 @@
+# Redirecciones 301 de las URLs antiguas del Mobirise a las nuevas (Astro).
+# Generadas por scripts/gen_redirects.py (cruce por idEvento de Qwantic).
+
+# --- Páginas legales ---
+/AvisoLegal.html             /aviso-legal/             301
+/PoliticaDePrivacidad.html   /politica-de-privacidad/  301
+/PoliticadeCookies.html      /politica-de-cookies/     301
+/PoliticaDeCookies.html      /politica-de-cookies/     301
+
+# --- Canónico / anti-duplicado (DESCOMENTAR al crear el sitio Netlify, antes del cutover) ---
+# Evita que Google indexe la copia en *.netlify.app. Pon el nombre real del sitio:
+# https://NOMBRE-DEL-SITIO.netlify.app/*   https://teatremuntaner.com/:splat   301!
+
+# --- Espectáculos y otras páginas ---
+/AQuienNoLeVaAGustar.html                 /#cartelera                              301
+/AsesinatoParaDos.html                    /#cartelera                              301
+/BarcelonaPassio.html                     /espectaculos/barcelona-passio/          301
+/CaserzaConversaciones.html               /espectaculos/joaquin-caserza-conversaciones-con-mi-mente/ 301
+/Comopasardelos60.html                    /espectaculos/como-pasar-de-los-60-sin-morir-en-el-intento/ 301
+/CortaBCNMuntaner.html                    /espectaculos/corta-el-cable-rojo/       301
+/Dario-Mares-Vamos-teniendo-una-edad.html /#cartelera                              301
+/DivorciarseALos40.html                   /#cartelera                              301
+/EnMiCabezaSonabaMejor.html               /#cartelera                              301
+/HolaNoMeLies.html                        /#cartelera                              301
+/LaVerdadEsBellaLiveShow.html             /#cartelera                              301
+/Laila_kale_Cuidado_con_la_marivi.html    /#cartelera                              301
+/Manos-Magicas.html                       /#cartelera                              301
+/MutanteSaludos.html                      /espectaculos/edu-mutante-saludos-cordiales/ 301
+/NoriegaGilipollas.html                   /#cartelera                              301
+/Ramon_Comico_Imbeciles.html              /#cartelera                              301
+/ReirEsSagrado.html                       /#cartelera                              301
+/Riquina.html                             /espectaculos/riquina/                   301
+/WomanComedyNight.html                    /#cartelera                              301
+/alquilerTeatreMuntaner.html              /alquiler/                               301
+/campoyadas.html                          /#cartelera                              301
+/david.verdaguer.dos.señoros.html         /#cartelera                              301
+/el-petit-princep.html                    /espectaculos/el-petit-princep/          301
+/empoderaras.html                         /#cartelera                              301
+/laVenganzaDonMendo.html                  /#cartelera                              301
+/laneguet-lleig.html                      /#cartelera                              301
+/lexecutiva.html                          /#cartelera                              301
+/nenaaa.html                              /espectaculos/nenaaa/                    301
+/sebastian-gallego-operacion-viejoven.html /#cartelera                              301
+/tele.html                                /#cartelera                              301
+/traficante.html                          /espectaculos/toni-cano-traficante-de-endorfinas/ 301
+/un-dos-tres-magia-javi-rufo.html         /espectaculos/un-dos-tres-magia-javi-rufo/ 301
+/youkai21.html                            /#cartelera                              301
+/youkai27.html                            /#cartelera                              301
+/youkai28.html                            /#cartelera                              301

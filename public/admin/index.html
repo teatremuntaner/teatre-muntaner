@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Teatre Muntaner · Gestor de contenidos</title>
+  </head>
+  <body>
+    <!-- Login del personal: widget de Netlify Identity (necesario para git-gateway). -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <!-- Panel de edición. Tu compañero entra aquí (/admin) y edita por formulario. -->
+    <script src="https://unpkg.com/decap-cms@^3.6.0/dist/decap-cms.js"></script>
+    <!-- Vista previa a medida (más legible que la de por defecto) -->
+    <script>
+      (function () {
+        function reg() {
+          if (!(window.CMS && window.createClass && window.h)) return false;
+          var h = window.h;
+          var box = function (s, c) { return h('div', { style: s }, c); };
+          var Preview = window.createClass({
+            render: function () {
+              var d = this.props.entry.get('data');
+              var get = this.props.getAsset;
+              var val = function (k) { return d.get(k); };
+              var listOf = function (k) { var v = val(k); return v && v.toJS ? v.toJS() : []; };
+              var poster = val('poster') ? get(val('poster')) : null;
+              var genres = val('genres');
+              var gtxt = genres && genres.toJS ? genres.toJS().join(' · ') : (val('category') || '');
+
+              var head = [];
+              if (poster) head.push(h('img', { src: poster.toString(), style: { width: '220px', borderRadius: '8px', flex: '0 0 auto' } }));
+              var info = [];
+              info.push(h('p', { style: { textTransform: 'uppercase', letterSpacing: '.12em', color: '#bd221f', fontSize: '12px', margin: '0 0 6px' } }, gtxt));
+              info.push(h('h1', { style: { margin: '0 0 6px', fontSize: '40px', lineHeight: '1.05' } }, val('title') || ''));
+              if (val('artist') || val('tagline')) info.push(h('p', { style: { color: '#b9b3c4', margin: '0 0 10px' } }, val('artist') || val('tagline')));
+              if (val('ticketAlarm')) info.push(h('p', { style: { color: '#d5a846', fontWeight: '700' } }, 'Próximamente · entradas aún no a la venta'));
+              var ds = listOf('dates');
+              if (ds.length) info.push(h('p', { style: { color: '#d5a846', margin: '6px 0' } }, ds.map(function (x) { return x.date + (x.time ? ' ' + x.time : ''); }).join(' · ')));
+              if (val('promo')) info.push(h('p', { style: { display: 'inline-block', background: '#bd221f', color: '#14100e', fontWeight: '800', padding: '8px 14px', borderRadius: '999px', margin: '8px 0 0' } }, '🎟 ' + val('promo')));
+              head.push(box({ flex: '1 1 280px' }, info));
+
+              var meta = [];
+              if (val('duration')) meta.push(h('p', { style: { margin: '3px 0' } }, 'Duración: ' + val('duration')));
+              if (val('price')) meta.push(h('p', { style: { margin: '3px 0' } }, 'Precio: ' + val('price')));
+              meta.push(h('p', { style: { margin: '3px 0' } }, 'Lugar: ' + (val('venue') || 'Teatre Muntaner · Carrer de Muntaner 4, Barcelona')));
+              var lk = listOf('links');
+              if (lk.length) meta.push(h('p', { style: { margin: '8px 0 0' } }, ['Enlaces: '].concat(lk.map(function (l, i) {
+                return h('a', { key: i, href: l.url, target: '_blank', style: { color: '#d5a846', marginRight: '10px' } }, l.label || l.url);
+              }))));
+
+              var children = [
+                box({ display: 'flex', gap: '24px', flexWrap: 'wrap', alignItems: 'flex-start' }, head),
+                box({ marginTop: '18px', color: '#b9b3c4', fontSize: '14px' }, meta),
+                box({ marginTop: '24px', lineHeight: '1.8', color: '#d8d4e0' }, this.props.widgetFor('body')),
+              ];
+
+              var gal = listOf('gallery');
+              if (gal.length) {
+                children.push(box({ marginTop: '26px' }, [
+                  h('h2', { style: { fontSize: '20px', margin: '0 0 12px' } }, 'Galería'),
+                  box({ display: 'flex', flexWrap: 'wrap', gap: '10px' }, gal.map(function (g, i) {
+                    var a = get(g);
+                    return h('img', { key: i, src: a ? a.toString() : '', style: { width: '150px', height: '100px', objectFit: 'cover', borderRadius: '6px' } });
+                  })),
+                ]));
+              }
+
+              return box(
+                { maxWidth: '820px', margin: '0 auto', padding: '34px 26px', color: '#fff', background: '#14100e', minHeight: '100vh', fontFamily: 'Reddit Sans, Arial, sans-serif' },
+                children
+              );
+            },
+          });
+          window.CMS.registerPreviewTemplate('espectaculos', Preview);
+          return true;
+        }
+        if (!reg()) { var n = 0, t = setInterval(function () { if (reg() || ++n > 60) clearInterval(t); }, 250); }
+      })();
+    </script>
+    <!-- Botón flotante "Actualizar cartelera": inyectado en /admin, no depende de
+         la API interna de Decap. Aparece logueado y lanza el sync de Qwantic. -->
+    <script>
+      (function () {
+        function init() {
+          if (document.getElementById("ts-sync-wrap")) return;
+          var idn = window.netlifyIdentity;
+          var wrap = document.createElement("div");
+          wrap.id = "ts-sync-wrap";
+          wrap.style.cssText =
+            "position:fixed;right:18px;bottom:18px;z-index:99999;display:none;flex-direction:column;align-items:flex-end;gap:8px;font-family:Arial,Helvetica,sans-serif";
+          var msg = document.createElement("div");
+          msg.style.cssText =
+            "max-width:300px;background:#15121c;color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:9px 13px;font-size:13px;line-height:1.4;box-shadow:0 8px 24px rgba(0,0,0,.3);display:none";
+          var btn = document.createElement("button");
+          btn.textContent = "↻ Actualizar cartelera";
+          btn.style.cssText =
+            "background:#d5a846;color:#14100e;font-weight:800;border:0;border-radius:999px;padding:12px 18px;font-size:14px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.35)";
+          function show(t, kind) {
+            msg.textContent = t;
+            msg.style.display = "block";
+            msg.style.borderColor = kind === "ok" ? "#7be38f" : kind === "err" ? "#bd221f" : "rgba(255,255,255,.15)";
+          }
+          function setVisible(v) { wrap.style.display = v ? "flex" : "none"; }
+          btn.addEventListener("click", async function () {
+            var user = idn && idn.currentUser && idn.currentUser();
+            if (!user) { show("Inicia sesión en el panel primero.", "err"); return; }
+            btn.disabled = true; var prev = btn.textContent; btn.textContent = "Actualizando…";
+            show("Lanzando actualización…");
+            try {
+              var token = await user.jwt();
+              var r = await fetch("/.netlify/functions/trigger-sync", {
+                method: "POST", headers: { Authorization: "Bearer " + token },
+              });
+              var j = await r.json().catch(function () { return {}; });
+              show(r.ok ? (j.message || "Actualización lanzada.") : (j.error || "No se pudo actualizar."), r.ok ? "ok" : "err");
+            } catch (e) { show("Error de conexión. Inténtalo de nuevo.", "err"); }
+            finally { setTimeout(function () { btn.disabled = false; btn.textContent = prev; }, 8000); }
+          });
+          wrap.appendChild(msg); wrap.appendChild(btn); document.body.appendChild(wrap);
+          // Mostrar solo con sesión iniciada
+          if (idn) {
+            if (idn.currentUser && idn.currentUser()) setVisible(true);
+            idn.on("init", function (u) { setVisible(!!u); });
+            idn.on("login", function () { setVisible(true); });
+            idn.on("logout", function () { setVisible(false); });
+          } else { setVisible(true); }
+        }
+        if (document.readyState !== "loading") init();
+        else document.addEventListener("DOMContentLoaded", init);
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>forms</title>
+  </head>
+  <body>
+    <!-- Definiciones para que Netlify detecte SIEMPRE los formularios,
+         aunque en un momento dado ninguna página los esté renderizando. -->
+    <form name="ticketalarm" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="ticketalarm" />
+      <input type="email" name="email" />
+      <input type="text" name="show" />
+      <input name="bot-field" />
+    </form>
+    <form name="newsletter" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="newsletter" />
+      <input type="email" name="email" />
+      <input name="bot-field" />
+    </form>
+  </body>
+</html>
