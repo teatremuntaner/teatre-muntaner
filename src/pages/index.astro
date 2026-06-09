@@ -33,6 +33,10 @@ const GENRE_ORDER = ['Comedia', 'Monólogos', 'Improvisación', 'Magia', 'Teatro
 const presentGenres = new Set(shows.flatMap((s) => s.data.genres));
 const genreFilters = GENRE_ORDER.filter((g) => presentGenres.has(g));
 
+// Filtro por idioma de la función
+const LANG_ORDER = ['Castellano', 'Catalán', 'Bilingüe'];
+const langFilters = LANG_ORDER.filter((l) => shows.some((s) => s.data.lang === l));
+
 // Temporada Verano: shows con alguna función dentro del rango (ajustable).
 const SUMMER_START = '2026-06-21';
 const SUMMER_END = '2026-09-22';
@@ -182,7 +186,7 @@ const gallery = [
       <p class="kicker kicker--coral">En cartel</p>
       <h2 class="section__title">Mira nuestra cartelera</h2>
     </header>
-    {(genreFilters.length > 1 || hasThisWeek) && (
+    {(genreFilters.length > 1 || hasThisWeek || langFilters.length > 1) && (
       <div class="genre-filter" role="group" aria-label="Filtrar cartelera">
         <button class="genre-chip is-active" data-genre="*" aria-pressed="true" type="button">Todos</button>
         {hasThisWeek && (
@@ -191,6 +195,14 @@ const gallery = [
         {genreFilters.map((g) => (
           <button class="genre-chip" data-genre={g} aria-pressed="false" type="button">{g}</button>
         ))}
+        {langFilters.length > 1 && (
+          <>
+            <span class="genre-filter__sep" aria-hidden="true"></span>
+            {langFilters.map((l) => (
+              <button class="genre-chip genre-chip--lang" data-genre={`__lang:${l}`} aria-pressed="false" type="button">{l === 'Catalán' ? 'Català' : l}</button>
+            ))}
+          </>
+        )}
       </div>
     )}
     <div class="shows-grid">
@@ -201,7 +213,7 @@ const gallery = [
         const genre = cardGenres.join(' · ');
         const when = d.ticketAlarm ? 'Próximamente' : (d.dates.length ? summarize(d.dates).card : (d.dateText ?? 'Consultar fechas'));
         return (
-          <article class="show-card reveal" style={`--card-accent:${d.accent}`} data-genres={cardGenres.join('|')} data-week={isThisWeek(d) ? '1' : '0'}>
+          <article class="show-card reveal" style={`--card-accent:${d.accent}`} data-genres={cardGenres.join('|')} data-week={isThisWeek(d) ? '1' : '0'} data-lang={d.lang ?? ''}>
             <a class="show-card__main" href={d.externalUrl ?? `${base}espectaculos/${show.id}/`}>
               <div class="show-card__bar"></div>
               <div class="show-card__img">
@@ -247,6 +259,7 @@ const gallery = [
             let visible;
             if (g === '*') visible = true;
             else if (g === '__week') visible = card.getAttribute('data-week') === '1';
+            else if (g.startsWith('__lang:')) visible = card.getAttribute('data-lang') === g.slice(7);
             else visible = (card.getAttribute('data-genres') || '').split('|').includes(g);
             card.classList.toggle('is-hidden', !visible);
           });
@@ -255,7 +268,9 @@ const gallery = [
     </script>
 
     <style>
-      .genre-filter { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 30px; }
+      .genre-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0 0 30px; }
+      .genre-filter__sep { width: 1px; align-self: stretch; min-height: 22px; background: var(--line); margin: 2px 6px; }
+      .genre-chip--lang.is-active { background: var(--c-gold); color: #2a1410; border-color: var(--c-gold); }
       .genre-chip {
         font-family: var(--f-display); font-size: 13px; letter-spacing: 0.04em;
         padding: 8px 16px; border-radius: 999px; cursor: pointer;

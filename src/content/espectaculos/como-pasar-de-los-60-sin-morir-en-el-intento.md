@@ -5,6 +5,7 @@ category: "Comedia"
 genres:
   - "Comedia"
   - "Monólogos"
+lang: "Castellano"
 poster: "./como-pasar-de-los-60-sin-morir-en-el-intento.jpg"
 accent: "#6062be"
 accentInk: "#ffffff"

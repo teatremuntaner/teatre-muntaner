@@ -6,6 +6,7 @@ genres:
   - "Comedia"
   - "Monólogos"
   - "Bienestar emocional"
+lang: "Castellano"
 poster: "./joaquin-caserza-conversaciones-con-mi-mente.jpg"
 accent: "#608cbe"
 accentInk: "#ffffff"

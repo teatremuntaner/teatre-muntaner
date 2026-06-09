@@ -23,6 +23,12 @@ LANG = {
     "toni-cano-traficante-de-endorfinas":            "Castellano",
     "me-veo-en-wallapop-diego-arjona":               "Castellano",
     "un-dos-tres-magia-javi-rufo":                   "Castellano",
+    # Castellano (confirmados por Carlos)
+    "como-pasar-de-los-60-sin-morir-en-el-intento":  "Castellano",
+    "edu-mutante-saludos-cordiales":                 "Castellano",
+    "joaquin-caserza-conversaciones-con-mi-mente":   "Castellano",
+    "riquina":                                       "Castellano",
+    "barcelona-passio":                              "Castellano",
 }
 
 for slug, lang in LANG.items():

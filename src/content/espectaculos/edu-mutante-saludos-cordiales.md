@@ -5,6 +5,7 @@ category: "Comedia"
 genres:
   - "Comedia"
   - "Monólogos"
+lang: "Castellano"
 poster: "./edu-mutante-saludos-cordiales.jpg"
 accent: "#be8c60"
 accentInk: "#ffffff"
