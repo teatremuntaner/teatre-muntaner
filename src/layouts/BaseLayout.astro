@@ -39,6 +39,16 @@ const bodyStyle =
 <html lang="es">
   <head>
     <meta charset="utf-8" />
+    <!-- Consent Mode v2: por defecto DENEGADO hasta que el usuario acepte (RGPD/LSSI) -->
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('consent','default',{
+        ad_storage:'denied', ad_user_data:'denied', ad_personalization:'denied',
+        analytics_storage:'denied', functionality_storage:'granted', security_storage:'granted',
+        wait_for_update: 500
+      });
+    </script>
     <!-- Google Tag Manager -->
     <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-TR52LK75');</script>
     <!-- End Google Tag Manager -->
@@ -58,6 +68,16 @@ const bodyStyle =
       rel="stylesheet"
     />
     {titleFontUrl && <link href={titleFontUrl} rel="stylesheet" />}
+    <!-- Banner de cookies (vanilla-cookieconsent, gratis/open-source) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3.1.0/dist/cookieconsent.css" />
+    <style is:inline>
+      #cc-main {
+        --cc-font-family: 'Reddit Sans', system-ui, sans-serif;
+        --cc-btn-primary-bg: #bd221f; --cc-btn-primary-hover-bg: #9e1c19; --cc-btn-primary-border-color: #bd221f; --cc-btn-primary-hover-border-color: #9e1c19;
+        --cc-btn-primary-color: #fff; --cc-btn-primary-hover-color: #fff;
+        --cc-link-color: #bd221f; --cc-toggle-on-bg: #bd221f;
+      }
+    </style>
     {weglotKey && (
       <>
         <script is:inline src="https://cdn.weglot.com/weglot.min.js"></script>
@@ -101,6 +121,67 @@ const bodyStyle =
           }
         });
       }
+    </script>
+
+    <!-- Consentimiento de cookies: banner + Consent Mode v2 (actualiza GTM al aceptar) -->
+    <script is:inline src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3.1.0/dist/cookieconsent.umd.js"></script>
+    <script is:inline>
+      (function () {
+        if (!window.CookieConsent) return;
+        function syncConsent() {
+          var analytics = CookieConsent.acceptedCategory('analytics');
+          var marketing = CookieConsent.acceptedCategory('marketing');
+          if (typeof gtag === 'function') {
+            gtag('consent', 'update', {
+              analytics_storage: analytics ? 'granted' : 'denied',
+              ad_storage: marketing ? 'granted' : 'denied',
+              ad_user_data: marketing ? 'granted' : 'denied',
+              ad_personalization: marketing ? 'granted' : 'denied'
+            });
+          }
+        }
+        CookieConsent.run({
+          guiOptions: {
+            consentModal: { layout: 'box wide', position: 'bottom left' },
+            preferencesModal: { layout: 'box' }
+          },
+          categories: { necessary: { enabled: true, readOnly: true }, analytics: {}, marketing: {} },
+          onConsent: syncConsent,
+          onChange: syncConsent,
+          language: {
+            default: 'es',
+            translations: {
+              es: {
+                consentModal: {
+                  title: 'Usamos cookies 🍪',
+                  description: 'Utilizamos cookies propias y de terceros para analítica y para mejorar tu experiencia. Puedes aceptarlas, rechazarlas o configurarlas. Más información en nuestra <a href="/politica-de-cookies/">Política de cookies</a>.',
+                  acceptAllBtn: 'Aceptar todo',
+                  acceptNecessaryBtn: 'Rechazar',
+                  showPreferencesBtn: 'Configurar'
+                },
+                preferencesModal: {
+                  title: 'Preferencias de cookies',
+                  acceptAllBtn: 'Aceptar todo',
+                  acceptNecessaryBtn: 'Rechazar todo',
+                  savePreferencesBtn: 'Guardar preferencias',
+                  closeIconLabel: 'Cerrar',
+                  sections: [
+                    { title: 'Necesarias', description: 'Imprescindibles para el funcionamiento del sitio. Siempre activas.', linkedCategory: 'necessary' },
+                    { title: 'Analíticas', description: 'Nos ayudan a entender cómo se usa la web (Google Analytics vía Tag Manager).', linkedCategory: 'analytics' },
+                    { title: 'Marketing', description: 'Para medir campañas y mostrar contenido relevante.', linkedCategory: 'marketing' },
+                    { title: 'Más información', description: 'Consulta nuestra <a href="/politica-de-cookies/">Política de cookies</a>.' }
+                  ]
+                }
+              }
+            }
+          }
+        });
+        // Enlace "Configurar cookies" (footer u otros) para reabrir el panel
+        document.addEventListener('click', function (e) {
+          var t = e.target.closest && e.target.closest('[data-cc="show-preferences"]');
+          if (t) { e.preventDefault(); CookieConsent.showPreferences(); }
+        });
+      })();
     </script>
   </body>
 </html>

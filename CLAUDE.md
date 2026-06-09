@@ -35,8 +35,11 @@ El dominio aún NO apunta a esta web (sigue el Mobirise) hasta aprobación del c
 - Mobirise export en `H:\OneDrive\Muntaner\WEB\mobirise\web`. Logos en `H:\OneDrive\Muntaner\Logo\LOGO MUNTANER TEATRE\formatos`.
 - Catálogo inicial creado desde la **API de Qwantic** (11 shows) con `sync_qwantic.py` (cartel oficial 2:3, fechas, sinopsis de longDescription). Géneros/artista se afinan luego (con Carlos) como en Sofía.
 
+## EN MARCHA (preview, aún NO producción)
+- **GitHub:** `github.com/teatremuntaner/teatre-muntaner` (Public, org `teatremuntaner` bajo la cuenta personal de Carlos). Branch `main`.
+- **Netlify:** proyecto `teatre-muntaner` en el equipo "Teatro Sofía" (plan de pago). Deploy automático desde `main`. Preview en **teatre-muntaner.netlify.app** (noindex, INDEXABLE=false). Form detection ON; 2 forms (ticketalarm + newsletter); avisos → entradas@teatremuntaner.com.
+
 ## Pendiente / producción
-- Crear repo GitHub (`teatremuntaner/teatre-muntaner`, provisional en trigger-sync.js/workflow) y sitio Netlify; conectar deploy.
 - **CONSENTIMIENTO DE COOKIES (hacer antes de producción):** la web carga GTM + embeds (YouTube/Maps/calendario) + Weglot → necesita banner de consentimiento (LSSI/RGPD). Ya tienen **CookieBot** pero el dominio de Netlify NO está dado de alta ahí (por eso se aplaza). Al pasar a producción: añadir el dominio en CookieBot, o (recomendado) banner gratuito **Consent Mode v2 + CookieConsent (vanilla)**. Política de cookies ya existe (`/politica-de-cookies`).
 
 ### CHECKLIST DE CUTOVER (lecciones del cutover de Teatro Sofía, ya en producción)
