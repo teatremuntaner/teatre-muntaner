@@ -99,7 +99,7 @@ def fetch_sessions(eid):
     out.sort()
     today = datetime.date.today().isoformat()
     fut = [d for d in out if d[0] >= today]
-    return (fut or out)[:12]
+    return (fut or out)[:24]
 
 def fetch_synopsis(friendly):
     """Sinopsis desde la página del evento en Qwantic (bloque 'event-description-landing')."""

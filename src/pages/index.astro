@@ -274,10 +274,9 @@ const gallery = [
     <style>
       .genre-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0 0 30px; }
       .genre-filter__langlabel { font-family: var(--f-display); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--paper-faint); margin-left: 8px; }
-      .genre-chip--lang { display: inline-flex; align-items: center; gap: 7px; border-color: var(--c-gold); color: var(--c-wine); font-weight: 700; }
-      .genre-chip--lang:hover { border-color: var(--c-gold); background: color-mix(in srgb, var(--c-gold) 14%, transparent); }
-      .genre-chip--lang.is-active { background: var(--c-gold); color: #2a1410; border-color: var(--c-gold); }
-      .genre-chip__flag { width: 18px; height: 13px; border-radius: 2px; display: block; box-shadow: 0 0 0 1px rgba(0,0,0,0.1); }
+      .genre-chip--lang { display: inline-flex; align-items: center; gap: 8px; border-color: var(--c-gold); background: color-mix(in srgb, var(--c-gold) 22%, #fff); color: var(--c-wine); font-weight: 700; }
+      .genre-chip--lang:hover { border-color: var(--c-gold); background: color-mix(in srgb, var(--c-gold) 38%, #fff); }
+      .genre-chip--lang.is-active { background: var(--c-gold); color: #2a1410; border-color: var(--c-gold); box-shadow: 0 4px 12px -4px var(--c-gold); }
       .genre-chip {
         font-family: var(--f-display); font-size: 13px; letter-spacing: 0.04em;
         padding: 8px 16px; border-radius: 999px; cursor: pointer;
