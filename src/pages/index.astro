@@ -38,13 +38,6 @@ const genreFilters = GENRE_ORDER.filter((g) => presentGenres.has(g));
 const LANG_ORDER = ['Castellano', 'Catalán', 'Bilingüe'];
 const langFilters = LANG_ORDER.filter((l) => shows.some((s) => s.data.lang === l));
 
-// Temporada Verano: shows con alguna función dentro del rango (ajustable).
-const SUMMER_START = '2026-06-21';
-const SUMMER_END = '2026-09-22';
-const veranoShows = shows.filter((s) =>
-  s.data.dates?.some((x) => x.date >= SUMMER_START && x.date <= SUMMER_END),
-);
-
 // Filtro "Esta semana": shows con función en los próximos 7 días.
 const weekEnd = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
 const isThisWeek = (data: { dates: { date: string }[] }) =>
@@ -139,47 +132,6 @@ const gallery = [
       </div>
     </section>
   )}
-
-  <!-- ===================== TEMPORADA VERANO ===================== -->
-  {veranoShows.length > 0 && (
-    <section class="season" id="verano">
-      <div class="wrap">
-        <header class="section__head reveal">
-          <p class="kicker kicker--yellow">☀ Temporada Verano</p>
-          <h2 class="section__title">El verano sube al escenario</h2>
-        </header>
-        <div class="season__row">
-          {veranoShows.map((s) => {
-            const sd = s.data;
-            const swhen = sd.dates.length ? summarize(sd.dates).card : (sd.dateText ?? '');
-            return (
-              <a class="season__card reveal" href={`${base}espectaculos/${s.id}/`} style={`--card-accent:${sd.accent}`}>
-                <div class="season__img">
-                  <Image src={sd.poster} alt={`Cartel de ${sd.title}`} widths={[200, 400]} sizes="180px" />
-                </div>
-                <div class="season__body">
-                  <h3 class="season__name">{sd.title}</h3>
-                  {swhen && <p class="season__when">{swhen}</p>}
-                </div>
-              </a>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  )}
-
-  <style>
-    .season { padding: clamp(34px, 5vw, 64px) 0; background: linear-gradient(180deg, rgba(213,168,70,0.08), rgba(189,34,31,0.06)); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-    .season__row { display: grid; grid-auto-flow: column; grid-auto-columns: 180px; gap: 16px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x proximity; }
-    .season__card { scroll-snap-align: start; display: block; text-decoration: none; }
-    .season__img { aspect-ratio: 2 / 3; border-radius: 10px; overflow: hidden; box-shadow: 0 14px 30px rgba(0,0,0,0.4); border: 1px solid var(--line); }
-    .season__img :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
-    .season__card:hover .season__img :global(img) { transform: scale(1.05); }
-    .season__body { padding: 10px 2px 0; }
-    .season__name { font-size: 16px; line-height: 1.2; }
-    .season__when { color: var(--card-accent, var(--accent)); font-size: 13px; margin-top: 4px; font-family: var(--f-display); }
-  </style>
 
   <!-- ===================== CARTELERA ===================== -->
   <section class="wrap section" id="cartelera">
