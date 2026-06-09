@@ -1,0 +1,21 @@
+---
+// Banderita SVG para el idioma de la función / selector de idioma.
+interface Props { lang: 'es' | 'ca'; class?: string }
+const { lang, class: cls } = Astro.props;
+---
+{lang === 'es' ? (
+  <svg class={cls} viewBox="0 0 3 2" role="img" aria-label="Castellano" preserveAspectRatio="xMidYMid slice">
+    <rect width="3" height="2" fill="#c60b1e" />
+    <rect y="0.5" width="3" height="1" fill="#ffc400" />
+  </svg>
+) : (
+  <svg class={cls} viewBox="0 0 9 6" role="img" aria-label="Català" preserveAspectRatio="xMidYMid slice">
+    <rect width="9" height="6" fill="#FCDD09" />
+    <g fill="#DA121A">
+      <rect y="0.667" width="9" height="0.667" />
+      <rect y="2" width="9" height="0.667" />
+      <rect y="3.333" width="9" height="0.667" />
+      <rect y="4.667" width="9" height="0.667" />
+    </g>
+  </svg>
+)}

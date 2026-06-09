@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Flag from '../components/Flag.astro';
 import { summarize } from '../lib/schedule';
 
 import hero from '../assets/venue/platea.jpg';            // patio de butacas con cortina roja
@@ -197,9 +198,12 @@ const gallery = [
         ))}
         {langFilters.length > 1 && (
           <>
-            <span class="genre-filter__sep" aria-hidden="true"></span>
+            <span class="genre-filter__langlabel">Idioma:</span>
             {langFilters.map((l) => (
-              <button class="genre-chip genre-chip--lang" data-genre={`__lang:${l}`} aria-pressed="false" type="button">{l === 'Catalán' ? 'Català' : l}</button>
+              <button class="genre-chip genre-chip--lang" data-genre={`__lang:${l}`} aria-pressed="false" type="button">
+                <Flag lang={l === 'Catalán' ? 'ca' : 'es'} class="genre-chip__flag" />
+                {l === 'Catalán' ? 'Català' : l}
+              </button>
             ))}
           </>
         )}
@@ -269,8 +273,11 @@ const gallery = [
 
     <style>
       .genre-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0 0 30px; }
-      .genre-filter__sep { width: 1px; align-self: stretch; min-height: 22px; background: var(--line); margin: 2px 6px; }
+      .genre-filter__langlabel { font-family: var(--f-display); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--paper-faint); margin-left: 8px; }
+      .genre-chip--lang { display: inline-flex; align-items: center; gap: 7px; border-color: var(--c-gold); color: var(--c-wine); font-weight: 700; }
+      .genre-chip--lang:hover { border-color: var(--c-gold); background: color-mix(in srgb, var(--c-gold) 14%, transparent); }
       .genre-chip--lang.is-active { background: var(--c-gold); color: #2a1410; border-color: var(--c-gold); }
+      .genre-chip__flag { width: 18px; height: 13px; border-radius: 2px; display: block; box-shadow: 0 0 0 1px rgba(0,0,0,0.1); }
       .genre-chip {
         font-family: var(--f-display); font-size: 13px; letter-spacing: 0.04em;
         padding: 8px 16px; border-radius: 999px; cursor: pointer;
@@ -355,7 +362,8 @@ const gallery = [
             <p class="addr"><strong>Dirección</strong>Carrer de Muntaner, 4 · 08011 Barcelona</p>
             <p class="addr"><strong>Taquilla</strong><a href="tel:+34614402738">+34 614 402 738</a></p>
             <p class="addr"><strong>Horario taquilla</strong>Abierta desde 1 h 30 min antes de cada función</p>
-            <p class="addr"><strong>Email</strong><a href="mailto:info@teatremuntaner.com">info@teatremuntaner.com</a></p>
+            <p class="addr"><strong>Información general</strong><a href="mailto:info@teatremuntaner.com">info@teatremuntaner.com</a></p>
+            <p class="addr"><strong>Entradas</strong><a href="mailto:entradas@teatremuntaner.com">entradas@teatremuntaner.com</a></p>
             <p class="addr"><strong>Síguenos</strong><span class="social-row"><a href="https://www.instagram.com/teatremuntaner/" target="_blank" rel="noopener">Instagram ↗</a><a href="https://www.tiktok.com/@teatremuntaner" target="_blank" rel="noopener">TikTok ↗</a><a href="https://www.google.com/maps/place/Teatre+Muntaner/data=!4m7!3m6!1s0x12a4a31493c798f3:0x12a7966c424af8f6!8m2!3d41.3841653!4d2.1630793!16s%2Fg%2F11w9gjbjvn" target="_blank" rel="noopener">Google ↗</a></span></p>
             <a class="btn btn--ghost" href="https://www.google.com/maps/dir/?api=1&destination=Teatre+Muntaner+Carrer+de+Muntaner+4+Barcelona" target="_blank" rel="noopener">Cómo llegar</a>
           </div>

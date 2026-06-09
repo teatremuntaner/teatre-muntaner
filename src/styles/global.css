@@ -90,8 +90,21 @@ h1, h2, h3 { font-family: var(--f-title); font-weight: 600; line-height: 1.05; m
   background: linear-gradient(90deg,
     var(--c-gold), var(--c-red) 50%, var(--c-gold));
 }
-.site-header .wrap { display: flex; align-items: center; justify-content: space-between; width: 100%; }
-.site-header__logo { display: flex; align-items: center; }
+.site-header .wrap { display: flex; align-items: center; gap: clamp(12px, 2vw, 24px); width: 100%; }
+.site-header__logo { display: flex; align-items: center; margin-right: auto; }
+
+/* Selector de idioma (banderitas) — siempre visible, también con el menú contraído */
+.lang-switch { display: inline-flex; align-items: center; gap: 6px; }
+.lang-switch__btn {
+  width: 30px; height: 21px; padding: 0; border-radius: 5px; overflow: hidden; line-height: 0;
+  border: 2px solid transparent; background: none; cursor: pointer;
+  opacity: 0.5; transition: opacity .2s ease, border-color .2s ease, transform .15s ease;
+}
+.lang-switch__btn:hover { opacity: 1; transform: translateY(-1px); }
+.lang-switch__btn.is-active { opacity: 1; border-color: var(--c-red); }
+.lang-switch__flag { width: 100%; height: 100%; display: block; }
+/* Ocultamos el switcher por defecto de Weglot (usamos el nuestro) */
+.weglot-container { display: none !important; }
 .site-header__logo img { height: 56px; width: auto; display: block; }
 @media (max-width: 600px) { .site-header__logo img { height: 46px; } }
 .site-nav { display: flex; gap: clamp(14px, 2.4vw, 30px); align-items: center; }
