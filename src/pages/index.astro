@@ -201,24 +201,38 @@ const gallery = [
     </div>
 
     <script>
+      // Dos dimensiones que se combinan: qué (Todos/Esta semana/género, excluyente)
+      // e idioma (opcional; se quita pulsándolo otra vez).
       const chips = document.querySelectorAll('.genre-filter .genre-chip');
       const cards = Array.from(document.querySelectorAll('#cartelera .show-card'));
+      let genre = '*';
+      let lang = null;
+      const apply = () => {
+        chips.forEach((c) => {
+          const g = c.getAttribute('data-genre');
+          const on = g.startsWith('__lang:') ? lang === g.slice(7) : g === genre;
+          c.classList.toggle('is-active', on);
+          c.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        cards.forEach((card) => {
+          let okGenre;
+          if (genre === '*') okGenre = true;
+          else if (genre === '__week') okGenre = card.getAttribute('data-week') === '1';
+          else okGenre = (card.getAttribute('data-genres') || '').split('|').includes(genre);
+          const okLang = !lang || card.getAttribute('data-lang') === lang;
+          card.classList.toggle('is-hidden', !(okGenre && okLang));
+        });
+      };
       chips.forEach((chip) =>
         chip.addEventListener('click', () => {
           const g = chip.getAttribute('data-genre');
-          chips.forEach((c) => {
-            const on = c === chip;
-            c.classList.toggle('is-active', on);
-            c.setAttribute('aria-pressed', on ? 'true' : 'false');
-          });
-          cards.forEach((card) => {
-            let visible;
-            if (g === '*') visible = true;
-            else if (g === '__week') visible = card.getAttribute('data-week') === '1';
-            else if (g.startsWith('__lang:')) visible = card.getAttribute('data-lang') === g.slice(7);
-            else visible = (card.getAttribute('data-genres') || '').split('|').includes(g);
-            card.classList.toggle('is-hidden', !visible);
-          });
+          if (g.startsWith('__lang:')) {
+            const l = g.slice(7);
+            lang = lang === l ? null : l;
+          } else {
+            genre = g;
+          }
+          apply();
         }),
       );
     </script>
