@@ -2,8 +2,7 @@
 
 Web del Teatre Muntaner (Barcelona) migrada de **Mobirise** a **Astro** (estática) + **Decap CMS**.
 Clon del sistema del Teatro Sofía (`C:\Users\carlo\dev\teatro-sofia`), adaptado.
-Deploy previsto: **Netlify** (auto al `git push` a `main`) → dominio final `teatremuntaner.com`.
-El dominio aún NO apunta a esta web (sigue el Mobirise) hasta aprobación del cliente.
+**EN PRODUCCIÓN desde 2026-06-09: https://teatremuntaner.com** (Netlify, deploy auto al `git push` a `main`).
 
 ## Diferencias clave vs Teatro Sofía
 - **NO hay piano bar** (ni landing, ni bloque, ni menú). No reintroducir.
@@ -35,23 +34,19 @@ El dominio aún NO apunta a esta web (sigue el Mobirise) hasta aprobación del c
 - Mobirise export en `H:\OneDrive\Muntaner\WEB\mobirise\web`. Logos en `H:\OneDrive\Muntaner\Logo\LOGO MUNTANER TEATRE\formatos`.
 - Catálogo inicial creado desde la **API de Qwantic** (11 shows) con `sync_qwantic.py` (cartel oficial 2:3, fechas, sinopsis de longDescription). Géneros/artista se afinan luego (con Carlos) como en Sofía.
 
-## EN MARCHA (preview, aún NO producción)
+## Infraestructura (EN PRODUCCIÓN desde 2026-06-09)
 - **GitHub:** `github.com/teatremuntaner/teatre-muntaner` (Public, org `teatremuntaner` bajo la cuenta personal de Carlos). Branch `main`.
-- **Netlify:** proyecto `teatre-muntaner` en el equipo "Teatro Sofía" (plan de pago). Deploy automático desde `main`. Preview en **teatre-muntaner.netlify.app** (noindex, INDEXABLE=false). Form detection ON; 2 forms (ticketalarm + newsletter); avisos → entradas@teatremuntaner.com.
-
-## Pendiente / producción
-- **CONSENTIMIENTO DE COOKIES (hacer antes de producción):** la web carga GTM + embeds (YouTube/Maps/calendario) + Weglot → necesita banner de consentimiento (LSSI/RGPD). Ya tienen **CookieBot** pero el dominio de Netlify NO está dado de alta ahí (por eso se aplaza). Al pasar a producción: añadir el dominio en CookieBot, o (recomendado) banner gratuito **Consent Mode v2 + CookieConsent (vanilla)**. Política de cookies ya existe (`/politica-de-cookies`).
-
-### CHECKLIST DE CUTOVER (lecciones del cutover de Teatro Sofía, ya en producción)
-1. **Netlify Forms — gotcha:** la detección de formularios viene **DESACTIVADA**. Ir a Forms → Enable form detection, **redesplegar**, y en Notifications → Form submission notifications poner **entradas@teatremuntaner.com** (decidido por Carlos: avisos de newsletter y "Avísame" van ahí). Si no, los envíos se pierden sin avisar.
-2. **DNS (en cdmon, mismo panel que teatremuntaner.com/.cat):** añadir dominio en Netlify (apex + www). Cambiar **solo el registro A del @ → 75.2.60.5**. NO tocar MX ni mail/imap/smtp. www como CNAME al apex.
-3. **Hueco de SSL:** tras el DNS hay ~30 min en que el dominio va a Netlify pero el cert aún no está → "SSL Error" en HTTPS estricto. Es normal; esperar a que Netlify emita el cert (Domain management).
-4. **Activar producción DESPUÉS del SSL:** `INDEXABLE="true"` en netlify.toml + **descomentar el redirect `*.netlify.app → teatremuntaner.com`** en `public/_redirects` (rellenar el nombre del sitio); un solo push/build.
-5. **Verificar:** HTTPS válido, 301s viejas (legales + shows), robots.txt + sitemap, que no quede ningún noindex (salvo /admin y /actualizar).
-6. **Search Console:** dar de alta la propiedad y enviar `sitemap-index.xml`.
-7. **Resto:** activar Weglot (`WEGLOT_API_KEY`), `GH_DISPATCH_TOKEN` para el botón "Actualizar cartelera".
-- Opción: el agente con navegador (el que hizo el cutover de Sofía) puede encargarse del cutover de Muntaner cuando llegue el momento.
+- **Netlify:** proyecto `teatre-muntaner` en el equipo "Teatro Sofía" (plan de pago). Deploy automático desde `main`. Dominio apex+www en Netlify (DNS en cdmon: solo el registro A del @ → 75.2.60.5; MX/correo intactos). `INDEXABLE=true`; redirect `teatre-muntaner.netlify.app → teatremuntaner.com` activo. Form detection ON; 2 forms (ticketalarm + newsletter); avisos → entradas@teatremuntaner.com.
+- **Cookies:** banner Consent Mode v2 + vanilla-cookieconsent (ES, marca), default denegado, "Configurar cookies" en footer.
+- **Weglot:** activo (`WEGLOT_API_KEY` en variables de Netlify), idiomas es+ca.
+- **CMS (/admin/):** Identity + Git Gateway activos, Invite only, 3 usuarios (Carlos + 2 de Nave8).
+- **Search Console:** propiedad `https://teatremuntaner.com/` verificada; sitemap-index.xml enviado.
+- **Verificado en el cutover:** HTTPS ok, robots Allow+sitemap, sin noindex (salvo /admin y /actualizar), 301s de shows/legales, netlify.app→dominio, www→apex.
 - **Correos (decidido):** footer/contacto visible = `info@teatremuntaner.com`; avisos de Netlify Forms (newsletter + "Avísame") = `entradas@teatremuntaner.com`.
+
+## Pendiente
+- `GH_DISPATCH_TOKEN` para el botón "Actualizar cartelera" (opcional).
+- Valorar carteles A4 propios vs el oficial 2:3 de Qwantic.
 
 ## Hecho
 - Catálogo: 11 shows desde Qwantic (sync_qwantic.py), géneros+artista clasificados (set_generos.py), títulos sin repetir el artista (fix_titulos.py).
