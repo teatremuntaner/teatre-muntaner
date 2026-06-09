@@ -7,9 +7,8 @@
 [build.environment]
   SITE_BASE = "/"
   NODE_VERSION = "22"
-  # Web de pruebas: NO indexar (evita contenido duplicado con teatremuntaner.com).
-  # AL PASAR A PRODUCCIÓN en teatremuntaner.com: poner INDEXABLE = "true".
-  INDEXABLE = "false"
+  # PRODUCCIÓN en teatremuntaner.com: indexable (robots Allow + sitemap + sin noindex).
+  INDEXABLE = "true"
 
 # Funciones serverless (botón "Actualizar cartelera" del centro de control)
 [functions]

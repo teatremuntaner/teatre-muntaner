@@ -7,9 +7,8 @@
 /PoliticadeCookies.html      /politica-de-cookies/     301
 /PoliticaDeCookies.html      /politica-de-cookies/     301
 
-# --- Canónico / anti-duplicado (DESCOMENTAR al crear el sitio Netlify, antes del cutover) ---
-# Evita que Google indexe la copia en *.netlify.app. Pon el nombre real del sitio:
-# https://NOMBRE-DEL-SITIO.netlify.app/*   https://teatremuntaner.com/:splat   301!
+# --- Canónico / anti-duplicado (evita indexar la copia en *.netlify.app) ---
+https://teatre-muntaner.netlify.app/*   https://teatremuntaner.com/:splat   301!
 
 # --- Espectáculos y otras páginas ---
 /AQuienNoLeVaAGustar.html                 /#cartelera                              301
@@ -37,7 +36,7 @@
 /el-petit-princep.html                    /espectaculos/el-petit-princep/          301
 /empoderaras.html                         /#cartelera                              301
 /laVenganzaDonMendo.html                  /#cartelera                              301
-/laneguet-lleig.html                      /#cartelera                              301
+/laneguet-lleig.html                      /espectaculos/laneguet-lleig/            301
 /lexecutiva.html                          /#cartelera                              301
 /nenaaa.html                              /espectaculos/nenaaa/                    301
 /sebastian-gallego-operacion-viejoven.html /#cartelera                              301

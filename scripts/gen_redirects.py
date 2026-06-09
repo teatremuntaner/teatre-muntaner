@@ -79,9 +79,8 @@ if WRITE:
         "/PoliticaDePrivacidad.html   /politica-de-privacidad/  301\n"
         "/PoliticadeCookies.html      /politica-de-cookies/     301\n"
         "/PoliticaDeCookies.html      /politica-de-cookies/     301\n\n"
-        "# --- Canónico / anti-duplicado (DESCOMENTAR al crear el sitio Netlify, antes del cutover) ---\n"
-        "# Evita que Google indexe la copia en *.netlify.app. Pon el nombre real del sitio:\n"
-        "# https://NOMBRE-DEL-SITIO.netlify.app/*   https://teatremuntaner.com/:splat   301!\n\n"
+        "# --- Canónico / anti-duplicado (evita indexar la copia en *.netlify.app) ---\n"
+        "https://teatre-muntaner.netlify.app/*   https://teatremuntaner.com/:splat   301!\n\n"
         "# --- Espectáculos y otras páginas ---\n"
     )
     lines = "".join(f"/{fn:40} {target:40} 301\n" for fn, target, how in rows)
