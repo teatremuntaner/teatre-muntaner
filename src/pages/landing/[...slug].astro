@@ -10,10 +10,11 @@ import { summarize } from '../../lib/schedule';
 
 export async function getStaticPaths() {
   // Solo shows publicados con entradas a la venta: un landing sin botón de
-  // compra no tiene sentido para campañas.
+  // compra no tiene sentido para campañas. Los unlisted (cancelados/ocultos)
+  // tampoco generan landing: su única salida sería comprar algo des-listado.
   const shows = await getCollection(
     'espectaculos',
-    ({ data }) => !data.draft && !data.externalUrl && !!data.ticketUrl && !data.ticketAlarm,
+    ({ data }) => !data.draft && !data.unlisted && !data.externalUrl && !!data.ticketUrl && !data.ticketAlarm,
   );
   return shows.map((show) => ({ params: { slug: show.id }, props: { show } }));
 }
