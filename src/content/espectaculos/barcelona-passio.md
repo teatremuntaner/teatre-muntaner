@@ -15,6 +15,8 @@ dates:
     time: "17:30"
 ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20644"
 qwanticEventId: "20644"
+saleStart: "2026-02-23T15:09"
+priceFrom: 14
 price: "Desde 14 €"
 venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
 draft: false

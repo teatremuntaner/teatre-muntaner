@@ -9,8 +9,6 @@ poster: "./corta-el-cable-rojo.jpg"
 accent: "#ef2e31"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-06-11"
-    time: "20:00"
   - date: "2026-06-12"
     time: "18:30"
   - date: "2026-06-12"
@@ -57,8 +55,12 @@ dates:
     time: "19:00"
   - date: "2026-07-03"
     time: "21:00"
+  - date: "2026-07-04"
+    time: "18:30"
 ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20529"
 qwanticEventId: "20529"
+saleStart: "2026-02-26T12:03"
+priceFrom: 19.8
 price: "Desde 20 €"
 venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
 draft: false

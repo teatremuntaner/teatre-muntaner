@@ -19,6 +19,8 @@ dates:
     time: "12:00"
 ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20722"
 qwanticEventId: "20722"
+saleStart: "2026-03-10T06:28"
+priceFrom: 12
 price: "Desde 12 €"
 venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
 draft: false

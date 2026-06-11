@@ -34,3 +34,6 @@ ftp-*.txt
 # python
 __pycache__/
 *.pyc
+
+# temporales locales (scripts de comprobación, descargas)
+.qtmp/

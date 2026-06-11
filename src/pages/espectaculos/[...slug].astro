@@ -36,12 +36,35 @@ const desc =
 // Datos estructurados: un TheaterEvent por función.
 const SITE = Astro.site ?? new URL('https://teatremuntaner.com');
 const posterUrl = new URL(d.poster.src, SITE).href;
+
+// endDate = inicio + duración real (o 90 min si no consta). Sin hora, acaba el mismo día.
+const showMinutes = Number(d.duration?.match(/(\d+)\s*min/i)?.[1] ?? 90);
+const endOf = (dt: { date: string; time?: string }) => {
+  if (!dt.time) return dt.date;
+  const t = new Date(`${dt.date}T${dt.time}:00Z`);
+  t.setUTCMinutes(t.getUTCMinutes() + showMinutes);
+  return t.toISOString().slice(0, 16);
+};
+
+// Offer completo (price/priceCurrency/validFrom los rellena el sync de Qwantic;
+// si faltan se omiten, no se inventan).
+const offer = d.ticketUrl
+  ? {
+      '@type': 'Offer',
+      url: d.ticketUrl,
+      availability: 'https://schema.org/InStock',
+      ...(d.priceFrom ? { price: d.priceFrom, priceCurrency: 'EUR' } : {}),
+      ...(d.saleStart ? { validFrom: d.saleStart } : {}),
+    }
+  : null;
+
 const mkEvent = (dt: { date: string; time?: string }) => ({
   '@context': 'https://schema.org',
   '@type': 'TheaterEvent',
   name: d.title,
-  ...(d.artist ? { performer: { '@type': 'PerformingGroup', name: d.artist } } : {}),
+  performer: { '@type': 'PerformingGroup', name: d.artist ?? d.title },
   startDate: dt.date + (dt.time ? 'T' + dt.time : ''),
+  endDate: endOf(dt),
   eventStatus: 'https://schema.org/EventScheduled',
   eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
   image: posterUrl,
@@ -52,9 +75,32 @@ const mkEvent = (dt: { date: string; time?: string }) => ({
     address: { '@type': 'PostalAddress', streetAddress: 'Carrer de Muntaner 4', addressLocality: 'Barcelona', postalCode: '08011', addressCountry: 'ES' },
   },
   organizer: { '@type': 'Organization', name: 'Teatre Muntaner', url: 'https://teatremuntaner.com' },
-  ...(d.ticketUrl ? { offers: { '@type': 'Offer', url: d.ticketUrl, availability: 'https://schema.org/InStock' } } : {}),
+  ...(offer ? { offers: offer } : {}),
 });
 const eventsLd = d.dates.map(mkEvent);
+
+// VideoObject del tráiler: Google exige thumbnailUrl para indexar el vídeo.
+const videoLd = ytId
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'VideoObject',
+      name: `Vídeo de ${d.title}`,
+      description: desc,
+      contentUrl: `https://www.youtube.com/watch?v=${ytId}`,
+      embedUrl: `https://www.youtube-nocookie.com/embed/${ytId}`,
+      thumbnailUrl: `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`,
+      ...(d.youtubeUploadDate ? { uploadDate: d.youtubeUploadDate } : {}),
+    }
+  : d.video
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'VideoObject',
+        name: `Vídeo de ${d.title}`,
+        description: desc,
+        contentUrl: new URL(d.video, SITE).href,
+        thumbnailUrl: posterUrl,
+      }
+    : null;
 ---
 
 <BaseLayout
@@ -182,6 +228,7 @@ const eventsLd = d.dates.map(mkEvent);
   {eventsLd.length > 0 && (
     <script type="application/ld+json" set:html={JSON.stringify(eventsLd.length === 1 ? eventsLd[0] : eventsLd)} />
   )}
+  {videoLd && <script type="application/ld+json" set:html={JSON.stringify(videoLd)} />}
 </BaseLayout>
 
 <style>

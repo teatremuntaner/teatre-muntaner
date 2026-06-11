@@ -87,7 +87,10 @@ collections:
           - { name: "time", label: "Hora (HH:MM)", widget: "string", required: false }
       - { name: "ticketUrl", label: "Enlace de entradas (Qwantic)", widget: "string", required: false }
       - { name: "qwanticEventId", widget: "hidden", required: false }
+      - { name: "priceFrom", widget: "hidden", required: false }
+      - { name: "saleStart", widget: "hidden", required: false }
       - { name: "youtube", label: "Vídeo de YouTube (pega el enlace o el ID)", widget: "string", required: false }
+      - { name: "youtubeUploadDate", widget: "hidden", required: false }
       - { name: "video", label: "Vídeo subido (.mp4, opcional; si no, usa YouTube)", widget: "file", required: false, media_folder: "/public/uploads/video", public_folder: "/uploads/video" }
 
       - name: "links"

@@ -15,6 +15,8 @@ dates:
     time: "19:00"
 ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20962"
 qwanticEventId: "20962"
+saleStart: "2026-04-17T17:19"
+priceFrom: 18
 price: "Desde 18 €"
 venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
 draft: false

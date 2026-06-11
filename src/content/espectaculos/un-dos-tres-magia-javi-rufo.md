@@ -16,6 +16,8 @@ dates:
     time: "17:00"
 ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20955"
 qwanticEventId: "20955"
+saleStart: "2026-04-15T15:04"
+priceFrom: 14
 price: "Desde 14 €"
 venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
 draft: false

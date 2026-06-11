@@ -78,15 +78,15 @@ def fetch_feed():
     return out
 
 def fetch_sessions(eid):
-    """[(YYYY-MM-DD, HH:MM)] futuras, ordenadas, máx 12."""
+    """([(YYYY-MM-DD, HH:MM)] futuras, ordenadas, máx 24; inicio de venta más antiguo)."""
     try:
         raw = get(EVENT_URL.format(eid))
     except Exception:
-        return []
+        return [], None
     m = re.search(r"Sesiones\s*=\s*(\[.*?\]);", raw, re.S)
     if not m:
-        return []
-    out, seen = [], set()
+        return [], None
+    out, seen, venta_desde = [], set(), None
     try:
         for s in json.loads(m.group(1)):
             fc = s.get("fechaCelebracionStr", "")
@@ -94,12 +94,15 @@ def fetch_sessions(eid):
             if mm and (mm.group(1), mm.group(2)) not in seen:
                 seen.add((mm.group(1), mm.group(2)))
                 out.append((mm.group(1), mm.group(2)))
+            fv = s.get("fechaInicioVentaStr")
+            if fv and (venta_desde is None or fv < venta_desde):
+                venta_desde = fv
     except Exception:
-        return []
+        return [], None
     out.sort()
     today = datetime.date.today().isoformat()
     fut = [d for d in out if d[0] >= today]
-    return (fut or out)[:24]
+    return (fut or out)[:24], venta_desde
 
 def fetch_synopsis(friendly):
     """Sinopsis desde la página del evento en Qwantic (bloque 'event-description-landing')."""
@@ -130,6 +133,31 @@ def dates_block(sessions):
     return "\n".join(lines) + "\n"
 
 DATES_RE = re.compile(r'^dates:\n(?:[ ]{2}- date:.*\n(?:[ ]{4}time:.*\n)?)+', re.M)
+
+def fmt_precio(p):
+    """15.0 -> '15' · 15.3 -> '15.3' (YAML numérico, sin ceros sobrantes)."""
+    return f"{float(p):g}"
+
+def upsert_field(t, key, line):
+    """Sustituye la línea 'key: ...' del frontmatter o la inserta tras qwanticEventId."""
+    if re.search(rf"^{key}:", t, re.M):
+        return re.sub(rf"^{key}:.*$", line, t, count=1, flags=re.M)
+    return re.sub(r"(qwanticEventId:.*\n)", r"\1" + line + "\n", t, count=1)
+
+YT_ID_RE = re.compile(r"(?:youtu\.be/|v=|embed/|shorts/|^)([A-Za-z0-9_-]{11})")
+
+def fetch_upload_date(youtube):
+    """uploadDate del vídeo, del HTML de su página de YouTube (para el VideoObject)."""
+    m = YT_ID_RE.search(youtube.strip())
+    if not m:
+        return None
+    try:
+        raw = get("https://www.youtube.com/watch?v=" + m.group(1),
+                  headers={"Accept-Language": "es-ES,es;q=0.9"})
+    except Exception:
+        return None
+    mm = re.search(r'"uploadDate":"([^"]+)"', raw)
+    return mm.group(1) if mm else None
 
 def avg_accent(poster_path):
     try:
@@ -166,7 +194,7 @@ for e in feed:
     if eid in SKIP_IDS or SKIP_TITLE.search(title) or not e.get("activo", True):
         report["skip"].append((eid, title)); continue
     feed_ids.add(eid)
-    sessions = fetch_sessions(eid)
+    sessions, venta_desde = fetch_sessions(eid)
 
     if eid in existing:
         path, t = existing[eid]
@@ -175,6 +203,11 @@ for e in feed:
         new_t, n = DATES_RE.subn(dates_block(sessions), t, count=1)
         if n == 0:  # ficha sin bloque dates: lo insertamos tras qwanticEventId
             new_t = re.sub(r'(qwanticEventId:.*\n)', r'\1' + dates_block(sessions), t, count=1)
+        # Datos del Offer del JSON-LD (Search Console): precio mínimo e inicio de venta
+        if e.get("precioMinimo"):
+            new_t = upsert_field(new_t, "priceFrom", f"priceFrom: {fmt_precio(e['precioMinimo'])}")
+        if venta_desde:
+            new_t = upsert_field(new_t, "saleStart", f'saleStart: "{venta_desde}"')
         if new_t != t:
             if not DRY:
                 open(path, "w", encoding="utf-8").write(new_t)
@@ -207,6 +240,10 @@ for e in feed:
     if sessions:
         fm.append(dates_block(sessions).rstrip("\n"))
     fm += [f'ticketUrl: "{TICKET_URL.format(eid)}"', f'qwanticEventId: "{eid}"']
+    if e.get("precioMinimo"):
+        fm.append(f"priceFrom: {fmt_precio(e['precioMinimo'])}")
+    if venta_desde:
+        fm.append(f'saleStart: "{venta_desde}"')
     if duracion and e.get("mostrarDuracion", True):
         fm.append(f'duration: "{duracion} min"')
     if precio:
@@ -222,6 +259,26 @@ for e in feed:
 for eid, (path, t) in existing.items():
     if eid not in feed_ids and eid not in SKIP_IDS:
         report["baja"].append((eid, os.path.basename(path)))
+
+# Fichas con vídeo de YouTube sin uploadDate: lo sacamos de la página del vídeo
+# (Google lo pide en el VideoObject). Releemos del disco: el bucle de fechas
+# puede haber reescrito el archivo.
+report["ytdate"] = []
+for fn in os.listdir(DEST):
+    if not fn.endswith(".md"):
+        continue
+    p = os.path.join(DEST, fn)
+    t = open(p, encoding="utf-8").read()
+    m = re.search(r'^youtube:\s*"?([^"\n]+)"?\s*$', t, re.M)
+    if not m or re.search(r"^youtubeUploadDate:", t, re.M):
+        continue
+    up = fetch_upload_date(m.group(1))
+    if not up:
+        report["ytdate"].append((fn, "no encontrado")); continue
+    new_t = re.sub(r"(^youtube:.*\n)", r"\1" + f'youtubeUploadDate: "{up}"\n', t, count=1, flags=re.M)
+    if not DRY:
+        open(p, "w", encoding="utf-8").write(new_t)
+    report["ytdate"].append((fn, up))
 
 # --- Informe ---
 tag = "[DRY-RUN] " if DRY else ""
@@ -242,3 +299,7 @@ for eid, title in report["nodate"]:
 print(f"\nEXCLUIDOS (no cartelera) ({len(report['skip'])}):")
 for eid, title in report["skip"]:
     print(f"  x {title}  (id {eid})")
+if report["ytdate"]:
+    print(f"\nUPLOADDATE DE VÍDEOS ({len(report['ytdate'])}):")
+    for fn, up in report["ytdate"]:
+        print(f"  » {fn}: {up}")

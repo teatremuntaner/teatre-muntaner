@@ -22,6 +22,7 @@ const espectaculos = defineCollection({
       poster: image(),
       photo: image().optional(), // foto que acompaña a la sinopsis, si existe
       youtube: z.string().optional(), // ID o URL de vídeo de YouTube, si existe
+      youtubeUploadDate: z.string().optional(), // fecha de subida del vídeo (la rellena el sync; para el VideoObject)
       video: z.string().optional(), // vídeo subido (ruta /uploads/...), alternativa a YouTube
       gallery: z.array(image()).default([]), // galería de fotos (se optimizan en el build)
 
@@ -43,6 +44,8 @@ const espectaculos = defineCollection({
       dateText: z.string().optional(), // horario recurrente en texto ("Viernes y Sábados")
       ticketUrl: z.string().url().optional(),
       qwanticEventId: z.string().optional(),
+      priceFrom: z.number().optional(), // precio mínimo numérico (lo rellena el sync; para el Offer del JSON-LD)
+      saleStart: z.string().optional(), // inicio de venta ISO (lo rellena el sync; validFrom del Offer)
 
       // Si está, la tarjeta de la cartelera enlaza aquí (p. ej. la landing del
       // Piano Bar) en vez de a una ficha propia, y no se genera página de ficha.
