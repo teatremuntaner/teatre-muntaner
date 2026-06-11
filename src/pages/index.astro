@@ -21,7 +21,7 @@ const nextDate = (d: { dates: { date: string }[] }) => {
   const all = d.dates.map((x) => x.date).sort();
   return all.find((x) => x >= today) ?? all[all.length - 1] ?? '9999';
 };
-const shows = (await getCollection('espectaculos', ({ data }) => !data.draft && !isArchived(data))).sort(
+const shows = (await getCollection('espectaculos', ({ data }) => !data.draft && !data.unlisted && !isArchived(data))).sort(
   (a, b) =>
     (b.data.priority ?? 0) - (a.data.priority ?? 0) ||
     nextDate(a.data).localeCompare(nextDate(b.data)),

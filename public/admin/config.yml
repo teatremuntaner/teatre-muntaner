@@ -105,6 +105,7 @@ collections:
 
       - { name: "featured", label: "Destacado en portada", widget: "boolean", default: false, required: false }
       - { name: "ticketAlarm", label: "Próximamente — aún sin venta (mostrar 'Avísame' y captar emails)", widget: "boolean", default: false, required: false }
+      - { name: "unlisted", label: "Ocultar de la cartelera (mantener la página y su URL)", widget: "boolean", default: false, required: false, hint: "Para cancelados o que no quieres listar, pero cuya página debe seguir accesible por su enlace." }
       - { name: "draft", label: "Borrador (no publicar)", widget: "boolean", default: false, required: false }
 
       - { name: "body", label: "Descripción", widget: "markdown" }

@@ -57,6 +57,7 @@ const espectaculos = defineCollection({
 
       featured: z.boolean().default(false),
       ticketAlarm: z.boolean().default(false), // próximamente: sin venta aún, captar avisos
+      unlisted: z.boolean().default(false), // oculto de la cartelera, pero su página/URL sigue viva
       draft: z.boolean().default(false),
     }),
 });
