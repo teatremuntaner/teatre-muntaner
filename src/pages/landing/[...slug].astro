@@ -1,0 +1,245 @@
+---
+// Landing de campaña (Meta Ads): la ficha del show SIN ninguna salida que no
+// sea comprar. Sin header, sin footer, sin enlaces externos ni a otras páginas.
+// Siempre noindex (modo bare). El contenido (vídeo, fotos, promo…) se edita en
+// el CMS en la ficha normal y se refleja aquí automáticamente.
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { summarize } from '../../lib/schedule';
+
+export async function getStaticPaths() {
+  // Solo shows publicados con entradas a la venta: un landing sin botón de
+  // compra no tiene sentido para campañas.
+  const shows = await getCollection(
+    'espectaculos',
+    ({ data }) => !data.draft && !data.externalUrl && !!data.ticketUrl && !data.ticketAlarm,
+  );
+  return shows.map((show) => ({ params: { slug: show.id }, props: { show } }));
+}
+
+const { show } = Astro.props;
+const { Content } = await render(show);
+const d = show.data;
+
+const sch = d.dates.length ? summarize(d.dates) : null;
+const today = new Date().toISOString().slice(0, 10);
+const archived = d.dates.length > 0 && !d.dates.some((x) => x.date >= today);
+const genre = d.genres.length ? d.genres.join(' · ') : d.category;
+const ytId = d.youtube
+  ? (d.youtube.match(/(?:youtu\.be\/|v=|embed\/|shorts\/|^)([A-Za-z0-9_-]{11})/)?.[1] ?? '')
+  : '';
+
+const plain = (show.body ?? '')
+  .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+  .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+  .replace(/[#*_>`~]/g, '')
+  .replace(/\s+/g, ' ')
+  .trim();
+const desc =
+  d.tagline ??
+  (plain ? (plain.length > 155 ? plain.slice(0, 152).replace(/\s+\S*$/, '') + '…' : plain) : `${d.title} en el Teatre Muntaner`);
+---
+
+<BaseLayout
+  title={d.title}
+  description={desc}
+  accent={d.accent}
+  accentInk={d.accentInk}
+  titleFont={d.titleFont}
+  titleFontUrl={d.titleFontUrl}
+  bare
+>
+  <article class="lp">
+    <section class="lp__hero">
+      <div class="lp__hero-bg" aria-hidden="true"></div>
+      <div class="wrap lp__hero-inner">
+        <div class="lp__poster">
+          <Image src={d.poster} alt={`Cartel de ${d.title}`} widths={[400, 700]} sizes="(max-width: 760px) 70vw, 360px" loading="eager" fetchpriority="high" />
+        </div>
+        <div class="lp__head">
+          <p class="eyebrow">{genre} · Teatre Muntaner, Barcelona</p>
+          <h1 class="lp__title">{d.title}</h1>
+          {(d.artist ?? d.tagline) && <p class="lp__tagline">{d.artist ?? d.tagline}</p>}
+
+          {archived ? (
+            <p class="lp__schedule lp__schedule--ended">Funciones finalizadas</p>
+          ) : (
+            <>
+              {sch?.full && <p class="lp__schedule">{sch.full}</p>}
+              {sch && sch.loose.length > 0 && (
+                <p class="lp__loose">{sch.full ? 'Funciones especiales: ' : ''}{sch.loose.join(' · ')}</p>
+              )}
+              {!sch && d.dateText && <p class="lp__schedule">{d.dateText}</p>}
+            </>
+          )}
+
+          {d.promo && <p class="lp__promo">🎟 {d.promo}</p>}
+
+          {!archived && (
+            <div class="lp__cta">
+              <a class="btn btn--accent lp__buy" data-buy href={d.ticketUrl} target="_blank" rel="noopener">
+                Comprar entradas{d.price ? ` · ${d.price.toLowerCase()}` : ''}
+              </a>
+            </div>
+          )}
+          <ul class="lp__facts">
+            {d.duration && <li>⏱ {d.duration}</li>}
+            {d.lang && <li>🗣 {d.lang}</li>}
+            <li>📍 Carrer de Muntaner 4, Barcelona</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap lp__body">
+      <div class="lp__prose">
+        {d.photo && (
+          <Image class="lp__photo" src={d.photo} alt={`Foto de ${d.title}`} widths={[400, 800]} sizes="(max-width: 760px) 100vw, 480px" />
+        )}
+        <Content />
+      </div>
+    </section>
+
+    {(d.video || ytId) && (
+      <section class="wrap">
+        <div class="lp__video">
+          {d.video ? (
+            <video controls preload="metadata" src={d.video} aria-label={`Vídeo de ${d.title}`}></video>
+          ) : (
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${ytId}`}
+              title={`Vídeo de ${d.title}`}
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          )}
+        </div>
+      </section>
+    )}
+
+    {d.gallery.length > 0 && (
+      <section class="wrap lp__gallery">
+        <div class="lp__gallery-grid">
+          {d.gallery.map((img, i) => (
+            <a class="glightbox lp__gallery-item" href={img.src} data-gallery="lp" aria-label={`Foto ${i + 1} de ${d.title}`}>
+              <Image src={img} alt={`Foto ${i + 1} de ${d.title}`} widths={[300, 600]} sizes="(max-width: 700px) 45vw, 280px" />
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {!archived && (
+      <section class="wrap lp__final">
+        <p class="lp__final-lead">{sch?.full ?? d.dateText ?? ''}</p>
+        <a class="btn btn--accent lp__buy lp__buy--big" data-buy href={d.ticketUrl} target="_blank" rel="noopener">
+          Comprar entradas{d.price ? ` · ${d.price.toLowerCase()}` : ''}
+        </a>
+      </section>
+    )}
+
+    <footer class="lp__legal">
+      <p>Teatre Muntaner · La Muntaner Teatre, S.L. (CIF B55438550) · Carrer de Muntaner 4, 08011 Barcelona</p>
+      <p>
+        <a href="/aviso-legal/">Aviso legal</a> · <a href="/politica-de-privacidad/">Privacidad</a> ·
+        <a href="/politica-de-cookies/">Cookies</a> · <a href="#" data-cc="show-preferences">Configurar cookies</a>
+      </p>
+    </footer>
+  </article>
+
+  {!archived && (
+    <div class="lp__sticky" aria-hidden="false">
+      <a class="btn btn--accent lp__buy" data-buy href={d.ticketUrl} target="_blank" rel="noopener">
+        Comprar entradas{d.price ? ` · ${d.price.toLowerCase()}` : ''}
+      </a>
+    </div>
+  )}
+</BaseLayout>
+
+<style>
+  .lp__hero { position: relative; overflow: hidden; padding: clamp(40px, 7vw, 90px) 0; }
+  .lp__hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(1200px 600px at 20% -10%, color-mix(in srgb, var(--accent) 75%, transparent), transparent 60%),
+      linear-gradient(180deg, color-mix(in srgb, var(--accent) 32%, var(--ink)) 0%, var(--ink) 80%);
+  }
+  .lp__hero-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 360px 1fr; gap: clamp(28px, 5vw, 64px); align-items: center; }
+  .lp__poster { border-radius: 8px; overflow: hidden; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5); }
+  .lp__poster :global(img) { width: 100%; height: auto; display: block; }
+  .lp__title { font-size: clamp(42px, 7vw, 92px); letter-spacing: 0.01em; text-transform: uppercase; text-wrap: balance; }
+  .lp__tagline { font-family: var(--f-display); font-size: clamp(17px, 2vw, 22px); color: var(--paper-dim); margin-top: 12px; }
+  .lp__schedule { font-family: var(--f-display); font-size: 19px; margin: 22px 0 0; color: var(--accent); letter-spacing: 0.02em; }
+  .lp__schedule--ended { color: var(--paper-faint); }
+  .lp__loose { font-size: 15px; margin: 8px 0 0; color: var(--paper-dim); }
+  .lp__promo { display: inline-block; background: var(--c-gold, #d5a846); color: #14100e; font-weight: 800; font-family: var(--f-display); padding: 9px 16px; border-radius: 999px; margin: 20px 0 0; font-size: 16px; }
+  .lp__cta { margin-top: 28px; }
+  .lp__buy { font-size: 17px; padding: 16px 30px; }
+  .lp__buy--big { font-size: 19px; padding: 18px 40px; }
+  .lp__facts { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 22px; padding: 0; margin: 26px 0 0; font-size: 15px; color: var(--paper-dim); }
+
+  .lp__body { padding-top: clamp(36px, 5vw, 60px); max-width: 880px; }
+  .lp__prose { font-size: 18px; line-height: 1.8; color: var(--paper-dim); }
+  .lp__prose :global(strong) { color: var(--paper); }
+  .lp__photo { float: right; width: 300px; max-width: 42%; height: auto; margin: 4px 0 18px 28px; border-radius: 6px; box-shadow: 0 18px 40px rgba(0,0,0,0.45); }
+  .lp__video { position: relative; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); margin-top: clamp(28px, 4vw, 44px); }
+  .lp__video iframe, .lp__video video { position: absolute; inset: 0; width: 100%; height: 100%; background: #000; }
+  .lp__gallery { padding-top: clamp(28px, 4vw, 44px); }
+  .lp__gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  .lp__gallery-item { display: block; border-radius: 10px; overflow: hidden; aspect-ratio: 3 / 2; border: 1px solid var(--line); }
+  .lp__gallery-item :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .lp__final { text-align: center; padding: clamp(44px, 7vw, 80px) 16px clamp(30px, 5vw, 50px); }
+  .lp__final-lead { font-family: var(--f-display); font-size: 18px; color: var(--paper-dim); margin: 0 0 18px; }
+
+  .lp__legal { text-align: center; padding: 30px 16px 110px; font-size: 12px; color: var(--paper-faint); }
+  .lp__legal p { margin: 4px 0; }
+  .lp__legal a { color: var(--paper-faint); text-decoration: underline; }
+
+  /* Barra fija de compra en móvil (en escritorio el CTA del hero queda a la vista) */
+  .lp__sticky { display: none; }
+  @media (max-width: 760px) {
+    .lp__hero-inner { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+    .lp__poster { max-width: 260px; }
+    .lp__facts { justify-content: center; }
+    .lp__photo { float: none; width: 100%; max-width: 100%; margin: 0 0 18px; }
+    .lp__sticky {
+      display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+      padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+      background: color-mix(in srgb, var(--ink) 88%, transparent);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid var(--line);
+      text-align: center;
+    }
+    .lp__sticky .lp__buy { display: block; width: 100%; }
+  }
+</style>
+
+<script>
+  // Galería con lightbox (sin enlaces de salida)
+  import GLightbox from 'glightbox';
+  import 'glightbox/dist/css/glightbox.min.css';
+  GLightbox({ selector: '.glightbox', loop: true, touchNavigation: true });
+</script>
+
+<script is:inline>
+  // Atribución: pasa los parámetros de campaña (utm_*, fbclid…) de la URL del
+  // landing a los enlaces de compra de Qwantic, por si los registran.
+  (function () {
+    var qs = new URLSearchParams(location.search);
+    var keep = [];
+    qs.forEach(function (v, k) {
+      if (/^(utm_|fbclid|gclid)/i.test(k)) keep.push([k, v]);
+    });
+    if (!keep.length) return;
+    document.querySelectorAll('a[data-buy]').forEach(function (a) {
+      try {
+        var u = new URL(a.href);
+        keep.forEach(function (p) { u.searchParams.set(p[0], p[1]); });
+        a.href = u.href;
+      } catch (e) {}
+    });
+  })();
+</script>
