@@ -103,8 +103,8 @@ collections:
       - { name: "duration", label: "Duración", widget: "string", required: false }
       - { name: "price", label: "Precio", widget: "string", required: false }
 
-      - { name: "featured", label: "Destacado en portada", widget: "boolean", default: false }
-      - { name: "ticketAlarm", label: "Próximamente — aún sin venta (mostrar 'Avísame' y captar emails)", widget: "boolean", default: false }
-      - { name: "draft", label: "Borrador (no publicar)", widget: "boolean", default: false }
+      - { name: "featured", label: "Destacado en portada", widget: "boolean", default: false, required: false }
+      - { name: "ticketAlarm", label: "Próximamente — aún sin venta (mostrar 'Avísame' y captar emails)", widget: "boolean", default: false, required: false }
+      - { name: "draft", label: "Borrador (no publicar)", widget: "boolean", default: false, required: false }
 
       - { name: "body", label: "Descripción", widget: "markdown" }
