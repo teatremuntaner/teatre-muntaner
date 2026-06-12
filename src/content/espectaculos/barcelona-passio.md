@@ -9,8 +9,6 @@ poster: "./barcelona-passio.jpg"
 accent: "#bf795f"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-06-12"
-    time: "16:30"
   - date: "2026-06-22"
     time: "17:30"
 ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20644"
