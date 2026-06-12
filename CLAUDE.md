@@ -14,6 +14,7 @@ Clon del sistema del Teatro Sofía (`C:\Users\carlo\dev\teatro-sofia`), adaptado
 ## Stack
 - Astro 6. Colección `espectaculos`: `src/content/espectaculos/*.md` (+ su `.jpg` de cartel). Schema: `src/content.config.ts`.
 - Campos: title, artist, category, genres[], priority, poster, photo?, gallery[], youtube?, video?, accent/accentInk, dates[], dateText?, ticketUrl, qwanticEventId, promo?, ticketAlarm, externalUrl?, duration?, price?, featured, draft, venue.
+- Campos SEO que rellena el sync (no editar a mano): priceFrom (numérico, del feed), saleStart (mín. fechaInicioVentaStr de la pág. de compra) → Offer del JSON-LD; youtubeUploadDate (del HTML de YouTube) → VideoObject. Si faltan, la plantilla los omite.
 - Shows con todas las fechas pasadas se ocultan solos de la cartelera. Borradores (draft:true) no se publican.
 - Front: GSAP+SplitText (títulos, tilt del cartel), GLightbox (galerías). Tema oscuro.
 
