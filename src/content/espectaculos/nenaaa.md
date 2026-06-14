@@ -9,8 +9,6 @@ poster: "./nenaaa.jpg"
 accent: "#cb6ab2"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-06-14"
-    time: "12:30"
   - date: "2026-10-07"
     time: "19:00"
 ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20962"
