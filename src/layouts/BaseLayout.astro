@@ -1,7 +1,13 @@
 ---
 import '../styles/global.css';
+import '../styles/fx.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+
+// Capa de efectos visuales (tm-fx). false = desactivada para el público.
+// Aun estando en false, se puede ver en vivo visitando la web con ?fx=1
+// (y ?fx=0 para apagarla; la preferencia se recuerda en el navegador).
+const FX_ENABLED = false;
 
 interface Props {
   title: string;
@@ -41,6 +47,18 @@ const bodyStyle =
 <html lang="es">
   <head>
     <meta charset="utf-8" />
+    <!-- Capa de efectos (tm-fx): activa la clase antes de pintar para no parpadear -->
+    <script is:inline define:vars={{ fxDefault: FX_ENABLED }}>
+      (function () {
+        try {
+          var p = new URLSearchParams(location.search), v = p.get('fx');
+          if (v === '1' || v === '0') localStorage.setItem('tm-fx', v);
+          var s = localStorage.getItem('tm-fx');
+          var on = s === null ? !!fxDefault : s === '1';
+          if (on) document.documentElement.classList.add('tm-fx-on');
+        } catch (e) {}
+      })();
+    </script>
     <!-- Consent Mode v2: por defecto DENEGADO hasta que el usuario acepte (RGPD/LSSI) -->
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
@@ -110,6 +128,11 @@ const bodyStyle =
     <!-- Animación (gratis): GSAP + SplitText para los títulos. Sin smooth scroll. -->
     <script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
     <script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+
+    <!-- Capa de efectos visuales (no hace nada salvo que tm-fx-on esté activa) -->
+    <script>
+      import '../scripts/fx';
+    </script>
 
     <!-- Login del CMS para el personal (Netlify Identity; invisible si no está en Netlify) -->
     <script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>

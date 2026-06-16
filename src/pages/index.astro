@@ -503,7 +503,8 @@ const gallery = [
     if (reduce) return;
     const h = document.querySelector('.hero__title[data-split]');
     const w = window as any;
-    if (h && w.gsap && w.SplitText) {
+    // Si la capa de efectos está activa, ella anima el título (no duplicar).
+    if (h && w.gsap && w.SplitText && !document.documentElement.classList.contains('tm-fx-on')) {
       try {
         const split = new w.SplitText(h, { type: 'lines,chars' });
         w.gsap.from(split.chars, { yPercent: 120, opacity: 0, stagger: 0.02, duration: 0.8, ease: 'power3.out', delay: 0.15 });
