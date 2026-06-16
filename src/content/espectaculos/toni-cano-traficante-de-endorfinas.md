@@ -12,10 +12,14 @@ accentInk: "#ffffff"
 dates:
   - date: "2026-06-20"
     time: "21:00"
+  - date: "2026-09-19"
+    time: "21:00"
+  - date: "2026-10-03"
+    time: "21:00"
 ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20530"
 qwanticEventId: "20530"
 saleStart: "2026-02-23T15:39"
-priceFrom: 16
+priceFrom: 14.4
 price: "Desde 14 €"
 venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
 draft: false
