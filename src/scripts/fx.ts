@@ -11,6 +11,10 @@ if (root.classList.contains('tm-fx-on')) {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
+  // Telón de intro: poner en false para quitar SOLO el telón (el resto sigue).
+  const CURTAIN = true;
+  let curtainWillPlay = false;
+
   // ---------- 6. Grano de película (global) ----------
   const grain = document.createElement('div');
   grain.className = 'tm-fx-grain';
@@ -39,6 +43,41 @@ if (root.classList.contains('tm-fx-on')) {
         });
       }, { passive: true });
     }
+  }
+
+  // ---------- Telón de intro (solo en la home, una vez por sesión) ----------
+  // Decorativo y con pointer-events:none → no condiciona que se vea el hero
+  // (el título tiene su propio failsafe). Se salta con reduced-motion.
+  if (CURTAIN && hero && !reduce) {
+    try { curtainWillPlay = !sessionStorage.getItem('tm-fx-curtain'); } catch (e) { curtainWillPlay = true; }
+  }
+  if (curtainWillPlay) {
+    try { sessionStorage.setItem('tm-fx-curtain', '1'); } catch (e) { /* sesión privada */ }
+    const curtain = document.createElement('div');
+    curtain.className = 'tm-fx-curtain';
+    curtain.setAttribute('aria-hidden', 'true');
+    curtain.innerHTML =
+      '<div class="tm-fx-cenefa-oro"></div><div class="tm-fx-cenefa"></div>' +
+      '<div class="tm-fx-panel izq"></div><div class="tm-fx-panel der"></div>';
+    document.body.appendChild(curtain);
+    const folds = (panel: Element | null, n: number) => {
+      if (!panel) return;
+      const w = 100 / n;
+      for (let k = 0; k < n; k++) {
+        const f = document.createElement('div');
+        f.className = 'tm-fx-fold';
+        f.style.left = `${k * w - 0.6}%`;
+        f.style.width = `${w + 1.4}%`;
+        f.style.animationDelay = `${k * 0.18}s`;
+        panel.appendChild(f);
+      }
+    };
+    folds(curtain.querySelector('.izq'), 9);
+    folds(curtain.querySelector('.der'), 9);
+    requestAnimationFrame(() => setTimeout(() => curtain.classList.add('is-open'), 300));
+    const removeCurtain = () => { if (curtain.parentNode) curtain.remove(); };
+    setTimeout(removeCurtain, 2800);   // tras abrirse
+    setTimeout(removeCurtain, 5000);   // failsafe absoluto: nunca se queda
   }
 
   // ---------- 2. Tipografía cinética del titular ----------
@@ -74,6 +113,10 @@ if (root.classList.contains('tm-fx-on')) {
     }
     if (reduce) {
       title.classList.add('is-lit');
+    } else if (curtainWillPlay) {
+      // Si hay telón, el título se revela justo cuando el telón se abre.
+      setTimeout(() => title.classList.add('is-lit'), 2300);
+      setTimeout(() => title.classList.add('is-lit'), 3500); // failsafe
     } else {
       const lit = () => requestAnimationFrame(() => title.classList.add('is-lit'));
       if ('IntersectionObserver' in window) {
@@ -107,7 +150,7 @@ if (root.classList.contains('tm-fx-on')) {
     const neon = document.createElement('div');
     neon.className = 'tm-fx-neon';
     neon.setAttribute('aria-hidden', 'true');
-    neon.innerHTML = '<span class="tm-fx-neon__txt">La casa de la comedia</span>';
+    neon.innerHTML = '<span class="tm-fx-neon__txt">★ La casa de la comedia ★</span>';
     marquee.parentNode.insertBefore(neon, marquee);
   }
 
@@ -123,7 +166,7 @@ if (root.classList.contains('tm-fx-on')) {
         const px = (e.clientX - r.left) / r.width - 0.5;
         const py = (e.clientY - r.top) / r.height - 0.5;
         card.classList.add('tm-fx-tilting');
-        card.style.transform = `perspective(800px) rotateY(${px * 12}deg) rotateX(${-py * 12}deg)`;
+        card.style.transform = `perspective(800px) rotateY(${px * 12}deg) rotateX(${-py * 12}deg) translateZ(6px)`;
       });
       card.addEventListener('pointerleave', () => {
         card.classList.remove('tm-fx-tilting');
