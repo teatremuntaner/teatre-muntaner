@@ -60,7 +60,7 @@ html.tm-fx-on .tm-fx-spot {
     transparent 47%,
     rgba(22, 9, 8, 0.4) 57%,
     rgba(16, 6, 6, 0.56) 100%);
-  animation: tm-fx-strike 0.9s ease-out both;
+  animation: tm-fx-strike 1.3s ease-out both;
 }
 /* Haz cálido dorado (mucha más luz dentro) + RIM (aro del borde del foco) +
    un lavado cálido por todo el hero = ambiente de sala iluminada para evento. */
@@ -78,16 +78,18 @@ html.tm-fx-on .tm-fx-halo {
       rgba(255, 242, 214, 0.30) 57%,
       transparent 62%),
     radial-gradient(130% 120% at 50% 35%, rgba(231, 150, 90, 0.07), transparent 75%);
-  animation: tm-fx-strike 0.9s ease-out both;
+  animation: tm-fx-strike 1.3s ease-out both;
 }
-/* Encendido del foco (efecto #5): parpadeo de arranque como lámpara de arco. */
+/* Encendido del foco (efecto #5): titubeo marcado de lámpara de arco al prender. */
 @keyframes tm-fx-strike {
   0% { opacity: 0; }
-  8% { opacity: 0.7; }
-  12% { opacity: 0.15; }
-  22% { opacity: 0.92; }
-  28% { opacity: 0.35; }
-  40%, 100% { opacity: 1; }
+  6% { opacity: 0.9; }
+  10% { opacity: 0.08; }
+  16% { opacity: 0.95; }
+  22% { opacity: 0.2; }
+  30% { opacity: 1; }
+  36% { opacity: 0.5; }
+  44%, 100% { opacity: 1; }
 }
 /* Luz de relleno fija (efecto #2): un 2º foco cálido tenue → la escena no
    queda plana, parece iluminada por más de una lámpara. */
@@ -98,35 +100,32 @@ html.tm-fx-on .tm-fx-fill {
 /* Motas de polvo en el haz (efecto #1): solo visibles dentro del foco
    (máscara que sigue al cursor), flotando despacio como en un teatro. */
 html.tm-fx-on .tm-fx-dust {
-  position: absolute; inset: 0; z-index: 4; pointer-events: none; mix-blend-mode: screen; opacity: 0.75;
-  background-repeat: no-repeat;
+  position: absolute; inset: 0; z-index: 4; pointer-events: none; mix-blend-mode: screen; opacity: 0.95;
+  /* Dos rejillas de puntos a tamaños no múltiplos → campo denso e irregular de
+     motas. La máscara solo deja ver las que caen dentro del haz. */
   background-image:
-    radial-gradient(1.6px 1.6px at 20% 30%, rgba(255, 240, 214, 0.9), transparent 60%),
-    radial-gradient(1.2px 1.2px at 33% 52%, rgba(255, 240, 214, 0.8), transparent 60%),
-    radial-gradient(1.4px 1.4px at 47% 38%, rgba(255, 240, 214, 0.85), transparent 60%),
-    radial-gradient(1px 1px at 58% 60%, rgba(255, 240, 214, 0.75), transparent 60%),
-    radial-gradient(1.6px 1.6px at 66% 33%, rgba(255, 240, 214, 0.9), transparent 60%),
-    radial-gradient(1.1px 1.1px at 72% 56%, rgba(255, 240, 214, 0.8), transparent 60%),
-    radial-gradient(1.3px 1.3px at 41% 66%, rgba(255, 240, 214, 0.8), transparent 60%),
-    radial-gradient(1px 1px at 28% 44%, rgba(255, 240, 214, 0.7), transparent 60%),
-    radial-gradient(1.5px 1.5px at 54% 27%, rgba(255, 240, 214, 0.85), transparent 60%),
-    radial-gradient(1.2px 1.2px at 78% 42%, rgba(255, 240, 214, 0.8), transparent 60%),
-    radial-gradient(1px 1px at 36% 35%, rgba(255, 240, 214, 0.7), transparent 60%),
-    radial-gradient(1.3px 1.3px at 62% 48%, rgba(255, 240, 214, 0.8), transparent 60%);
+    radial-gradient(2px 2px at 50% 50%, rgba(255, 243, 216, 0.95), transparent 62%),
+    radial-gradient(1.4px 1.4px at 50% 50%, rgba(255, 236, 205, 0.8), transparent 62%);
+  background-size: 30px 30px, 44px 44px;
+  background-position: 0 0, 13px 9px;
   -webkit-mask: radial-gradient(circle 320px at var(--mx, 50%) var(--my, 50%), #000 0, #000 46%, transparent 60%);
           mask: radial-gradient(circle 320px at var(--mx, 50%) var(--my, 50%), #000 0, #000 46%, transparent 60%);
-  animation: tm-fx-strike 0.9s ease-out both, tm-fx-float 7s ease-in-out infinite;
+  animation: tm-fx-strike 1.3s ease-out both, tm-fx-motes 9s linear infinite;
 }
-@keyframes tm-fx-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-11px); }
+/* Las motas suben despacio a través del haz (anima la posición, no el elemento,
+   para que la máscara del foco no se mueva). */
+@keyframes tm-fx-motes {
+  from { background-position: 0 0, 13px 9px; }
+  to   { background-position: 0 -60px, 13px -51px; }
 }
 
-/* Hilo de oro de progreso de scroll (efecto #3) — funciona también en móvil. */
+/* Hilo de oro de progreso de scroll (efecto #3) — funciona también en móvil.
+   Va JUSTO DEBAJO de la cabecera (no en el borde superior, para no confundirse
+   con la línea oro-rojo de la cabecera), brillante y con resplandor. */
 html.tm-fx-on .tm-fx-progress {
-  position: fixed; top: 0; left: 0; height: 3px; width: 0; z-index: 60; pointer-events: none;
-  background: linear-gradient(90deg, var(--c-gold), var(--c-red));
-  box-shadow: 0 0 8px rgba(231, 183, 90, 0.6);
+  position: fixed; top: calc(var(--nav-h) - 3px); left: 0; height: 3px; width: 0; z-index: 60; pointer-events: none;
+  background: linear-gradient(90deg, #e7b75a, #f3cf7a 55%, #fff);
+  box-shadow: 0 0 10px rgba(231, 183, 90, 0.9), 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 
 /* Subrayado dorado que se "dibuja" en los títulos de sección (efecto #4)
