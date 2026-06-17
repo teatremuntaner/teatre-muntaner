@@ -17,13 +17,29 @@ if (root.classList.contains('tm-fx-on')) {
   grain.setAttribute('aria-hidden', 'true');
   document.body.appendChild(grain);
 
+  // ---------- Hilo de oro de progreso de scroll (efecto #3, global) ----------
+  const prog = document.createElement('div');
+  prog.className = 'tm-fx-progress';
+  prog.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(prog);
+  let praf = 0;
+  const setProg = () => {
+    const doc = document.documentElement;
+    const max = doc.scrollHeight - doc.clientHeight;
+    prog.style.width = `${max > 0 ? (doc.scrollTop / max) * 100 : 0}%`;
+    praf = 0;
+  };
+  addEventListener('scroll', () => { if (!praf) praf = requestAnimationFrame(setProg); }, { passive: true });
+  setProg();
+
   // ---------- 1. Hero: escena oscura + foco "linterna" (SOLO escritorio) ----------
   // En móvil/táctil no hay ratón, así que NO se aplica: el hero se queda con su
   // foto normal (sin oscurecer). La clase tm-fx-hero activa el oscurecido en CSS.
   const hero = document.querySelector<HTMLElement>('.hero');
   if (hero && fine) {
     hero.classList.add('tm-fx-hero');
-    for (const cls of ['tm-fx-mesh', 'tm-fx-spot', 'tm-fx-halo']) {
+    // Orden = z-index: mesh(1) y relleno(1) detrás, foco(2), haz(3), polvo(4).
+    for (const cls of ['tm-fx-mesh', 'tm-fx-fill', 'tm-fx-spot', 'tm-fx-halo', 'tm-fx-dust']) {
       const layer = document.createElement('div');
       layer.className = cls;
       layer.setAttribute('aria-hidden', 'true');
