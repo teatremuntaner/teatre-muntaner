@@ -65,16 +65,16 @@ if (root.classList.contains('tm-fx-on')) {
         resize();
         addEventListener('resize', resize, { passive: true });
 
-        const P = Array.from({ length: 105 }, () => ({
+        const P = Array.from({ length: 150 }, () => ({
           x: Math.random(), y: Math.random(),
-          r: 0.8 + Math.random() * 2.4,
+          r: 0.9 + Math.random() * 2.8,
           vy: 4 + Math.random() * 11,
           vx: (Math.random() - 0.5) * 7,
           ph: Math.random() * Math.PI * 2,
           tw: 0.5 + Math.random() * 1.6,
-          a: 0.55 + Math.random() * 0.45,
+          a: 0.72 + Math.random() * 0.28,
         }));
-        const R = 165; // radio visible del haz (px)
+        const R = 175; // radio visible del haz (px)
         let onScreen = true;
         new IntersectionObserver((es) => { onScreen = es[0].isIntersecting; }).observe(hero);
         let last = 0;
@@ -92,10 +92,18 @@ if (root.classList.contains('tm-fx-on')) {
             const d = Math.hypot(px - mx, py - my);
             if (d > R) continue;
             const tw = 0.7 + 0.3 * Math.sin((t / 1000) * p.tw + p.ph);
-            ctx.globalAlpha = Math.max(0, p.a * (1 - d / R) * tw);
+            const base = Math.max(0, p.a * (1 - d / R) * tw);
+            // Resplandor (disco amplio y tenue) — hace que la mota "atrape" la luz.
+            ctx.globalAlpha = base * 0.4;
+            ctx.beginPath();
+            ctx.arc(px, py, p.r * 2.8, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgb(255, 234, 198)';
+            ctx.fill();
+            // Núcleo brillante.
+            ctx.globalAlpha = base;
             ctx.beginPath();
             ctx.arc(px, py, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgb(255, 240, 210)';
+            ctx.fillStyle = 'rgb(255, 245, 224)';
             ctx.fill();
           }
           ctx.globalAlpha = 1;
