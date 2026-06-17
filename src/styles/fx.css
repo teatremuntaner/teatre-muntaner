@@ -116,16 +116,6 @@ html.tm-fx-on .show-card.reveal.is-visible { clip-path: inset(0 0 0 0); }
 /* Tilt 3D */
 html.tm-fx-on .show-card { transform-style: preserve-3d; }
 html.tm-fx-on .show-card.tm-fx-tilting { transition: none; }
-/* Duotono → color al hover. Solo en dispositivos con ratón: en táctil no hay
-   hover que devuelva el color, así que ahí los carteles se ven a color directos. */
-@media (hover: hover) and (pointer: fine) {
-  html.tm-fx-on .show-card__img img {
-    filter: grayscale(1) brightness(0.92);
-    transition: transform 0.6s ease, filter 0.5s ease;
-  }
-  html.tm-fx-on .show-card:hover .show-card__img img { filter: none; }
-}
-
 /* ---------- Rendimiento y accesibilidad (obligatorio) ---------- */
 @media (prefers-reduced-motion: reduce) {
   html.tm-fx-on .tm-fx-mesh,
