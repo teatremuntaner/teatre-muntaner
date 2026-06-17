@@ -60,7 +60,7 @@ html.tm-fx-on .tm-fx-spot {
     transparent 47%,
     rgba(22, 9, 8, 0.4) 57%,
     rgba(16, 6, 6, 0.56) 100%);
-  animation: tm-fx-strike 1.3s ease-out both;
+  animation: tm-fx-dim 1.1s ease-out both;
 }
 /* Haz cálido dorado (mucha más luz dentro) + RIM (aro del borde del foco) +
    un lavado cálido por todo el hero = ambiente de sala iluminada para evento. */
@@ -78,18 +78,20 @@ html.tm-fx-on .tm-fx-halo {
       rgba(255, 242, 214, 0.30) 57%,
       transparent 62%),
     radial-gradient(130% 120% at 50% 35%, rgba(231, 150, 90, 0.07), transparent 75%);
-  animation: tm-fx-strike 1.3s ease-out both;
+  animation: tm-fx-ignite 1.2s ease-out both;
 }
-/* Encendido del foco (efecto #5): titubeo marcado de lámpara de arco al prender. */
-@keyframes tm-fx-strike {
+/* Encendido del foco (efecto #5): la sala se atenúa (dim) y el haz "prende"
+   con un destello cálido que se asienta — NO un parpadeo on/off (eso parecía
+   error de carga). */
+@keyframes tm-fx-dim {
   0% { opacity: 0; }
-  6% { opacity: 0.9; }
-  10% { opacity: 0.08; }
-  16% { opacity: 0.95; }
-  22% { opacity: 0.2; }
-  30% { opacity: 1; }
-  36% { opacity: 0.5; }
-  44%, 100% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes tm-fx-ignite {
+  0%   { opacity: 0;    filter: brightness(1.7); }
+  30%  { opacity: 1;    filter: brightness(1.5); }  /* destello al prender */
+  55%  { opacity: 0.82; filter: brightness(1); }    /* se asienta (suave) */
+  100% { opacity: 1;    filter: brightness(1); }
 }
 /* Luz de relleno fija (efecto #2): un 2º foco cálido tenue → la escena no
    queda plana, parece iluminada por más de una lámpara. */
@@ -97,35 +99,11 @@ html.tm-fx-on .tm-fx-fill {
   position: absolute; inset: 0; z-index: 1; pointer-events: none; mix-blend-mode: screen;
   background: radial-gradient(58% 50% at 85% 88%, rgba(231, 150, 90, 0.18), transparent 70%);
 }
-/* Motas de polvo en el haz (efecto #1): solo visibles dentro del foco
-   (máscara que sigue al cursor), flotando despacio como en un teatro. */
-html.tm-fx-on .tm-fx-dust {
-  position: absolute; inset: 0; z-index: 4; pointer-events: none; mix-blend-mode: screen; opacity: 0.95;
-  /* Dos rejillas de puntos a tamaños no múltiplos → campo denso e irregular de
-     motas. La máscara solo deja ver las que caen dentro del haz. */
-  background-image:
-    radial-gradient(2px 2px at 50% 50%, rgba(255, 243, 216, 0.95), transparent 62%),
-    radial-gradient(1.4px 1.4px at 50% 50%, rgba(255, 236, 205, 0.8), transparent 62%);
-  background-size: 30px 30px, 44px 44px;
-  background-position: 0 0, 13px 9px;
-  -webkit-mask: radial-gradient(circle 320px at var(--mx, 50%) var(--my, 50%), #000 0, #000 46%, transparent 60%);
-          mask: radial-gradient(circle 320px at var(--mx, 50%) var(--my, 50%), #000 0, #000 46%, transparent 60%);
-  animation: tm-fx-strike 1.3s ease-out both, tm-fx-motes 9s linear infinite;
-}
-/* Las motas suben despacio a través del haz (anima la posición, no el elemento,
-   para que la máscara del foco no se mueva). */
-@keyframes tm-fx-motes {
-  from { background-position: 0 0, 13px 9px; }
-  to   { background-position: 0 -60px, 13px -51px; }
-}
-
-/* Hilo de oro de progreso de scroll (efecto #3) — funciona también en móvil.
-   Va JUSTO DEBAJO de la cabecera (no en el borde superior, para no confundirse
-   con la línea oro-rojo de la cabecera), brillante y con resplandor. */
-html.tm-fx-on .tm-fx-progress {
-  position: fixed; top: calc(var(--nav-h) - 3px); left: 0; height: 3px; width: 0; z-index: 60; pointer-events: none;
-  background: linear-gradient(90deg, #e7b75a, #f3cf7a 55%, #fff);
-  box-shadow: 0 0 10px rgba(231, 183, 90, 0.9), 0 1px 4px rgba(0, 0, 0, 0.25);
+/* Motas de polvo en el haz (efecto #1): canvas con partículas ALEATORIAS
+   (posición, tamaño y parpadeo al azar) que fx.ts dibuja solo dentro del foco.
+   Nada de rejillas: aquí solo posicionamos el lienzo. */
+html.tm-fx-on canvas.tm-fx-dust {
+  position: absolute; inset: 0; z-index: 4; pointer-events: none; mix-blend-mode: screen;
 }
 
 /* Subrayado dorado que se "dibuja" en los títulos de sección (efecto #4)

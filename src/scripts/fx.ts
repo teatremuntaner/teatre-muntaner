@@ -17,44 +17,92 @@ if (root.classList.contains('tm-fx-on')) {
   grain.setAttribute('aria-hidden', 'true');
   document.body.appendChild(grain);
 
-  // ---------- Hilo de oro de progreso de scroll (efecto #3, global) ----------
-  const prog = document.createElement('div');
-  prog.className = 'tm-fx-progress';
-  prog.setAttribute('aria-hidden', 'true');
-  document.body.appendChild(prog);
-  let praf = 0;
-  const setProg = () => {
-    const doc = document.documentElement;
-    const max = doc.scrollHeight - doc.clientHeight;
-    prog.style.width = `${max > 0 ? (doc.scrollTop / max) * 100 : 0}%`;
-    praf = 0;
-  };
-  addEventListener('scroll', () => { if (!praf) praf = requestAnimationFrame(setProg); }, { passive: true });
-  setProg();
-
   // ---------- 1. Hero: escena oscura + foco "linterna" (SOLO escritorio) ----------
   // En móvil/táctil no hay ratón, así que NO se aplica: el hero se queda con su
   // foto normal (sin oscurecer). La clase tm-fx-hero activa el oscurecido en CSS.
   const hero = document.querySelector<HTMLElement>('.hero');
   if (hero && fine) {
     hero.classList.add('tm-fx-hero');
-    // Orden = z-index: mesh(1) y relleno(1) detrás, foco(2), haz(3), polvo(4).
-    for (const cls of ['tm-fx-mesh', 'tm-fx-fill', 'tm-fx-spot', 'tm-fx-halo', 'tm-fx-dust']) {
+    // Orden = z-index: mesh(1) y relleno(1) detrás, foco(2), haz(3).
+    for (const cls of ['tm-fx-mesh', 'tm-fx-fill', 'tm-fx-spot', 'tm-fx-halo']) {
       const layer = document.createElement('div');
       layer.className = cls;
       layer.setAttribute('aria-hidden', 'true');
       hero.appendChild(layer);
     }
+    // Posición del foco: en píxeles (para el canvas de motas) y en % (para CSS).
+    let mx = -9999, my = -9999;
     let raf = 0;
     hero.addEventListener('pointermove', (e) => {
+      const r = hero.getBoundingClientRect();
+      mx = e.clientX - r.left; my = e.clientY - r.top;
       if (raf) return;
       raf = requestAnimationFrame(() => {
-        const r = hero.getBoundingClientRect();
-        hero.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
-        hero.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
+        hero.style.setProperty('--mx', `${(mx / r.width) * 100}%`);
+        hero.style.setProperty('--my', `${(my / r.height) * 100}%`);
         raf = 0;
       });
     }, { passive: true });
+
+    // ---------- 1. Motas de polvo en el haz (canvas de partículas aleatorias) ----------
+    // Posición, tamaño y parpadeo al azar; solo se dibujan dentro del foco.
+    if (!reduce) {
+      const canvas = document.createElement('canvas');
+      canvas.className = 'tm-fx-dust';
+      canvas.setAttribute('aria-hidden', 'true');
+      hero.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        let W = 0, H = 0;
+        const resize = () => {
+          const r = hero.getBoundingClientRect();
+          W = r.width; H = r.height;
+          canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+          canvas.style.width = `${W}px`; canvas.style.height = `${H}px`;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        };
+        resize();
+        addEventListener('resize', resize, { passive: true });
+
+        const P = Array.from({ length: 105 }, () => ({
+          x: Math.random(), y: Math.random(),
+          r: 0.8 + Math.random() * 2.4,
+          vy: 4 + Math.random() * 11,
+          vx: (Math.random() - 0.5) * 7,
+          ph: Math.random() * Math.PI * 2,
+          tw: 0.5 + Math.random() * 1.6,
+          a: 0.55 + Math.random() * 0.45,
+        }));
+        const R = 165; // radio visible del haz (px)
+        let onScreen = true;
+        new IntersectionObserver((es) => { onScreen = es[0].isIntersecting; }).observe(hero);
+        let last = 0;
+        const frame = (t: number) => {
+          requestAnimationFrame(frame);
+          if (!onScreen) { last = t; return; }
+          const dt = last ? Math.min((t - last) / 1000, 0.05) : 0; last = t;
+          ctx.clearRect(0, 0, W, H);
+          ctx.globalCompositeOperation = 'lighter';
+          for (const p of P) {
+            p.y -= (p.vy * dt) / H; p.x += (p.vx * dt) / W;
+            if (p.y < -0.02) { p.y = 1.02; p.x = Math.random(); }
+            if (p.x < -0.02) p.x = 1.02; else if (p.x > 1.02) p.x = -0.02;
+            const px = p.x * W, py = p.y * H;
+            const d = Math.hypot(px - mx, py - my);
+            if (d > R) continue;
+            const tw = 0.7 + 0.3 * Math.sin((t / 1000) * p.tw + p.ph);
+            ctx.globalAlpha = Math.max(0, p.a * (1 - d / R) * tw);
+            ctx.beginPath();
+            ctx.arc(px, py, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgb(255, 240, 210)';
+            ctx.fill();
+          }
+          ctx.globalAlpha = 1;
+        };
+        requestAnimationFrame(frame);
+      }
+    }
   }
 
   // ---------- 2. Tipografía cinética del titular ----------
