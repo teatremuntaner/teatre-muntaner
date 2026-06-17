@@ -4,10 +4,10 @@ import '../styles/fx.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
-// Capa de efectos visuales (tm-fx). false = desactivada para el público.
-// Aun estando en false, se puede ver en vivo visitando la web con ?fx=1
-// (y ?fx=0 para apagarla; la preferencia se recuerda en el navegador).
-const FX_ENABLED = false;
+// Capa de efectos visuales (tm-fx). true = activa para todo el mundo.
+// (?fx=0 en la URL la apaga puntualmente; la preferencia se recuerda en el
+// navegador. No es una opción anunciada, solo una salida de emergencia.)
+const FX_ENABLED = true;
 
 interface Props {
   title: string;
