@@ -193,7 +193,9 @@ h1, h2, h3 { font-family: var(--f-title); font-weight: 600; line-height: 1.05; m
 }
 .show-card__more { background: rgba(42, 20, 16, 0.06); color: var(--paper); border-top: 3px solid var(--card-accent, var(--accent)); }
 .show-card__more:hover { background: rgba(42, 20, 16, 0.12); }
-.show-card__buy { color: #fff; background: var(--c-red); border-top: 3px solid var(--c-red); }
+/* Botón de comprar con el color predominante del cartel (mismo acento que el
+   encuadre de la tarjeta). El texto usa el ink calculado para contrastar. */
+.show-card__buy { color: var(--card-ink, #fff); background: var(--card-accent, var(--c-red)); border-top: 3px solid var(--card-accent, var(--c-red)); }
 .show-card__buy:hover { filter: brightness(1.08); }
 
 /* ---------- Marquesina teatral (signage) ---------- */

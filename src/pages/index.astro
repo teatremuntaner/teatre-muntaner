@@ -169,7 +169,7 @@ const gallery = [
         const genre = cardGenres.join(' · ');
         const when = d.ticketAlarm ? 'Próximamente' : (d.dates.length ? summarize(d.dates).card : (d.dateText ?? 'Consultar fechas'));
         return (
-          <article class="show-card reveal" style={`--card-accent:${d.accent}`} data-genres={cardGenres.join('|')} data-week={isThisWeek(d) ? '1' : '0'} data-lang={d.lang ?? ''}>
+          <article class="show-card reveal" style={`--card-accent:${d.accent};--card-ink:${d.accentInk}`} data-genres={cardGenres.join('|')} data-week={isThisWeek(d) ? '1' : '0'} data-lang={d.lang ?? ''}>
             <a class="show-card__main" href={d.externalUrl ?? `${base}espectaculos/${show.id}/`}>
               <div class="show-card__bar"></div>
               <div class="show-card__img">
