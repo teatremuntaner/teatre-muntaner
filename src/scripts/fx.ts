@@ -11,73 +11,34 @@ if (root.classList.contains('tm-fx-on')) {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-  // Telón de intro: poner en false para quitar SOLO el telón (el resto sigue).
-  const CURTAIN = true;
-  let curtainWillPlay = false;
-
   // ---------- 6. Grano de película (global) ----------
   const grain = document.createElement('div');
   grain.className = 'tm-fx-grain';
   grain.setAttribute('aria-hidden', 'true');
   document.body.appendChild(grain);
 
-  // ---------- 1. Hero: capas (mesh / foco / halo) + seguimiento ----------
+  // ---------- 1. Hero: escena oscura + foco "linterna" (SOLO escritorio) ----------
+  // En móvil/táctil no hay ratón, así que NO se aplica: el hero se queda con su
+  // foto normal (sin oscurecer). La clase tm-fx-hero activa el oscurecido en CSS.
   const hero = document.querySelector<HTMLElement>('.hero');
-  if (hero) {
+  if (hero && fine) {
+    hero.classList.add('tm-fx-hero');
     for (const cls of ['tm-fx-mesh', 'tm-fx-spot', 'tm-fx-halo']) {
       const layer = document.createElement('div');
       layer.className = cls;
       layer.setAttribute('aria-hidden', 'true');
       hero.appendChild(layer);
     }
-    // El foco sigue al cursor solo en escritorio; en táctil queda centrado.
-    if (fine && !reduce) {
-      let raf = 0;
-      hero.addEventListener('pointermove', (e) => {
-        if (raf) return;
-        raf = requestAnimationFrame(() => {
-          const r = hero.getBoundingClientRect();
-          hero.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
-          hero.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
-          raf = 0;
-        });
-      }, { passive: true });
-    }
-  }
-
-  // ---------- Telón de intro (solo en la home, una vez por sesión) ----------
-  // Decorativo y con pointer-events:none → no condiciona que se vea el hero
-  // (el título tiene su propio failsafe). Se salta con reduced-motion.
-  if (CURTAIN && hero && !reduce) {
-    try { curtainWillPlay = !sessionStorage.getItem('tm-fx-curtain'); } catch (e) { curtainWillPlay = true; }
-  }
-  if (curtainWillPlay) {
-    try { sessionStorage.setItem('tm-fx-curtain', '1'); } catch (e) { /* sesión privada */ }
-    const curtain = document.createElement('div');
-    curtain.className = 'tm-fx-curtain';
-    curtain.setAttribute('aria-hidden', 'true');
-    curtain.innerHTML =
-      '<div class="tm-fx-cenefa-oro"></div><div class="tm-fx-cenefa"></div>' +
-      '<div class="tm-fx-panel izq"></div><div class="tm-fx-panel der"></div>';
-    document.body.appendChild(curtain);
-    const folds = (panel: Element | null, n: number) => {
-      if (!panel) return;
-      const w = 100 / n;
-      for (let k = 0; k < n; k++) {
-        const f = document.createElement('div');
-        f.className = 'tm-fx-fold';
-        f.style.left = `${k * w - 0.6}%`;
-        f.style.width = `${w + 1.4}%`;
-        f.style.animationDelay = `${k * 0.18}s`;
-        panel.appendChild(f);
-      }
-    };
-    folds(curtain.querySelector('.izq'), 9);
-    folds(curtain.querySelector('.der'), 9);
-    requestAnimationFrame(() => setTimeout(() => curtain.classList.add('is-open'), 300));
-    const removeCurtain = () => { if (curtain.parentNode) curtain.remove(); };
-    setTimeout(removeCurtain, 2800);   // tras abrirse
-    setTimeout(removeCurtain, 5000);   // failsafe absoluto: nunca se queda
+    let raf = 0;
+    hero.addEventListener('pointermove', (e) => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        const r = hero.getBoundingClientRect();
+        hero.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
+        hero.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
+        raf = 0;
+      });
+    }, { passive: true });
   }
 
   // ---------- 2. Tipografía cinética del titular ----------
@@ -113,10 +74,6 @@ if (root.classList.contains('tm-fx-on')) {
     }
     if (reduce) {
       title.classList.add('is-lit');
-    } else if (curtainWillPlay) {
-      // Si hay telón, el título se revela justo cuando el telón se abre.
-      setTimeout(() => title.classList.add('is-lit'), 2300);
-      setTimeout(() => title.classList.add('is-lit'), 3500); // failsafe
     } else {
       const lit = () => requestAnimationFrame(() => title.classList.add('is-lit'));
       if ('IntersectionObserver' in window) {
