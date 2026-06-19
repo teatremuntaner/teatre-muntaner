@@ -14,7 +14,7 @@ dates:
     time: "21:00"
   - date: "2026-09-19"
     time: "21:00"
-  - date: "2026-10-03"
+  - date: "2026-10-17"
     time: "21:00"
 ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20530"
 qwanticEventId: "20530"
