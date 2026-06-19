@@ -1,11 +1,11 @@
 ---
 title: Un Tal Shakespeare
-category: Espectáculo
+category: Comedia
 genres:
   - Comedia
   - Teatre
 lang: Catalán
-priority: 0
+priority: 1
 poster: ./un-tal-shakespeare.jpg
 accent: "#be6060"
 accentInk: "#ffffff"
