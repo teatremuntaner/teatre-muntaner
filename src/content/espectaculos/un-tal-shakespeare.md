@@ -5,21 +5,21 @@ genres:
   - Comedia
   - Teatre
 lang: Catalán
-priority: 1
+priority: 0
 poster: ./un-tal-shakespeare.jpg
 accent: "#be6060"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-11-07"
-    time: "21:00"
-  - date: "2026-11-15"
-    time: "12:30"
-  - date: "2026-12-13"
-    time: "12:30"
+  - date: 2026-11-07
+    time: 21:00
+  - date: 2026-11-15
+    time: 12:30
+  - date: 2026-12-13
+    time: 12:30
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21451
 qwanticEventId: "21451"
 priceFrom: 18
-saleStart: "2026-06-19T02:12"
+saleStart: 2026-06-19T02:12
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 18 €
 draft: false
