@@ -10,8 +10,6 @@ poster: "./toni-cano-traficante-de-endorfinas.jpg"
 accent: "#8f60be"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-06-20"
-    time: "21:00"
   - date: "2026-09-19"
     time: "21:00"
   - date: "2026-10-17"
