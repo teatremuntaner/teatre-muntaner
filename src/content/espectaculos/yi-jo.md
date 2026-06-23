@@ -1,6 +1,6 @@
 ---
 title: YI & JO
-tagline: Grimey Tv, Yibril y Joel.
+tagline: Yibril y Joel
 promo: No recomendado a menores de 18 años
 category: Espectáculo
 genres:
@@ -31,6 +31,6 @@ Dos personas extraordinariamente divertidas se reúnen para ofrecer un espectác
 
 Una experiencia única. La asistencia es muy recomendable. El arrepentimiento por perdérselo podría durar toda la vida.
 
-Grimey Tv, Yibril y Joel.
+Yibril y Joel.
 
 **No recomendado a menores de 18 años**
