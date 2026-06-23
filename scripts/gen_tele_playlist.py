@@ -149,7 +149,9 @@ def build_playlist(mapping, assume_available):
             lista.append({"archivo": chosen[si][1], "segundos": SECONDS_SHOW, "girar": POSTER_GIRAR, "show": chosen[si][0]})
             si += 1
         elif tok == "CCR":
-            lista.append({"archivo": ccr_file, "segundos": SECONDS_PROMO, "girar": POSTER_GIRAR})
+            # CCR tambien es un espectaculo de la casa (id corta-el-cable-rojo en
+            # funciones.json) -> lleva show para que el overlay muestre su proxima funcion.
+            lista.append({"archivo": ccr_file, "segundos": SECONDS_PROMO, "girar": POSTER_GIRAR, "show": "corta-el-cable-rojo"})
         elif tok == "HOUSE":
             if house_ok:
                 lista.append({"archivo": house_file, "segundos": SECONDS_PROMO, "girar": POSTER_GIRAR})
