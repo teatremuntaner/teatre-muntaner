@@ -48,12 +48,13 @@ const endOf = (dt: { date: string; time?: string }) => {
 
 // Offer completo (price/priceCurrency/validFrom los rellena el sync de Qwantic;
 // si faltan se omiten, no se inventan).
+// Nota: NO ponemos price/priceCurrency. El priceFrom de Qwantic no es fiable
+// (mezcla 2x1 y promos), y un precio engañoso en Google es peor que ninguno.
 const offer = d.ticketUrl
   ? {
       '@type': 'Offer',
       url: d.ticketUrl,
       availability: 'https://schema.org/InStock',
-      ...(d.priceFrom ? { price: d.priceFrom, priceCurrency: 'EUR' } : {}),
       ...(d.saleStart ? { validFrom: d.saleStart } : {}),
     }
   : null;
