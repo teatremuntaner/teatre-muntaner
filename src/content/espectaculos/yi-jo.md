@@ -1,5 +1,6 @@
 ---
 title: YI & JO
+tagline: Grimey Tv, Yibril y Joel.
 promo: No recomendado a menores de 18 años
 category: Espectáculo
 genres: []
@@ -27,5 +28,7 @@ Hay días que pasan desapercibidos. Y hay días que se recuerdan para siempre. E
 Dos personas extraordinariamente divertidas se reúnen para ofrecer un espectáculo repleto de risas, sorpresas y momentos inolvidables. El programa es incierto: puede haber juegos, puede haber sándwiches, puede que alguien acabe con la cara pintada. Todo es posible.
 
 Una experiencia única. La asistencia es muy recomendable. El arrepentimiento por perdérselo podría durar toda la vida.
+
+Grimey Tv, Yibril y Joel.
 
 **No recomendado a menores de 18 años**
