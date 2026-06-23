@@ -3,19 +3,21 @@ title: YI & JO
 tagline: Grimey Tv, Yibril y Joel.
 promo: No recomendado a menores de 18 años
 category: Espectáculo
-genres: []
+genres:
+  - Comedia
+  - Monólogos
 lang: Castellano
 priority: 0
 poster: ./yi-jo.jpg
 accent: "#be6086"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-10-10"
-    time: "21:00"
+  - date: 2026-10-10
+    time: 21:00
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21503
 qwanticEventId: "21503"
 priceFrom: 18
-saleStart: "2026-06-23T00:00"
+saleStart: 2026-06-23T00:00
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 duration: 90´
 price: Desde 18 €
