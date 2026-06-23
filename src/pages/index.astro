@@ -370,7 +370,8 @@ const gallery = [
   .hero__title { font-size: clamp(52px, 10vw, 132px); text-transform: uppercase; line-height: 0.92; color: #fff; text-shadow: 0 6px 40px rgba(0,0,0,0.55); }
   .hero__lead { font-family: var(--f-body); font-size: clamp(17px, 1.8vw, 21px); line-height: 1.6; color: rgba(255,255,255,0.94); max-width: 40ch; margin-top: 22px; text-shadow: 0 2px 16px rgba(0,0,0,0.6); }
   .hero__cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
-  .hero__cta .btn--ghost { border-color: rgba(255,255,255,0.55); color: #fff; }
+  /* Primario sólido domina; "Calendario" queda como secundario fantasma discreto. */
+  .hero__cta .btn--ghost { border-color: rgba(255,255,255,0.38); color: rgba(255,255,255,0.9); }
   .hero__cta .btn--ghost:hover { border-color: #fff; color: #fff; }
   .hero__scroll { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 3; width: 26px; height: 42px; border: 1px solid var(--paper-faint); border-radius: 14px; }
   .hero__scroll span { position: absolute; left: 50%; top: 8px; width: 3px; height: 8px; background: var(--paper); border-radius: 2px; transform: translateX(-50%); animation: scrollDot 1.8s ease-in-out infinite; }
@@ -408,7 +409,7 @@ const gallery = [
   /* Banda "El Teatro" con textura damasco (la pared real del teatro) */
   .teatro--damask { position: relative; background-size: cover; background-position: center; overflow: hidden; }
   .teatro--damask::before { content: ""; position: absolute; inset: 0; z-index: 0;
-    background: linear-gradient(180deg, rgba(26,8,6,0.5) 0%, rgba(38,13,10,0.42) 100%); }
+    background: linear-gradient(180deg, rgba(26,8,6,0.72) 0%, rgba(38,13,10,0.64) 100%); }
   .teatro--damask > .wrap { position: relative; z-index: 1; }
   .teatro--damask .kicker { color: var(--c-gold); text-shadow: 0 2px 10px rgba(0,0,0,0.6); }
   .teatro--damask .section__title { color: #fff; text-shadow: 0 2px 16px rgba(0,0,0,0.6); }

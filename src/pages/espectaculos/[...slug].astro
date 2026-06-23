@@ -224,6 +224,11 @@ const videoLd = ytId
     )}
   </article>
 
+  <!-- Barra de compra fija (solo móvil): "Comprar" siempre al alcance al leer la ficha -->
+  {!d.ticketAlarm && !archived && d.ticketUrl && (
+    <a class="show__buybar" href={d.ticketUrl} target="_blank" rel="noopener">Comprar entradas</a>
+  )}
+
   <!-- SEO: datos estructurados (un TheaterEvent por función) -->
   {eventsLd.length > 0 && (
     <script type="application/ld+json" set:html={JSON.stringify(eventsLd.length === 1 ? eventsLd[0] : eventsLd)} />
@@ -279,7 +284,8 @@ const videoLd = ytId
   .ticketalarm__row input[type="email"]:focus { outline: none; border-color: var(--accent); }
 
   .show__body { display: grid; grid-template-columns: 1fr 280px; gap: clamp(30px, 5vw, 60px); padding-top: clamp(40px, 6vw, 70px); }
-  .show__prose { font-size: 18px; line-height: 1.8; color: var(--paper-dim); }
+  /* Cuerpo de sinopsis en casi negro: párrafos largos legibles sin fatiga. */
+  .show__prose { font-size: 18px; line-height: 1.8; color: var(--paper); }
   .show__prose :global(strong) { color: var(--paper); }
   .show__photo { float: right; width: 300px; max-width: 42%; height: auto; margin: 4px 0 18px 28px; border-radius: 6px; box-shadow: 0 18px 40px rgba(0,0,0,0.45); }
   .show__video { position: relative; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); margin-top: 10px; }
@@ -304,11 +310,24 @@ const videoLd = ytId
   }
   .show__links-row a:hover { border-color: var(--accent); color: var(--accent-ink); }
 
+  /* Barra de compra: solo móvil, fija abajo (en escritorio el CTA del hero basta). */
+  .show__buybar { display: none; }
+
   @media (max-width: 760px) {
     .show__hero-inner { grid-template-columns: 1fr; justify-items: center; text-align: center; }
     .show__poster { max-width: 260px; }
     .show__cta { justify-content: center; }
     .show__body { grid-template-columns: 1fr; }
+    /* Hueco para que la barra fija no tape el final del contenido */
+    .show { padding-bottom: 78px; }
+    .show__buybar {
+      display: flex; align-items: center; justify-content: center;
+      position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 60;
+      background: var(--accent); color: var(--accent-ink);
+      font-family: var(--f-display); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; font-size: 14px;
+      padding: 16px 22px; border-radius: 999px;
+      box-shadow: 0 12px 30px -8px rgba(0,0,0,0.55), 0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent);
+    }
   }
 </style>
 
