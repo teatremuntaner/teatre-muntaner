@@ -43,6 +43,12 @@ CONFIG_URL    = "https://tele.teatremuntaner.com/config.json"   # config en vivo
 MEDIA_URL     = "https://tele.teatremuntaner.com/media/"        # para comprobar que el cartel existe (HEAD)
 SCREEN_SLUG   = "principal"     # que pantalla del config.json regeneramos
 
+# Overlay "proxima funcion" (lo lee motor.js de estos campos de nivel superior del config).
+# Se conservan si ya estan en el config en vivo; si faltan, este script los re-crea
+# (asi el overlay sobrevive aunque un guardado del panel los hubiera borrado).
+FUNCIONES_URL = "https://teatremuntaner.com/funciones.json"
+OVERLAY_POS   = "abajo-izq"
+
 N_SHOWS       = 6               # cuantos shows entran (los mas importantes)
 SECONDS_SHOW  = 10              # segundos por cartel de show
 SECONDS_PROMO = 10              # segundos por promo (CCR / casa)
@@ -139,7 +145,8 @@ def build_playlist(mapping, assume_available):
         if tok == "SHOW":
             if si >= len(chosen):
                 continue
-            lista.append({"archivo": chosen[si][1], "segundos": SECONDS_SHOW, "girar": POSTER_GIRAR})
+            # show: el slug de la ficha = id en funciones.json -> el overlay empareja solo.
+            lista.append({"archivo": chosen[si][1], "segundos": SECONDS_SHOW, "girar": POSTER_GIRAR, "show": chosen[si][0]})
             si += 1
         elif tok == "CCR":
             lista.append({"archivo": ccr_file, "segundos": SECONDS_PROMO, "girar": POSTER_GIRAR})
@@ -160,6 +167,12 @@ def merge_config(live, lista):
     if SCREEN_SLUG not in pant:
         sys.exit(f"ERROR: la pantalla '{SCREEN_SLUG}' no existe en el config en vivo; no toco nada.")
     pant[SCREEN_SLUG]["porDefecto"] = {"lista": lista, "girar": POSTER_GIRAR}
+    # Conserva el overlay "proxima funcion"; si falta (config sin esos campos o
+    # borrado por un guardado del panel), lo re-crea para que no se pierda.
+    if not cfg.get("funcionesUrl"):
+        cfg["funcionesUrl"] = FUNCIONES_URL
+    if not cfg.get("overlay"):
+        cfg["overlay"] = OVERLAY_POS
     return cfg
 
 
