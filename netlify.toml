@@ -13,3 +13,12 @@
 # Funciones serverless (botón "Actualizar cartelera" del centro de control)
 [functions]
   directory = "netlify/functions"
+
+# CORS para funciones.json: lo consume el escaparate (tele.teatremuntaner.com),
+# que es OTRO origen. Astro pone la cabecera en el endpoint, pero al prerenderizarse
+# a archivo estático se pierde; Netlify la reañade aquí. Sin esto, el navegador
+# bloquea el fetch del panel (selector de espectáculo) y de la tele (overlay).
+[[headers]]
+  for = "/funciones.json"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
