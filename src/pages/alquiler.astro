@@ -75,6 +75,21 @@ const ventajas = [
       </div>
     </section>
 
+    <!-- GUÍA DE ESPACIOS (PDF) -->
+    <section class="wrap section">
+      <div class="rent__guide reveal">
+        <div class="rent__guide-text">
+          <p class="kicker kicker--coral">Documentación</p>
+          <h2 class="section__title">Guía de espacios</h2>
+          <p class="lead">Descárgate la guía completa del Teatre Muntaner, con las características del espacio, equipamiento y todo lo que necesitas para tu evento.</p>
+        </div>
+        <div class="rent__guide-btns">
+          <a class="btn btn--accent" href="/assets/files/GUIADEESPACIOS_CAST.pdf" target="_blank" rel="noopener">Guía de espacios (Castellano) ↓</a>
+          <a class="btn btn--ghost" href="/assets/files/GUIADESPAIS_CAT.pdf" target="_blank" rel="noopener">Guia d'espais (Català) ↓</a>
+        </div>
+      </div>
+    </section>
+
     <!-- CONTACTO -->
     <section class="rent__cta" id="alquiler-contacto">
       <div class="wrap reveal">
@@ -110,6 +125,12 @@ const ventajas = [
   .rent__gallery { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; margin: clamp(28px, 6vw, 72px) 0; }
   .rent__gallery :global(img) { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; aspect-ratio: 3/2; box-shadow: 0 20px 50px -24px rgba(0,0,0,0.5); }
   @media (max-width: 760px) { .rent__gallery { grid-template-columns: 1fr; } }
+
+  .rent__guide { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 28px; background: var(--ink-soft); border: 1px solid var(--line); border-left: 4px solid var(--c-gold); border-radius: 16px; padding: clamp(24px, 4vw, 44px); }
+  .rent__guide-text { flex: 1 1 320px; }
+  .rent__guide-text .lead { margin-top: 12px; }
+  .rent__guide-btns { display: flex; flex-direction: column; gap: 12px; flex: 0 0 auto; }
+  @media (max-width: 600px) { .rent__guide-btns { width: 100%; } .rent__guide-btns .btn { justify-content: center; } }
 
   .rent__cta { background: var(--c-red); color: #fff; padding: clamp(48px, 7vw, 96px) 0; text-align: center; border-top: 2px solid var(--c-gold); }
   .rent__cta .section__title { color: #fff; }
