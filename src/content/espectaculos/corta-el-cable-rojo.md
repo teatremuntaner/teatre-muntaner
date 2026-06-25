@@ -1,68 +1,68 @@
 ---
-title: "Corta el cable rojo"
-category: "Comedia"
+title: Corta el cable rojo
+category: Comedia
 genres:
-  - "Improvisación"
-  - "Comedia"
-lang: "Castellano"
-poster: "./corta-el-cable-rojo.jpg"
+  - Improvisación
+  - Comedia
+lang: Castellano
+poster: ./corta-el-cable-rojo.jpg
 accent: "#ef2e31"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-06-25"
-    time: "20:00"
-  - date: "2026-06-26"
-    time: "18:30"
-  - date: "2026-06-26"
-    time: "20:30"
-  - date: "2026-06-27"
-    time: "17:00"
-  - date: "2026-06-27"
-    time: "19:00"
-  - date: "2026-06-28"
-    time: "18:30"
-  - date: "2026-06-28"
-    time: "20:30"
-  - date: "2026-07-01"
-    time: "20:00"
-  - date: "2026-07-02"
-    time: "20:00"
-  - date: "2026-07-03"
-    time: "19:00"
-  - date: "2026-07-03"
-    time: "21:00"
-  - date: "2026-07-04"
-    time: "18:30"
-  - date: "2026-07-04"
-    time: "20:30"
-  - date: "2026-07-08"
-    time: "20:00"
-  - date: "2026-07-09"
-    time: "20:00"
-  - date: "2026-07-10"
-    time: "19:00"
-  - date: "2026-07-10"
-    time: "21:00"
-  - date: "2026-07-11"
-    time: "18:30"
-  - date: "2026-07-11"
-    time: "20:30"
-  - date: "2026-07-15"
-    time: "20:00"
-  - date: "2026-07-16"
-    time: "20:00"
-  - date: "2026-07-17"
-    time: "19:00"
-  - date: "2026-07-17"
-    time: "21:00"
-  - date: "2026-07-18"
-    time: "18:30"
-ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20529"
+  - date: 2026-06-25
+    time: 20:00
+  - date: 2026-06-26
+    time: 18:30
+  - date: 2026-06-26
+    time: 20:30
+  - date: 2026-06-27
+    time: 17:00
+  - date: 2026-06-27
+    time: 19:00
+  - date: 2026-06-28
+    time: 18:30
+  - date: 2026-06-28
+    time: 20:30
+  - date: 2026-07-01
+    time: 20:00
+  - date: 2026-07-02
+    time: 20:00
+  - date: 2026-07-03
+    time: 19:00
+  - date: 2026-07-03
+    time: 21:00
+  - date: 2026-07-04
+    time: 18:30
+  - date: 2026-07-04
+    time: 20:30
+  - date: 2026-07-08
+    time: 20:00
+  - date: 2026-07-09
+    time: 20:00
+  - date: 2026-07-10
+    time: 19:00
+  - date: 2026-07-10
+    time: 21:00
+  - date: 2026-07-11
+    time: 18:30
+  - date: 2026-07-11
+    time: 20:30
+  - date: 2026-07-15
+    time: 20:00
+  - date: 2026-07-16
+    time: 20:00
+  - date: 2026-07-17
+    time: 19:00
+  - date: 2026-07-17
+    time: 21:00
+  - date: 2026-07-18
+    time: 18:30
+ticketUrl: https://lamuntaner.entradas.plus/entradas/es/calendario-corta-cable-rojo
 qwanticEventId: "20529"
-saleStart: "2026-02-26T12:03"
 priceFrom: 19.8
-price: "Desde 20 €"
-venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
+saleStart: 2026-02-26T12:03
+venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
+price: Desde 20 €
 draft: false
 ---
 
