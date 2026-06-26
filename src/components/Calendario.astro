@@ -226,12 +226,12 @@ const labels = months.map((mm) => `${MONTHS[mm.m]} ${mm.y}`);
   .cal__nav:hover:not(:disabled) { border-color: var(--c-red); color: var(--c-red); background: rgba(189, 34, 31, 0.06); }
   .cal__nav:disabled { opacity: 0.28; cursor: default; }
 
-  .cal__weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 8px; }
+  .cal__weekdays { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-bottom: 8px; }
   .cal__weekdays span {
     text-align: center; font-family: var(--f-display); font-size: 12px; letter-spacing: 0.1em;
     text-transform: uppercase; color: var(--paper-faint); font-weight: 600;
   }
-  .cal__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .cal__grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
   .cal__grid[hidden] { display: none; }
   /* Casilla: compacta. Las semanas vacías quedan en filas bajas; las que tienen
      función crecen con sus chips → densidad donde hay info, aire donde no. */
