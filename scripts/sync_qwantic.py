@@ -102,7 +102,10 @@ def fetch_sessions(eid):
     out.sort()
     today = datetime.date.today().isoformat()
     fut = [d for d in out if d[0] >= today]
-    return (fut or out)[:24], venta_desde
+    # Todas las funciones a la venta (tope de seguridad 1 año). Antes estaba en 24,
+    # lo que recortaba shows con muchas funciones (p. ej. Corta el cable rojo) y
+    # dejaba fuera del calendario las de meses siguientes aunque estuvieran a la venta.
+    return (fut or out)[:366], venta_desde
 
 def fetch_synopsis(friendly):
     """Sinopsis desde la página del evento en Qwantic (bloque 'event-description-landing')."""

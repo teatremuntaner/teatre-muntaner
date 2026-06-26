@@ -78,7 +78,9 @@ const mkEvent = (dt: { date: string; time?: string }) => ({
   organizer: { '@type': 'Organization', name: 'Teatre Muntaner', url: 'https://teatremuntaner.com' },
   ...(offer ? { offers: offer } : {}),
 });
-const eventsLd = d.dates.map(mkEvent);
+// Limitamos los TheaterEvent del JSON-LD a las próximas ~50 funciones: shows con
+// muchísimas fechas (Corta el cable rojo) inflarían el HTML sin aportar a SEO.
+const eventsLd = d.dates.slice(0, 50).map(mkEvent);
 
 // VideoObject del tráiler: Google exige thumbnailUrl para indexar el vídeo.
 const videoLd = ytId
