@@ -11,8 +11,6 @@ poster: "./joaquin-caserza-conversaciones-con-mi-mente.jpg"
 accent: "#608cbe"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-06-26"
-    time: "22:30"
   - date: "2026-09-12"
     time: "21:00"
   - date: "2026-09-13"
