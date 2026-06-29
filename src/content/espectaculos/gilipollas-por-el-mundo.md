@@ -3,7 +3,7 @@ title: Gilipollas por el mundo
 category: Comedia
 genres: []
 lang: Castellano
-priority: 0
+priority: -18
 poster: ./gilipollas-por-el-mundo.jpg
 accent: "#d39c90"
 accentInk: "#0c0a0f"
