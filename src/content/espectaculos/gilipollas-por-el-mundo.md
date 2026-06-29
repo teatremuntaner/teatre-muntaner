@@ -8,14 +8,14 @@ poster: ./gilipollas-por-el-mundo.jpg
 accent: "#d39c90"
 accentInk: "#0c0a0f"
 dates:
-  - date: 2026-12-04
-    time: 22:30
-  - date: 2026-12-05
-    time: 21:00
+  - date: "2026-12-04"
+    time: "22:30"
+  - date: "2026-12-05"
+    time: "21:00"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20536
 qwanticEventId: "20536"
 priceFrom: 18
-saleStart: 2026-06-29T10:05
+saleStart: "2026-06-29T10:05"
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 duration: 60´
 price: Desde 18 €
