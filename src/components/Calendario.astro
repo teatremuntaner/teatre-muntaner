@@ -259,15 +259,24 @@ const labels = months.map((mm) => `${MONTHS[mm.m]} ${mm.y}`);
   /* Chips con el nombre del espectáculo dentro de la casilla */
   .cal__chips { display: flex; flex-direction: column; gap: 3px; }
   .cal__chip {
+    position: relative;
     font-family: var(--f-display); font-size: 10.5px; letter-spacing: 0.01em; line-height: 1.3;
     text-transform: uppercase; font-weight: 600;
-    padding: 2px 6px; border-radius: 5px;
-    background: color-mix(in srgb, var(--c) 16%, #fff); color: #2a1410;
-    border-left: 3px solid var(--c);
+    padding: 3px 6px 3px 13px; border-radius: 5px;
+    /* Cajita NEUTRA (no un tinte del acento): un tinte del mismo tono pegado a la
+       barra saturada creaba cromoestereopsis (efecto "cuatricromía descuadrada"). */
+    background: #f2efe9; color: #2a1410;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .cal__chip--more { background: transparent; border-left-color: transparent; color: var(--paper-faint); padding-left: 3px; }
-  .cal__cell.is-sel .cal__chip { background: rgba(255, 255, 255, 0.92); color: #1a0c08; border-left-color: rgba(0, 0, 0, 0.18); }
+  /* Barra de color ANCHA pero rodeada de neutro (keyline): al no lindar el color
+     saturado con el fondo oscuro, se elimina el "vibrado" cromático. */
+  .cal__chip::before {
+    content: ""; position: absolute; left: 3px; top: 3px; bottom: 3px; width: 6px;
+    border-radius: 2px; background: var(--c);
+  }
+  .cal__chip--more { background: transparent; color: var(--paper-faint); padding: 2px 3px; }
+  .cal__chip--more::before { display: none; }
+  .cal__cell.is-sel .cal__chip { background: rgba(255, 255, 255, 0.92); color: #1a0c08; }
 
   /* Panel del día seleccionado.
      OJO: el contenido del panel se inyecta por JS (innerHTML), así que el CSS
@@ -310,7 +319,8 @@ const labels = months.map((mm) => `${MONTHS[mm.m]} ${mm.y}`);
     .cal__weekdays, .cal__grid { gap: 4px; }
     .cal__cell { border-radius: 8px; padding: 5px 4px; min-height: 36px; }
     /* En móvil el nombre no cabe: el chip se convierte en una barrita de color. */
-    .cal__chip { font-size: 0; padding: 0; height: 4px; border-radius: 2px; border-left: 0; background: var(--c); }
+    .cal__chip { font-size: 0; padding: 0; height: 4px; border-radius: 2px; background: var(--c); }
+    .cal__chip::before { display: none; }
     .cal__chip--more { display: none; }
     .cal__cell.is-sel .cal__chip { background: rgba(255, 255, 255, 0.92); }
     :global(.cal__fn) { grid-template-columns: 46px 1fr; }
