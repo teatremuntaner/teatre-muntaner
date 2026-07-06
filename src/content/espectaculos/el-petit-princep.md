@@ -9,8 +9,6 @@ poster: "./el-petit-princep.jpg"
 accent: "#4453da"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-07-05"
-    time: "12:00"
   - date: "2026-09-20"
     time: "12:00"
   - date: "2026-10-04"
