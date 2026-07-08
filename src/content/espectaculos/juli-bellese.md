@@ -3,7 +3,7 @@ title: JULI BELLESE
 category: Espectáculo
 genres: []
 lang: Castellano
-priority: 1
+priority: 0
 poster: ./juli-bellese.jpg
 accent: "#ce4f51"
 accentInk: "#ffffff"
