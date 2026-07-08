@@ -1,16 +1,19 @@
 ---
-title: "JULI BELLESE"
-category: "Espectáculo"
+title: JULI BELLESE
+category: Espectáculo
 genres: []
-poster: "./juli-bellese.jpg"
+lang: Castellano
+priority: 1
+poster: ./juli-bellese.jpg
 accent: "#ce4f51"
 accentInk: "#ffffff"
-ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21603"
+ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21603
 qwanticEventId: "21603"
 priceFrom: 30
-price: "Desde 30 €"
-venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
-draft: true
+venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
+duration: 80 minutos
+price: Desde 30 €
+draft: false
 ---
 
 Julián Bellese creció al calor de los aplausos en el mundo del stand up pero con los años se volvió un artista integral. Ahora, tras la despedida multitudinaria de Casi Adulto, llega con aire renovado a su nueva gira por España.
