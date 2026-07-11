@@ -39,12 +39,6 @@ jobs:
             echo "Sin cambios; no se despliega."
           fi
 
-      # Tele del escaparate (cdmon): reordena la cartelera por fecha/priority y
-      # resube el porDefecto del config.json por FTP. Corre CADA día aunque no haya
-      # cambios de Qwantic, porque el orden cambia solo al pasar las fechas.
-      # No necesita Google Drive (reutiliza los carteles ya en /tele/media).
-      - name: Actualizar playlist de la tele del escaparate
-        if: ${{ !cancelled() }}
-        env:
-          TELE_FTP_PASS: ${{ secrets.TELE_FTP_PASS }}
-        run: python scripts/gen_tele_playlist.py --out /tmp/tele-config.json --upload
+      # La tele del escaparate ya NO se toca desde aquí (11/07/2026): los huecos
+      # "automáticos" de la playlist los resuelve la propia pantalla (motor.js)
+      # con funciones.json, y todo se edita en el panel (tele.teatremuntaner.com/panel.php).
