@@ -35,6 +35,7 @@ export const GET: APIRoute = async ({ site }) => {
       ticketUrl: d.ticketUrl ?? null,
       pageUrl: new URL(`${import.meta.env.BASE_URL}espectaculos/${s.id}/`, base).href,
       unlisted: d.unlisted,
+      priority: d.priority ?? 0,             // jerarquía de cartelera (mayor = más importante)
       ticketAlarm: d.ticketAlarm,            // true = próximamente, sin venta aún
       dates: d.dates,                        // todas [{date:"YYYY-MM-DD", time:"HH:MM"}]
       future,                                // solo futuras, ordenadas
