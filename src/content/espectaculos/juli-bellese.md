@@ -7,19 +7,18 @@ priority: 0
 poster: ./juli-bellese.jpg
 accent: "#ce4f51"
 accentInk: "#ffffff"
+dates:
+  - date: 2026-10-11
+    time: 21:00
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21603
 qwanticEventId: "21603"
-saleStart: "2026-07-08T12:46"
-dates:
-  - date: "2026-10-11"
-    time: "21:00"
 priceFrom: 30
+saleStart: 2026-07-08T12:46
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 duration: 80 minutos
 price: Desde 30 €
 draft: false
 ---
-
 Julián Bellese creció al calor de los aplausos en el mundo del stand up pero con los años se volvió un artista integral. Ahora, tras la despedida multitudinaria de Casi Adulto, llega con aire renovado a su nueva gira por España.
 
 Bellese creció de golpe con su obra emblemática, ese espectáculo que nació de un sueño personal, se modeló con cursos y horas de stand up y tuvo tres años de éxito en teatros de la Argentina y países limítrofes. Se convirtió en un fenómeno que emergió de las redes sociales y tomó vida propia hasta la multitudinaria función de despedida nada menos que en el Gran Rex de la calle Corrientes.
@@ -32,4 +31,4 @@ Según la estadística de la Asociación Argentina de Empresarios/as Teatrales y
 
 Cabe preguntarse entonces, después de lo que te reíste con Casi Adulto, y de lo que viste en sus redes sociales, si ya estás listo para este nuevo show. Estás preparado para reírte hasta llorar?
 
-Espectáculo recomendado para mayores de 13 años
+Espectáculo recomendado para mayores de 16 años
