@@ -1,0 +1,34 @@
+# Teatre Muntaner
+
+> Teatro en el Eixample de Barcelona (Carrer de Muntaner 4, 08011). Comedia, improvisación, música y teatro en castellano y en catalán. Sala histórica de Barcelona y casa del espectáculo de improvisación "Corta el Cable Rojo".
+
+## Datos clave
+
+- Dirección: Carrer de Muntaner 4, 08011 Barcelona, España
+- Web oficial: https://teatremuntaner.com
+- Entradas: https://lamuntaner.entradas.plus
+- Programación: comedia, improvisación, monólogos, música y teatro (castellano y catalán)
+- Alquiler de espacios para eventos y producciones
+
+## Páginas principales
+
+- [Cartelera y entradas](https://teatremuntaner.com/#espectaculos): espectáculos actualmente en venta
+- [Calendario de funciones](https://teatremuntaner.com/#calendario): todas las fechas por día
+- [Guía de espacios (PDF, castellano)](https://teatremuntaner.com/assets/files/GUIADEESPACIOS_CAST.pdf)
+- [Guia d'espais (PDF, català)](https://teatremuntaner.com/assets/files/GUIADESPAIS_CAT.pdf)
+
+## Datos para máquinas
+
+- [funciones.json](https://teatremuntaner.com/funciones.json): feed JSON con la cartelera y todas las funciones a la venta (título, fechas, horas, enlace de compra), actualizado a diario
+- [Sitemap](https://teatremuntaner.com/sitemap-index.xml)
+- Datos estructurados schema.org (PerformingArtsTheater, TheaterEvent) en todas las páginas
+
+## Espectáculo residente
+
+- [Corta el Cable Rojo](https://www.cortaelcablerojo.com): comedia improvisada, funciones semanales en el Teatre Muntaner ([Corta el Cable Rojo Barcelona](https://www.cortaelcablerojo.com/CCRBarna.html))
+
+## Marcas hermanas
+
+- [Teatro Sofía](https://teatrosofia.es): teatro hermano en la Gran Vía de Madrid (Gran Vía 70)
+- [Clap](https://clapshow.es): impro comedia musical en el Teatro Sofía de Madrid
+- [Corta el Cable Rojo](https://www.cortaelcablerojo.com): comedia improvisada en Madrid, Barcelona y de gira por España
