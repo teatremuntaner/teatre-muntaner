@@ -8,12 +8,12 @@ poster: ./juli-bellese.jpg
 accent: "#ce4f51"
 accentInk: "#ffffff"
 dates:
-  - date: 2026-10-11
-    time: 21:00
+  - date: "2026-10-11"
+    time: "21:00"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21603
 qwanticEventId: "21603"
 priceFrom: 30
-saleStart: 2026-07-08T12:46
+saleStart: "2026-07-08T12:46"
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 duration: 80 minutos
 price: Desde 30 €
