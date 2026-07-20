@@ -1,6 +1,8 @@
 // Función serverless: lanza el workflow "Sync Qwantic" de GitHub Actions.
 // Protegida por Netlify Identity (solo personal logueado) y con enfriamiento
 // para que no se pueda abusar. El despliegue real solo ocurre si hay cambios.
+// OJO: en ESM (package.json trae "type":"module") — con exports.handler la
+// función ni arrancaba («module is not defined», visto 20/07/2026).
 
 const REPO = "teatremuntaner/teatre-muntaner";
 const WORKFLOW = "sync-qwantic.yml";
@@ -10,7 +12,7 @@ function resp(statusCode, obj) {
   return { statusCode, headers: { "Content-Type": "application/json" }, body: JSON.stringify(obj) };
 }
 
-exports.handler = async (event, context) => {
+export const handler = async (event, context) => {
   if (event.httpMethod !== "POST") return resp(405, { error: "Método no permitido." });
 
   // 1) Solo personal logueado (Netlify Identity rellena clientContext.user)
