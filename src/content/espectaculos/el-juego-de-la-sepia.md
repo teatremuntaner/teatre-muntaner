@@ -15,6 +15,7 @@ priceFrom: 15.3
 saleStart: 2026-07-20T09:15
 youtube: https://youtu.be/u0JqTVIWwKE
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
+duration: 70 minutos
 price: Desde 15 €
 draft: false
 ---
