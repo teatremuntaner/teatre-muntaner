@@ -13,7 +13,7 @@ ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=2167
 qwanticEventId: "21671"
 priceFrom: 15.3
 saleStart: 2026-07-20T09:15
-youtube: "https://youtu.be/u0JqTVIWwKE "
+youtube: https://youtu.be/u0JqTVIWwKE
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 15 €
 draft: true
