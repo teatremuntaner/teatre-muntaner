@@ -1,19 +1,21 @@
 ---
-title: "El Juego de la Sepia"
-category: "Espectáculo"
+title: El Juego de la Sepia
+promo: "PROMO LIMITADA: 15% DESCUENTO "
+category: Espectáculo
 genres: []
-poster: "./el-juego-de-la-sepia.jpg"
+poster: ./el-juego-de-la-sepia.jpg
 accent: "#be6073"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-09-18"
-    time: "22:30"
-ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21671"
+  - date: 2026-09-18
+    time: 22:30
+ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21671
 qwanticEventId: "21671"
 priceFrom: 15.3
-saleStart: "2026-07-20T09:15"
-price: "Desde 15 €"
-venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
+saleStart: 2026-07-20T09:15
+youtube: "https://youtu.be/u0JqTVIWwKE "
+venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
+price: Desde 15 €
 draft: true
 ---
 
