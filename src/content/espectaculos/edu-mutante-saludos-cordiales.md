@@ -12,6 +12,8 @@ accentInk: "#ffffff"
 dates:
   - date: "2026-08-22"
     time: "22:30"
+  - date: "2026-09-26"
+    time: "21:00"
 ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20533"
 qwanticEventId: "20533"
 saleStart: "2026-06-01T23:55"
