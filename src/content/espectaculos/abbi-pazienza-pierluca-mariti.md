@@ -7,12 +7,12 @@ poster: ./abbi-pazienza-pierluca-mariti.jpg
 accent: "#606ebe"
 accentInk: "#ffffff"
 dates:
-  - date: 2027-01-29
-    time: 22:30
+  - date: "2027-01-29"
+    time: "22:30"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21672
 qwanticEventId: "21672"
 priceFrom: 15.3
-saleStart: 2026-07-20T09:52
+saleStart: "2026-07-20T09:52"
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 15 €
 draft: false
