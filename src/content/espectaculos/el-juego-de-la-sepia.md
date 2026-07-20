@@ -16,7 +16,7 @@ saleStart: 2026-07-20T09:15
 youtube: https://youtu.be/u0JqTVIWwKE
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 15 €
-draft: true
+draft: false
 ---
 
 “El Juego de la sepia” es una comedia que parodia las grandes distopías contemporáneas y reinventa el formato tradicional de la improvisación combinándolo con una fuerte narrativa teatral y tecnología.
