@@ -1,0 +1,119 @@
+{
+  "pantallas": {
+    "principal": {
+      "nombre": "Escaparate",
+      "ancho": 1920,
+      "alto": 1080,
+      "grados": -90,
+      "porDefecto": {
+        "lista": [
+          {
+            "archivo": "_ccr.jpg",
+            "segundos": 10,
+            "girar": true,
+            "show": "corta-el-cable-rojo"
+          },
+          {
+            "archivo": "edu-mutante-saludos-cordiales.jpg",
+            "segundos": 10,
+            "girar": true,
+            "show": "edu-mutante-saludos-cordiales"
+          },
+          {
+            "archivo": "como-pasar-de-los-60-sin-morir-en-el-intento.jpg",
+            "segundos": 10,
+            "girar": true,
+            "show": "como-pasar-de-los-60-sin-morir-en-el-intento"
+          },
+          {
+            "archivo": "_casa.png",
+            "segundos": 10,
+            "girar": true
+          },
+          {
+            "archivo": "joaquin-caserza-conversaciones-con-mi-mente.jpg",
+            "segundos": 10,
+            "girar": true,
+            "show": "joaquin-caserza-conversaciones-con-mi-mente"
+          },
+          {
+            "archivo": "_ccr.jpg",
+            "segundos": 10,
+            "girar": true,
+            "show": "corta-el-cable-rojo"
+          },
+          {
+            "archivo": "toni-cano-traficante-de-endorfinas.jpg",
+            "segundos": 10,
+            "girar": true,
+            "show": "toni-cano-traficante-de-endorfinas"
+          },
+          {
+            "archivo": "_casa.png",
+            "segundos": 10,
+            "girar": true
+          }
+        ],
+        "girar": true
+      },
+      "programados": [],
+      "franjas": [
+        {
+          "tipo": "fecha",
+          "desdeFecha": "2026-06-27",
+          "hastaFecha": "",
+          "nombre": "youkali 27",
+          "desde": "09:00",
+          "hasta": "15:00",
+          "archivo": "Vertical_27dejuny.mp4",
+          "girar": true
+        },
+        {
+          "tipo": "fecha",
+          "desdeFecha": "2026-06-28",
+          "hastaFecha": "",
+          "nombre": "youkali 28",
+          "desde": "09:00",
+          "hasta": "15:00",
+          "archivo": "Vertical_28dejuny.mp4",
+          "girar": true
+        }
+      ]
+    },
+    "taquilla": {
+      "nombre": "taquilla",
+      "ancho": 1920,
+      "alto": 1080,
+      "grados": 0,
+      "porDefecto": {
+        "url": "https://lamuntaner.entradas.plus/entradas/es/monitorFunciones",
+        "girar": true
+      },
+      "programados": [],
+      "franjas": [
+        {
+          "tipo": "fecha",
+          "desdeFecha": "2026-06-27",
+          "hastaFecha": "",
+          "nombre": "youkali 27",
+          "desde": "09:00",
+          "hasta": "15:00",
+          "archivo": "HORITZONTAL (1).mp4",
+          "girar": true
+        },
+        {
+          "tipo": "fecha",
+          "desdeFecha": "2026-06-28",
+          "hastaFecha": "",
+          "nombre": "youkali 28",
+          "desde": "09:00",
+          "hasta": "15:00",
+          "archivo": "HORITZONTAL (1).mp4",
+          "girar": true
+        }
+      ]
+    }
+  },
+  "funcionesUrl": "https://teatremuntaner.com/funciones.json",
+  "overlay": "abajo-izq"
+}

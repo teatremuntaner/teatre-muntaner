@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Pantalla Muntaner</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
+    #stage { position: fixed; inset: 0; overflow: hidden; }
+    #stage img, #stage video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <!-- Pantalla principal (la que ya estaba). Otras pantallas tienen su propio HTML. -->
+  <script>window.PANTALLA = 'principal';</script>
+  <script src="motor.js?v=19"></script>
+</body>
+</html>

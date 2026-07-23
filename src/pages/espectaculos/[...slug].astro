@@ -82,28 +82,28 @@ const mkEvent = (dt: { date: string; time?: string }) => ({
 // muchísimas fechas (Corta el cable rojo) inflarían el HTML sin aportar a SEO.
 const eventsLd = d.dates.slice(0, 50).map(mkEvent);
 
-// VideoObject del tráiler: Google exige thumbnailUrl para indexar el vídeo.
-const videoLd = ytId
+// VideoObject del tráiler. Google EXIGE uploadDate (y thumbnailUrl): sin
+// uploadDate el dato estructurado es inválido y Search Console lo marca como
+// error crítico. Por eso solo emitimos el VideoObject si tenemos la fecha
+// (YouTube: la saca el sync en youtubeUploadDate; vídeo subido: campo
+// videoUploadDate). Si falta, no ponemos schema (el vídeo se sigue viendo).
+const videoUploadDate = ytId ? d.youtubeUploadDate : d.videoUploadDate;
+const videoLd = (ytId || d.video) && videoUploadDate
   ? {
       '@context': 'https://schema.org',
       '@type': 'VideoObject',
       name: `Vídeo de ${d.title}`,
       description: desc,
-      contentUrl: `https://www.youtube.com/watch?v=${ytId}`,
-      embedUrl: `https://www.youtube-nocookie.com/embed/${ytId}`,
-      thumbnailUrl: `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`,
-      ...(d.youtubeUploadDate ? { uploadDate: d.youtubeUploadDate } : {}),
+      uploadDate: videoUploadDate,
+      thumbnailUrl: ytId ? `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg` : posterUrl,
+      ...(ytId
+        ? {
+            contentUrl: `https://www.youtube.com/watch?v=${ytId}`,
+            embedUrl: `https://www.youtube-nocookie.com/embed/${ytId}`,
+          }
+        : { contentUrl: new URL(d.video, SITE).href }),
     }
-  : d.video
-    ? {
-        '@context': 'https://schema.org',
-        '@type': 'VideoObject',
-        name: `Vídeo de ${d.title}`,
-        description: desc,
-        contentUrl: new URL(d.video, SITE).href,
-        thumbnailUrl: posterUrl,
-      }
-    : null;
+  : null;
 ---
 
 <BaseLayout

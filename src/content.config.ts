@@ -24,6 +24,7 @@ const espectaculos = defineCollection({
       youtube: z.string().optional(), // ID o URL de vídeo de YouTube, si existe
       youtubeUploadDate: z.string().optional(), // fecha de subida del vídeo (la rellena el sync; para el VideoObject)
       video: z.string().optional(), // vídeo subido (ruta /uploads/...), alternativa a YouTube
+      videoUploadDate: z.string().optional(), // fecha de publicación del vídeo subido (uploadDate del VideoObject; obligatorio para Google)
       gallery: z.array(image()).default([]), // galería de fotos (se optimizan en el build)
 
       // --- Arte por espectáculo: color y tipografía del cartel ---
