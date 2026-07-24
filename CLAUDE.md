@@ -9,7 +9,7 @@ Clon del sistema del Teatro Sofía (`C:\Users\carlo\dev\teatro-sofia`), adaptado
 - **Marca Muntaner**: rojo `#bd221f` + oro `#d5a846` + crema `#f9f6e0` + tinta `#14100e` (sacados del logo oficial). Fuente body **Reddit Sans**, display **Oswald**. Logo en `public/logo-muntaner.png` (+ `-negativo`).
 - **GTM propio**: `GTM-TR52LK75` (el del Sofía era GTM-WDFWX99H).
 - **Venue**: Carrer de Muntaner 4, 08011 Barcelona. Razón social **La Muntaner Teatre, S.L.** (CIF B55438550). Tel taquilla +34 614402738. Emails info@/entradas@teatremuntaner.com. IG/TikTok @teatremuntaner. El Teatro Sofía aparece como "teatro hermano" en el footer (intencional).
-- **Weglot**: la web se hace en **castellano**; el **catalán** lo traduce Weglot automáticamente. Integración latente en `BaseLayout.astro`: se activa poniendo `WEGLOT_API_KEY` como variable de entorno en Netlify (pedir la key a Carlos).
+- **Idiomas**: la web se escribe en **castellano**; el **catalán** se genera en el build (ver "Catalán" más abajo). Weglot se retiró el 24/07/2026.
 
 ## Stack
 - Astro 6. Colección `espectaculos`: `src/content/espectaculos/*.md` (+ su `.jpg` de cartel). Schema: `src/content.config.ts`.
@@ -17,6 +17,39 @@ Clon del sistema del Teatro Sofía (`C:\Users\carlo\dev\teatro-sofia`), adaptado
 - Campos SEO que rellena el sync (no editar a mano): priceFrom (numérico, del feed), saleStart (mín. fechaInicioVentaStr de la pág. de compra) → Offer del JSON-LD; youtubeUploadDate (del HTML de YouTube) → VideoObject. Si faltan, la plantilla los omite.
 - Shows con todas las fechas pasadas se ocultan solos de la cartelera. Borradores (draft:true) no se publican.
 - Front: GSAP+SplitText (títulos, tilt del cartel), GLightbox (galerías). Tema oscuro.
+
+## Catalán (sustituye a Weglot desde el 24/07/2026)
+
+El catalán ya NO es un servicio que traduce al vuelo: son **páginas reales** que
+se generan en el build y viven en `/ca/…`. Coste cero y sin límite de palabras.
+
+- **Motor**: Apertium (libre). Par `spa|cat`, su especialidad. API pública por
+  defecto; se puede apuntar a otra instancia con la variable `APERTIUM_URL`.
+- **Script**: `python scripts/translate_ca.py` (`--force` rehace todo, `--dry`
+  simula, `--ui` solo interfaz, `--fichas` solo espectáculos, `--only <slug>`).
+  Es incremental: si el castellano no ha cambiado, no vuelve a traducir.
+- **NOMBRES PROPIOS**: `title`, `artist` y `venue` **no se traducen nunca**.
+  No es una regla que haya que recordar: la colección `espectaculosCa` ni
+  siquiera tiene esos campos, así que es imposible traducirlos por descuido.
+  (Ese era justo el fallo recurrente de Weglot.)
+- **Qué genera**:
+  - `src/content/espectaculos-ca/*.md` — texto catalán de cada ficha. GENERADO,
+    no editar a mano ni tocar desde el CMS.
+  - `src/i18n/ui.es.json` — se arma juntando `src/i18n/parts/*.es.json`.
+  - `src/i18n/ui.ca.json` — traducción automática de lo anterior. GENERADO.
+- **Textos de interfaz**: se escriben en castellano en `src/i18n/parts/*.es.json`
+  y se usan con `useT(lang)` desde los `.astro`. Para añadir un texto nuevo:
+  ponerlo en el `parts/*.es.json` que toque y ejecutar el script.
+- **Corregir una traducción concreta**: `src/i18n/ui.ca.lock.json`. Lo que esté
+  ahí gana siempre y el automático no lo pisa (Apertium falla en cosas como
+  "Consulta nostra" → "Consulta la nostra").
+- **Rutas**: cada página castellana tiene un envoltorio de 3 líneas en
+  `src/pages/ca/…` que reutiliza la misma página; el idioma se deduce de la URL.
+  No hay marcado duplicado.
+- **Párrafos en otro idioma**: si una sinopsis está en italiano (Abbi Pazienza),
+  el script lo detecta y la deja intacta en vez de destrozarla.
+- **Automático**: el workflow diario de Qwantic ejecuta el script y commitea el
+  catalán junto al castellano. Si Apertium falla, avisa pero no bloquea el deploy.
 
 ## Comandos (en este equipo, usuario carlo)
 - **Compilar**: `npm run build` en **PowerShell** (NO `bash scripts/build.sh`: aquí bash es WSL sin distro). Node está en el PATH de PowerShell.

@@ -24,15 +24,28 @@ jobs:
           python-version: "3.12"
       - name: Instalar ffmpeg
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Instalar dependencias de Python
+        run: pip install --quiet requests pyyaml
       - name: Ejecutar sincronizador
         run: python scripts/sync_qwantic.py
+      # Traduce al catalán lo que haya cambiado (Apertium). Si el servicio
+      # estuviera caído no bloqueamos el deploy: la web catalana sigue viva y
+      # el show nuevo se ve en castellano hasta la siguiente pasada.
+      - name: Generar el catalán
+        id: catalan
+        continue-on-error: true
+        run: python scripts/translate_ca.py
+      - name: Avisar si la traducción falló
+        if: steps.catalan.outcome == 'failure'
+        run: echo "::warning::La traducción al catalán falló (Apertium). Se despliega igualmente; revisar y relanzar."
       - name: Subir cambios si los hay
         run: |
-          if [ -n "$(git status --porcelain src/content/espectaculos)" ]; then
+          RUTAS="src/content/espectaculos src/content/espectaculos-ca src/i18n"
+          if [ -n "$(git status --porcelain $RUTAS)" ]; then
             git config user.name "Teatre Muntaner (bot)"
             git config user.email "info@teatremuntaner.com"
-            git add src/content/espectaculos
-            git commit -m "Auto-sync Qwantic: fechas y altas de shows"
+            git add $RUTAS
+            git commit -m "Auto-sync Qwantic: fechas y altas de shows (+ catalán)"
             git push
             echo "Cambios subidos -> Netlify desplegará."
           else

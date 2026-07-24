@@ -1,0 +1,9 @@
+{
+  "aviso.meta.titulo": "¡Recibido!",
+  "aviso.meta.descripcion": "Gracias, hemos recibido tus datos.",
+
+  "aviso.titulo": "¡Gracias!",
+  "aviso.lead": "Hemos recibido tu email. Te avisaremos por correo. Mientras, echa un vistazo a la cartelera.",
+  "aviso.cta.inicio": "Volver al inicio",
+  "aviso.cta.cartelera": "Ver la cartelera"
+}

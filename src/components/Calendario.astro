@@ -4,10 +4,16 @@
 // color del cartel; al pulsar un día se muestran sus funciones + botón Comprar.
 // Se alimenta de los mismos datos de cada espectáculo (fechas + hora + entradas).
 import { getCollection } from 'astro:content';
+import { useT, langFromPath } from '../i18n';
+
+const lang = langFromPath(Astro.url.pathname);
+const t = useT(lang);
 
 const base = import.meta.env.BASE_URL;
-const MONTHS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-const WD = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+const MONTH_KEYS = ['cal.mes.enero', 'cal.mes.febrero', 'cal.mes.marzo', 'cal.mes.abril', 'cal.mes.mayo', 'cal.mes.junio', 'cal.mes.julio', 'cal.mes.agosto', 'cal.mes.septiembre', 'cal.mes.octubre', 'cal.mes.noviembre', 'cal.mes.diciembre'];
+const MONTHS = MONTH_KEYS.map((k) => t(k));
+// Iniciales de la cabecera de la rejilla, con el lunes primero.
+const WD = ['cal.diaCorto.lunes', 'cal.diaCorto.martes', 'cal.diaCorto.miercoles', 'cal.diaCorto.jueves', 'cal.diaCorto.viernes', 'cal.diaCorto.sabado', 'cal.diaCorto.domingo'].map((k) => t(k));
 
 const today = new Date();
 today.setHours(0, 0, 0, 0);
@@ -62,20 +68,31 @@ const matrix = (y: number, m: number) => {
 const selDate = fns.length ? fns[0].date : null;
 const startIdx = Math.max(0, months.findIndex((mm) => selDate && mm.y === +selDate.slice(0, 4) && mm.m === +selDate.slice(5, 7) - 1));
 const labels = months.map((mm) => `${MONTHS[mm.m]} ${mm.y}`);
+
+// Textos del panel del día: lo pinta el JavaScript del navegador, donde `t` no
+// llega. Se traducen aquí y viajan con los datos en el <script> de abajo.
+const i18n = {
+  dias: ['cal.dia.domingo', 'cal.dia.lunes', 'cal.dia.martes', 'cal.dia.miercoles', 'cal.dia.jueves', 'cal.dia.viernes', 'cal.dia.sabado'].map((k) => t(k)),
+  meses: ['cal.mesCorto.enero', 'cal.mesCorto.febrero', 'cal.mesCorto.marzo', 'cal.mesCorto.abril', 'cal.mesCorto.mayo', 'cal.mesCorto.junio', 'cal.mesCorto.julio', 'cal.mesCorto.agosto', 'cal.mesCorto.septiembre', 'cal.mesCorto.octubre', 'cal.mesCorto.noviembre', 'cal.mesCorto.diciembre'].map((k) => t(k)),
+  avisame: t('cal.avisame'),
+  comprar: t('cal.comprar'),
+  verMas: t('cal.verMas'),
+  cartelDe: t('cal.cartelDe'), // lleva {titulo}: lo sustituye el navegador
+};
 ---
 
 <section class="section calend" id="calendario">
   <div class="wrap">
     <header class="section__head reveal">
-      <p class="kicker kicker--blue">Agenda</p>
-      <h2 class="section__title">Calendario de funciones</h2>
+      <p class="kicker kicker--blue">{t('cal.kicker')}</p>
+      <h2 class="section__title">{t('cal.titulo')}</h2>
     </header>
 
     <div class="cal reveal">
       <div class="cal__head">
-        <button class="cal__nav" data-nav="-1" type="button" aria-label="Mes anterior">‹</button>
+        <button class="cal__nav" data-nav="-1" type="button" aria-label={t('cal.mesAnterior')}>‹</button>
         <h3 class="cal__month" id="calMonth">{labels[startIdx]}</h3>
-        <button class="cal__nav" data-nav="1" type="button" aria-label="Mes siguiente">›</button>
+        <button class="cal__nav" data-nav="1" type="button" aria-label={t('cal.mesSiguiente')}>›</button>
       </div>
 
       <div class="cal__grid-wrap">
@@ -122,7 +139,7 @@ const labels = months.map((mm) => `${MONTHS[mm.m]} ${mm.y}`);
     </div>
   </div>
 
-  <script type="application/json" id="cal-data" set:html={JSON.stringify({ fns, labels, startIdx, selDate })}></script>
+  <script type="application/json" id="cal-data" set:html={JSON.stringify({ fns, labels, startIdx, selDate, i18n })}></script>
 
   <script>
     const raw = document.getElementById('cal-data');
@@ -135,8 +152,10 @@ const labels = months.map((mm) => `${MONTHS[mm.m]} ${mm.y}`);
     const navs = Array.from(document.querySelectorAll('[data-nav]')) as HTMLButtonElement[];
     let active = data.startIdx || 0;
 
-    const WD = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-    const MO = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    // Textos ya traducidos que vienen del servidor (ver el bloque `i18n` de arriba).
+    const i18n = data.i18n || {};
+    const WD = i18n.dias || [];
+    const MO = i18n.meses || [];
     const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
     function showMonth(i) {
@@ -161,16 +180,17 @@ const labels = months.map((mm) => `${MONTHS[mm.m]} ${mm.y}`);
         list.map((f) => {
           const buyExt = f.buy && String(f.buy).startsWith('http');
           let buyBtn = '';
-          if (f.alarm) buyBtn = `<a class="cal__fn-buy" href="${esc(f.href)}">Avísame</a>`;
-          else if (f.buy) buyBtn = `<a class="cal__fn-buy" href="${esc(f.buy)}"${buyExt ? ' target="_blank" rel="noopener"' : ''}>Comprar</a>`;
+          if (f.alarm) buyBtn = `<a class="cal__fn-buy" href="${esc(f.href)}">${esc(i18n.avisame)}</a>`;
+          else if (f.buy) buyBtn = `<a class="cal__fn-buy" href="${esc(f.buy)}"${buyExt ? ' target="_blank" rel="noopener"' : ''}>${esc(i18n.comprar)}</a>`;
+          const alt = esc(i18n.cartelDe).replace('{titulo}', esc(f.title));
           return `<div class="cal__fn" style="--d-accent:${esc(f.accent)};--d-ink:${esc(f.ink)}">
-              <a class="cal__fn-poster" href="${esc(f.href)}"><img src="${esc(f.poster)}" alt="Cartel de ${esc(f.title)}" loading="lazy" /></a>
+              <a class="cal__fn-poster" href="${esc(f.href)}"><img src="${esc(f.poster)}" alt="${alt}" loading="lazy" /></a>
               <div class="cal__fn-info">
                 <a class="cal__fn-title" href="${esc(f.href)}">${esc(f.title)}</a>
                 ${f.time ? `<span class="cal__fn-time">🕘 ${esc(f.time)}</span>` : ''}
               </div>
               <div class="cal__fn-actions">
-                <a class="cal__fn-more" href="${esc(f.href)}">Ver más</a>
+                <a class="cal__fn-more" href="${esc(f.href)}">${esc(i18n.verMas)}</a>
                 ${buyBtn}
               </div>
             </div>`;

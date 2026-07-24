@@ -1,0 +1,9 @@
+{
+  "e404.meta.titulo": "Página no encontrada (404)",
+  "e404.meta.descripcion": "La página que buscas no existe o se ha movido.",
+
+  "e404.titulo": "Esta página no está en cartel",
+  "e404.lead": "La página que buscas no existe o se ha movido. Puede que el espectáculo ya terminara su temporada.",
+  "e404.cta.inicio": "Ir al inicio",
+  "e404.cta.cartelera": "Ver la cartelera"
+}

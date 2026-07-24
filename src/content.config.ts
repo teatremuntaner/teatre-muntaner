@@ -66,4 +66,29 @@ const espectaculos = defineCollection({
     }),
 });
 
-export const collections = { espectaculos };
+/**
+ * Coleccion "espectaculosCa": SOLO el texto en catalan de cada ficha.
+ *
+ * La genera scripts/translate_ca.py con Apertium a partir de la ficha
+ * castellana; no se edita a mano ni aparece en el CMS. Deliberadamente NO
+ * incluye title, artist ni venue: los nombres propios no se traducen, y al no
+ * existir aqui es imposible que se traduzcan por descuido. Tampoco duplica
+ * imagenes, fechas ni precios: eso lo coge la pagina de la ficha castellana.
+ */
+const espectaculosCa = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/espectaculos-ca' }),
+  schema: z.object({
+    tagline: z.string().optional(),
+    promo: z.string().optional(),
+    category: z.string().optional(),
+    genres: z.array(z.string()).default([]),
+    lang: z.string().optional(),
+    duration: z.string().optional(),
+    price: z.string().optional(),
+    dateText: z.string().optional(),
+    sourceHash: z.string().optional(),
+    generated: z.boolean().default(true),
+  }),
+});
+
+export const collections = { espectaculos, espectaculosCa };

@@ -1,0 +1,15 @@
+---
+// Version catalana de la ficha de espectaculo.
+// Reutiliza la misma pagina; el idioma se deduce de la URL (/ca/...) y el texto
+// catalan sale de la coleccion "espectaculosCa". El titulo y el artista NO se
+// traducen: se siguen leyendo de la ficha castellana.
+import { getCollection } from 'astro:content';
+import Ficha from '../../espectaculos/[...slug].astro';
+
+export async function getStaticPaths() {
+  const shows = await getCollection('espectaculos', ({ data }) => !data.draft && !data.externalUrl);
+  return shows.map((show) => ({ params: { slug: show.id }, props: { show } }));
+}
+---
+
+<Ficha {...Astro.props} />

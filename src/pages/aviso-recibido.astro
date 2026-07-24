@@ -1,15 +1,19 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { useT, langFromPath } from '../i18n';
+
+const lang = langFromPath(Astro.url.pathname);
+const t = useT(lang);
 const base = import.meta.env.BASE_URL;
 ---
-<BaseLayout title="¡Recibido!" description="Gracias, hemos recibido tus datos.">
+<BaseLayout title={t('aviso.meta.titulo')} description={t('aviso.meta.descripcion')}>
   <section class="ok">
     <p class="ok__big" aria-hidden="true">✓</p>
-    <h1>¡Gracias!</h1>
-    <p class="ok__lead">Hemos recibido tu email. Te avisaremos por correo. Mientras, echa un vistazo a la cartelera.</p>
+    <h1>{t('aviso.titulo')}</h1>
+    <p class="ok__lead">{t('aviso.lead')}</p>
     <div class="ok__cta">
-      <a class="btn btn--accent" href={base}>Volver al inicio</a>
-      <a class="btn btn--ghost" href={`${base}#cartelera`}>Ver la cartelera</a>
+      <a class="btn btn--accent" href={base}>{t('aviso.cta.inicio')}</a>
+      <a class="btn btn--ghost" href={`${base}#cartelera`}>{t('aviso.cta.cartelera')}</a>
     </div>
   </section>
 </BaseLayout>

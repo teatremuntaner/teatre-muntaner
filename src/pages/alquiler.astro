@@ -4,47 +4,55 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import escenario from '../assets/venue/escenario.jpg';
 import platea from '../assets/venue/platea.jpg';
 import foyer from '../assets/venue/foyer.jpg';
+import { useT, langFromPath } from '../i18n';
+
+const lang = langFromPath(Astro.url.pathname);
+const t = useT(lang);
+
+// Nombres propios y direccion: NO se traducen, entran como variable.
+const TEATRO = 'Teatre Muntaner';
+const DIRECCION = 'Carrer de Muntaner 4';
 
 const usos = [
-  'Presentaciones de empresa y lanzamientos de producto',
-  'Convenciones, congresos y reuniones corporativas',
-  'Formaciones, conferencias y charlas profesionales',
-  'Eventos internos de empresa y reuniones de equipo',
-  'Entregas de premios y actos institucionales',
-  'Eventos para clientes, partners o distribuidores',
-  'Grabaciones, rodajes y eventos híbridos (presencial / streaming)',
-  'Espectáculos privados para empresas y eventos de incentivo',
-  'Showcases, pases privados y presentaciones de marca',
+  t('alquiler.usos.1'),
+  t('alquiler.usos.2'),
+  t('alquiler.usos.3'),
+  t('alquiler.usos.4'),
+  t('alquiler.usos.5'),
+  t('alquiler.usos.6'),
+  t('alquiler.usos.7'),
+  t('alquiler.usos.8'),
+  t('alquiler.usos.9'),
 ];
 const ventajas = [
-  ['Ubicación céntrica', 'En Carrer de Muntaner 4, en pleno corazón de Barcelona, con transporte público a pocos pasos.'],
-  ['Totalmente equipado', 'Pantalla gigante, iluminación y sonido profesional, escenario y equipo técnico.'],
-  ['Aforo cómodo', 'Capacidad para hasta 200 personas, perfecto para cualquier evento profesional.'],
-  ['A tu medida', 'Personalización del evento, bar y espacio para catering, y asesoramiento durante todo el acto.'],
+  [t('alquiler.ventajas.1.titulo'), t('alquiler.ventajas.1.texto', { direccion: DIRECCION })],
+  [t('alquiler.ventajas.2.titulo'), t('alquiler.ventajas.2.texto')],
+  [t('alquiler.ventajas.3.titulo'), t('alquiler.ventajas.3.texto')],
+  [t('alquiler.ventajas.4.titulo'), t('alquiler.ventajas.4.texto')],
 ];
 ---
 <BaseLayout
-  title="Alquiler del teatro para eventos de empresa"
-  description="Alquila el Teatre Muntaner para eventos de empresa en Barcelona: presentaciones, convenciones, lanzamientos y actos profesionales. Sala céntrica y totalmente equipada, hasta 200 personas."
+  title={t('alquiler.meta.titulo')}
+  description={t('alquiler.meta.descripcion', { teatro: TEATRO })}
 >
   <article class="rent">
     <!-- HERO -->
     <section class="rent__hero">
-      <Image class="rent__hero-img" src={escenario} alt="Escenario del Teatre Muntaner preparado para un evento" widths={[900, 1600, 2200]} sizes="100vw" loading="eager" />
+      <Image class="rent__hero-img" src={escenario} alt={t('alquiler.hero.alt', { teatro: TEATRO })} widths={[900, 1600, 2200]} sizes="100vw" loading="eager" />
       <div class="rent__hero-scrim"></div>
       <div class="wrap rent__hero-inner">
-        <p class="kicker kicker--coral">Alquiler del teatro</p>
-        <h1 class="rent__title">Tu evento, a lo grande</h1>
-        <p class="rent__lead">El Teatre Muntaner es un espacio ideal para eventos de empresa, presentaciones corporativas, convenciones, lanzamientos de producto y actos profesionales. Una sala céntrica, totalmente equipada y con equipo técnico profesional, para empresas que buscan un teatro con personalidad.</p>
-        <a class="btn btn--accent" href="#alquiler-contacto">Pedir información</a>
+        <p class="kicker kicker--coral">{t('alquiler.hero.kicker')}</p>
+        <h1 class="rent__title">{t('alquiler.hero.titulo')}</h1>
+        <p class="rent__lead">{t('alquiler.hero.lead', { teatro: TEATRO })}</p>
+        <a class="btn btn--accent" href="#alquiler-contacto">{t('alquiler.hero.cta')}</a>
       </div>
     </section>
 
     <!-- USOS -->
     <section class="wrap section">
       <header class="section__head reveal">
-        <p class="kicker kicker--coral">Para qué</p>
-        <h2 class="section__title">Un espacio versátil y profesional</h2>
+        <p class="kicker kicker--coral">{t('alquiler.usos.kicker')}</p>
+        <h2 class="section__title">{t('alquiler.usos.titulo')}</h2>
       </header>
       <ul class="rent__uses reveal">
         {usos.map((u) => <li>{u}</li>)}
@@ -54,8 +62,8 @@ const ventajas = [
     <!-- VENTAJAS -->
     <section class="wrap section rent__why">
       <header class="section__head reveal">
-        <p class="kicker kicker--coral">Por qué el Muntaner</p>
-        <h2 class="section__title">Ideal para empresas</h2>
+        <p class="kicker kicker--coral">{t('alquiler.ventajas.kicker')} Muntaner</p>
+        <h2 class="section__title">{t('alquiler.ventajas.titulo')}</h2>
       </header>
       <div class="rent__grid">
         {ventajas.map(([t, d]) => (
@@ -70,8 +78,8 @@ const ventajas = [
     <!-- GALERÍA -->
     <section class="wrap section">
       <div class="rent__gallery reveal">
-        <Image src={platea} alt="Patio de butacas del Teatre Muntaner" widths={[500, 1000]} sizes="(max-width: 760px) 100vw, 600px" />
-        <Image src={foyer} alt="Bar y vestíbulo del Teatre Muntaner" widths={[400, 800]} sizes="(max-width: 760px) 100vw, 360px" />
+        <Image src={platea} alt={t('alquiler.galeria.platea.alt', { teatro: TEATRO })} widths={[500, 1000]} sizes="(max-width: 760px) 100vw, 600px" />
+        <Image src={foyer} alt={t('alquiler.galeria.foyer.alt', { teatro: TEATRO })} widths={[400, 800]} sizes="(max-width: 760px) 100vw, 360px" />
       </div>
     </section>
 
@@ -79,13 +87,13 @@ const ventajas = [
     <section class="wrap section">
       <div class="rent__guide reveal">
         <div class="rent__guide-text">
-          <p class="kicker kicker--coral">Documentación</p>
-          <h2 class="section__title">Guía de espacios</h2>
-          <p class="lead">Descárgate la guía completa del Teatre Muntaner, con las características del espacio, equipamiento y todo lo que necesitas para tu evento.</p>
+          <p class="kicker kicker--coral">{t('alquiler.guia.kicker')}</p>
+          <h2 class="section__title">{t('alquiler.guia.titulo')}</h2>
+          <p class="lead">{t('alquiler.guia.lead', { teatro: TEATRO })}</p>
         </div>
         <div class="rent__guide-btns">
-          <a class="btn btn--accent" href="/assets/files/GUIADEESPACIOS_CAST.pdf" target="_blank" rel="noopener">Guía de espacios (Castellano) ↓</a>
-          <a class="btn btn--ghost" href="/assets/files/GUIADESPAIS_CAT.pdf" target="_blank" rel="noopener">Guia d'espais (Català) ↓</a>
+          <a class="btn btn--accent" href="/assets/files/GUIADEESPACIOS_CAST.pdf" target="_blank" rel="noopener">{t('alquiler.guia.pdf.es')}</a>
+          <a class="btn btn--ghost" href="/assets/files/GUIADESPAIS_CAT.pdf" target="_blank" rel="noopener">{t('alquiler.guia.pdf.ca')}</a>
         </div>
       </div>
     </section>
@@ -93,10 +101,10 @@ const ventajas = [
     <!-- CONTACTO -->
     <section class="rent__cta" id="alquiler-contacto">
       <div class="wrap reveal">
-        <h2 class="section__title">¿Hablamos de tu evento?</h2>
-        <p class="lead">Pídenos información concreta y te contestaremos rápidamente. Cuéntanos qué necesitas y lo preparamos a tu medida.</p>
+        <h2 class="section__title">{t('alquiler.cta.titulo')}</h2>
+        <p class="lead">{t('alquiler.cta.lead')}</p>
         <div class="rent__cta-row">
-          <a class="btn btn--accent" href="mailto:info@teatremuntaner.com?subject=Alquiler%20del%20Teatre%20Muntaner">Escríbenos</a>
+          <a class="btn btn--accent" href="mailto:info@teatremuntaner.com?subject=Alquiler%20del%20Teatre%20Muntaner">{t('alquiler.cta.escribenos')}</a>
           <a class="btn btn--ghost" href="tel:+34614402738">+34 614 402 738</a>
         </div>
       </div>
