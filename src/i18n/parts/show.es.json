@@ -1,0 +1,26 @@
+{
+  "show.proximamente": "Próximamente · entradas aún no a la venta",
+  "show.finalizadas": "Funciones finalizadas · vuelve pronto",
+  "show.funcionesEspeciales": "Funciones especiales: ",
+
+  "show.comprarEntradas": "Comprar entradas",
+  "show.volverCartelera": "Volver a cartelera",
+
+  "show.noRellenar": "No rellenar",
+  "show.avisoLead": "Déjanos tu email y te avisamos en cuanto salgan las entradas.",
+  "show.tuEmail": "Tu email",
+  "show.avisame": "Avísame",
+
+  "show.duracion": "Duración",
+  "show.idioma": "Idioma",
+  "show.precio": "Precio",
+  "show.lugar": "Lugar",
+  "show.enlacesRedes": "Enlaces y redes",
+  "show.galeria": "Galería",
+
+  "show.cartelDe": "Cartel de {titulo}",
+  "show.fotoDe": "Foto de {titulo}",
+  "show.fotoNDe": "Foto {n} de {titulo}",
+  "show.videoDe": "Vídeo de {titulo}",
+  "show.descFallback": "{titulo} en el Teatre Muntaner"
+}

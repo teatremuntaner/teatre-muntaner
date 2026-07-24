@@ -1,0 +1,46 @@
+{
+  "alquiler.meta.titulo": "Alquiler del teatro para eventos de empresa",
+  "alquiler.meta.descripcion": "Alquila el {teatro} para eventos de empresa en Barcelona: presentaciones, convenciones, lanzamientos y actos profesionales. Sala céntrica y totalmente equipada, hasta 200 personas.",
+
+  "alquiler.hero.alt": "Escenario del {teatro} preparado para un evento",
+  "alquiler.hero.kicker": "Alquiler del teatro",
+  "alquiler.hero.titulo": "Tu evento, a lo grande",
+  "alquiler.hero.lead": "El {teatro} es un espacio ideal para eventos de empresa, presentaciones corporativas, convenciones, lanzamientos de producto y actos profesionales. Una sala céntrica, totalmente equipada y con equipo técnico profesional, para empresas que buscan un teatro con personalidad.",
+  "alquiler.hero.cta": "Pedir información",
+
+  "alquiler.usos.kicker": "Para qué",
+  "alquiler.usos.titulo": "Un espacio versátil y profesional",
+  "alquiler.usos.1": "Presentaciones de empresa y lanzamientos de producto",
+  "alquiler.usos.2": "Convenciones, congresos y reuniones corporativas",
+  "alquiler.usos.3": "Formaciones, conferencias y charlas profesionales",
+  "alquiler.usos.4": "Eventos internos de empresa y reuniones de equipo",
+  "alquiler.usos.5": "Entregas de premios y actos institucionales",
+  "alquiler.usos.6": "Eventos para clientes, partners o distribuidores",
+  "alquiler.usos.7": "Grabaciones, rodajes y eventos híbridos (presencial / streaming)",
+  "alquiler.usos.8": "Espectáculos privados para empresas y eventos de incentivo",
+  "alquiler.usos.9": "Showcases, pases privados y presentaciones de marca",
+
+  "alquiler.ventajas.kicker": "Por qué el",
+  "alquiler.ventajas.titulo": "Ideal para empresas",
+  "alquiler.ventajas.1.titulo": "Ubicación céntrica",
+  "alquiler.ventajas.1.texto": "En {direccion}, en pleno corazón de Barcelona, con transporte público a pocos pasos.",
+  "alquiler.ventajas.2.titulo": "Totalmente equipado",
+  "alquiler.ventajas.2.texto": "Pantalla gigante, iluminación y sonido profesional, escenario y equipo técnico.",
+  "alquiler.ventajas.3.titulo": "Aforo cómodo",
+  "alquiler.ventajas.3.texto": "Capacidad para hasta 200 personas, perfecto para cualquier evento profesional.",
+  "alquiler.ventajas.4.titulo": "A tu medida",
+  "alquiler.ventajas.4.texto": "Personalización del evento, bar y espacio para catering, y asesoramiento durante todo el acto.",
+
+  "alquiler.galeria.platea.alt": "Patio de butacas del {teatro}",
+  "alquiler.galeria.foyer.alt": "Bar y vestíbulo del {teatro}",
+
+  "alquiler.guia.kicker": "Documentación",
+  "alquiler.guia.titulo": "Guía de espacios",
+  "alquiler.guia.lead": "Descárgate la guía completa del {teatro}, con las características del espacio, equipamiento y todo lo que necesitas para tu evento.",
+  "alquiler.guia.pdf.es": "Guía de espacios (Castellano) ↓",
+  "alquiler.guia.pdf.ca": "Guia d'espais (Català) ↓",
+
+  "alquiler.cta.titulo": "¿Hablamos de tu evento?",
+  "alquiler.cta.lead": "Pídenos información concreta y te contestaremos rápidamente. Cuéntanos qué necesitas y lo preparamos a tu medida.",
+  "alquiler.cta.escribenos": "Escríbenos"
+}

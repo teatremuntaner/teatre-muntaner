@@ -1,0 +1,18 @@
+{
+  "legal.privacidad.meta.titulo": "Política de privacidad",
+  "legal.privacidad.meta.descripcion": "Cómo trata el {teatro} tus datos personales y cómo ejercer tus derechos.",
+
+  "legal.privacidad.titulo": "Política de privacidad",
+
+  "legal.privacidad.h.proteccion": "PROTECCIÓN DE DATOS DE CARÁCTER PERSONAL",
+  "legal.privacidad.p1": "Los datos de carácter personal recogidos a través de la web {web} serán tratados de conformidad con la Ley Orgánica 15/1999 de Protección de Datos de Carácter Personal y serán incorporados a los ficheros automatizados de {empresa}.",
+  "legal.privacidad.p2": "Los datos de Carácter Personal de los usuarios recogidos al completar el formulario de contacto, de newsletter, bolsa de trabajo o posibles sorteos o promociones, serán tratados con la finalidad de envío de información sobre proyectos en los que {empresa} participa, o envío de información relacionada con puestos de trabajo, por medios tradicionales o electrónicos.",
+  "legal.privacidad.p3": "EL PROMOTOR y EL DISTRIBUIDOR garantiza la total confidencialidad de los datos. Los usuarios, dan su expreso consentimiento al tratamiento de los datos. EL PROMOTOR y EL DISTRIBUIDOR garantiza que los datos no serán cedidos a terceros salvo su expreso consentimiento. EL PROMOTOR y EL DISTRIBUIDOR ha implantado medidas técnicas a su alcance para evitar la pérdida, mal uso, alteración, acceso no autorizado y robo de los Datos Personales facilitados en el Portal. Así mismo, el usuario es consciente de que las medidas de seguridad en internet no son inexpugnables. EL PROMOTOR y EL DISTRIBUIDOR conservará estos datos por tiempo indefinido salvo que usted nos indique lo contrario. El remitente admite que la información y los datos personales que nos indica son suyos, exactos y ciertos. Ambas partes operan por separado y garantizan la protección de los datos de forma independiente.",
+  "legal.privacidad.p4": "En relación con tales datos, el usuario podrá ejercitar los derechos de acceso, rectificación, cancelación y oposición respecto a los datos incorporados en sus ficheros, mediante solicitud escrita a:",
+
+  "legal.privacidad.datos.promotor": "Promotor/Organizador",
+  "legal.privacidad.datos.denominacion": "Denominación social",
+  "legal.privacidad.datos.comercial": "Nombre Comercial",
+  "legal.privacidad.datos.domicilio": "Domicilio social",
+  "legal.privacidad.datos.email": "Dirección de correo electrónico"
+}

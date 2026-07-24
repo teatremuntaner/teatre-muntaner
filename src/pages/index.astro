@@ -5,6 +5,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Flag from '../components/Flag.astro';
 import Calendario from '../components/Calendario.astro';
 import { summarize } from '../lib/schedule';
+import { useT, langFromPath } from '../i18n';
 
 import hero from '../assets/venue/platea.jpg';            // patio de butacas con cortina roja
 import escenario from '../assets/venue/escenario.jpg';    // escenario con pantallas LED
@@ -14,7 +15,12 @@ import foyer from '../assets/venue/foyer.jpg';            // bar / vestíbulo
 import ambienteMun from '../assets/venue/ambiente-muntaner.jpg'; // elenco con público
 import damasco from '../assets/venue/damasco.jpg';        // textura damasco rojo/oro (pared real)
 
+const lang = langFromPath(Astro.url.pathname);
+const t = useT(lang);
+
 const base = import.meta.env.BASE_URL;
+// Los enlaces internos deben quedarse dentro del idioma: en catalán, /ca/...
+const rutaBase = lang === 'ca' ? '/ca/' : base;
 const today = new Date().toISOString().slice(0, 10);
 const isArchived = (d: { dates: { date: string }[] }) =>
   d.dates.length > 0 && !d.dates.some((x) => x.date >= today);
@@ -29,6 +35,43 @@ const shows = (await getCollection('espectaculos', ({ data }) => !data.draft && 
 );
 // Destacados: shows marcados como featured en el CMS (hasta 2).
 const featured = shows.filter((s) => s.data.featured).slice(0, 2);
+
+// --- Catalán -------------------------------------------------------------
+// El texto catalán de cada ficha lo genera scripts/translate_ca.py. Aquí solo
+// se superpone al castellano para PINTAR. Ojo: los géneros NO se sustituyen en
+// los datos, porque `data-genres` es lo que compara el filtro del navegador;
+// se traduce únicamente la etiqueta visible.
+const caShows = lang === 'ca' ? await getCollection('espectaculosCa') : [];
+const caById = new Map(caShows.map((e) => [e.id, e.data]));
+
+/** Texto de la ficha en el idioma de la página (cae al castellano si falta). */
+const textoDe = (show: { id: string; data: any }) => {
+  const ca = caById.get(show.id);
+  if (!ca) return show.data;
+  const usar = (v: any, alt: any) => (v !== undefined && v !== '' ? v : alt);
+  return {
+    ...show.data,
+    tagline: usar(ca.tagline, show.data.tagline),
+    promo: usar(ca.promo, show.data.promo),
+    category: usar(ca.category, show.data.category),
+    duration: usar(ca.duration, show.data.duration),
+    price: usar(ca.price, show.data.price),
+    dateText: usar(ca.dateText, show.data.dateText),
+  };
+};
+
+// Mapa género castellano -> etiqueta catalana, deducido de las propias fichas
+// (el script traduce la lista respetando el orden, así que casan 1 a 1).
+const etiquetaGenero = new Map<string, string>();
+if (lang === 'ca') {
+  for (const s of caShows) {
+    const original = shows.find((x) => x.id === s.id)?.data.genres ?? [];
+    s.data.genres?.forEach((g: string, i: number) => {
+      if (original[i]) etiquetaGenero.set(original[i], g);
+    });
+  }
+}
+const gLabel = (g: string) => etiquetaGenero.get(g) ?? g;
 
 // Filtro de géneros: solo los presentes en la cartelera, en orden preferente.
 const GENRE_ORDER = ['Comedia', 'Monólogos', 'Improvisación', 'Magia', 'Teatro', 'Familiar', 'Música', 'Flamenco', 'Bienestar emocional'];
@@ -46,18 +89,18 @@ const isThisWeek = (data: { dates: { date: string }[] }) =>
 const hasThisWeek = shows.some((s) => isThisWeek(s.data));
 
 const gallery = [
-  { img: hero, alt: 'Patio de butacas con la cortina roja del Teatre Muntaner' },
-  { img: escenario, alt: 'Escenario del Teatre Muntaner con pantallas LED' },
-  { img: fachada, alt: 'Fachada del Teatre Muntaner en Carrer de Muntaner 4' },
-  { img: foyer, alt: 'Bar y vestíbulo del Teatre Muntaner' },
-  { img: emporium, alt: 'Pared histórica Emporium 1927-1979 del Teatre Muntaner' },
-  { img: ambienteMun, alt: 'Elenco y público en el Teatre Muntaner' },
+  { img: hero, alt: t('home.alt.platea') },
+  { img: escenario, alt: t('home.alt.escenario') },
+  { img: fachada, alt: t('home.alt.fachada') },
+  { img: foyer, alt: t('home.alt.foyer') },
+  { img: emporium, alt: t('home.alt.emporium') },
+  { img: ambienteMun, alt: t('home.alt.ambiente') },
 ];
 ---
 
 <BaseLayout
-  title="La casa de la comedia en Barcelona"
-  description="Teatre Muntaner, la casa de la comedia en Barcelona. Monólogos, magia, improvisación y teatro de humor en Carrer de Muntaner 4."
+  title={t('home.meta.titulo')}
+  description={t('home.meta.descripcion')}
 >
   <script type="application/ld+json" set:html={JSON.stringify({
     '@context': 'https://schema.org',
@@ -66,7 +109,7 @@ const gallery = [
     url: 'https://teatremuntaner.com',
     logo: 'https://teatremuntaner.com/logo-muntaner.png',
     image: 'https://teatremuntaner.com/og.jpg',
-    description: 'La casa de la comedia en Barcelona: monólogos, magia, improvisación y teatro de humor.',
+    description: t('home.meta.descripcion'),
     address: { '@type': 'PostalAddress', streetAddress: 'Carrer de Muntaner 4', addressLocality: 'Barcelona', postalCode: '08011', addressCountry: 'ES' },
     geo: { '@type': 'GeoCoordinates', latitude: 41.3841653, longitude: 2.1630793 },
     sameAs: ['https://www.instagram.com/teatremuntaner/', 'https://www.tiktok.com/@teatremuntaner'],
@@ -74,19 +117,19 @@ const gallery = [
 
   <!-- ===================== HERO ===================== -->
   <section class="hero" id="inicio">
-    <Image class="hero__img" src={fachada} alt="Cola de público de noche en la fachada del Teatre Muntaner" widths={[1200, 1800, 2600]} sizes="100vw" loading="eager" fetchpriority="high" />
+    <Image class="hero__img" src={fachada} alt={t('home.alt.hero')} widths={[1200, 1800, 2600]} sizes="100vw" loading="eager" fetchpriority="high" />
     <div class="hero__scrim"></div>
     <span class="starburst hero__star" style="width:min(46vw,560px);top:-12%;right:-8%"></span>
     <div class="wrap hero__inner">
-      <p class="hero__eyebrow"><span class="dots"><i></i><i></i><i></i><i></i></span> La casa de la comedia · Barcelona</p>
-      <h1 class="hero__title" data-split>La casa<br />de la comedia</h1>
-      <p class="hero__lead">Disfruta de la comedia más actual y divertida en nuestro teatro centenario, en el corazón de Barcelona.</p>
+      <p class="hero__eyebrow"><span class="dots"><i></i><i></i><i></i><i></i></span> {t('home.hero.eyebrow')}</p>
+      <h1 class="hero__title" data-split>{t('home.hero.titulo.linea1')}<br />{t('home.hero.titulo.linea2')}</h1>
+      <p class="hero__lead">{t('home.hero.lead')}</p>
       <div class="hero__cta">
-        <a class="btn btn--accent" href="#cartelera">Ver cartelera</a>
-        <a class="btn btn--ghost" href="#calendario">Calendario</a>
+        <a class="btn btn--accent" href="#cartelera">{t('home.hero.cta.cartelera')}</a>
+        <a class="btn btn--ghost" href="#calendario">{t('home.hero.cta.calendario')}</a>
       </div>
     </div>
-    <a class="hero__scroll" href="#destacados" aria-label="Bajar"><span></span></a>
+    <a class="hero__scroll" href="#destacados" aria-label={t('home.hero.bajar')}><span></span></a>
   </section>
 
   <!-- ===================== MARQUESINA ===================== -->
@@ -95,11 +138,11 @@ const gallery = [
       {Array.from({ length: 2 }).map(() => (
         <div class="marquee__item">
           Teatre Muntaner <span class="marquee__star">✦</span>
-          La casa de la comedia <span class="marquee__star">✦</span>
-          Monólogos <span class="marquee__star">✦</span>
-          Magia <span class="marquee__star">✦</span>
-          Improvisación <span class="marquee__star">✦</span>
-          Teatre de humor <span class="marquee__star">✦</span>
+          {t('home.marquesina.casa')} <span class="marquee__star">✦</span>
+          {t('home.marquesina.monologos')} <span class="marquee__star">✦</span>
+          {t('home.marquesina.magia')} <span class="marquee__star">✦</span>
+          {t('home.marquesina.improvisacion')} <span class="marquee__star">✦</span>
+          {t('home.marquesina.humor')} <span class="marquee__star">✦</span>
           Barcelona <span class="marquee__star">✦</span>
         </div>
       ))}
@@ -110,22 +153,22 @@ const gallery = [
   {featured.length > 0 && (
     <section class="wrap section" id="destacados">
       <header class="section__head reveal">
-        <p class="kicker kicker--yellow">Destacados</p>
-        <h2 class="section__title">No te los pierdas</h2>
+        <p class="kicker kicker--yellow">{t('home.destacados.kicker')}</p>
+        <h2 class="section__title">{t('home.destacados.titulo')}</h2>
       </header>
       <div class="featured">
         {featured.map((s) => {
-          const sd = s.data;
-          const fwhen = sd.dates.length ? summarize(sd.dates).card : (sd.dateText ?? '');
+          const sd = textoDe(s);
+          const fwhen = sd.dates.length ? summarize(sd.dates, lang).card : (sd.dateText ?? '');
           return (
-            <a class="featured__card reveal" href={`${base}espectaculos/${s.id}/`} style={`--fc:${sd.accent}`}>
-              <Image class="featured__bg" src={sd.poster} alt={`Cartel de ${sd.title}`} widths={[600, 1100]} sizes="(max-width: 880px) 100vw, 560px" />
+            <a class="featured__card reveal" href={`${rutaBase}espectaculos/${s.id}/`} style={`--fc:${sd.accent}`}>
+              <Image class="featured__bg" src={sd.poster} alt={t('home.alt.cartel', { titulo: sd.title })} widths={[600, 1100]} sizes="(max-width: 880px) 100vw, 560px" />
               <span class="featured__veil"></span>
               <div class="featured__body">
                 {(sd.artist ?? fwhen) && <span class="featured__tag">{sd.artist ?? fwhen}</span>}
                 <h3>{sd.title}</h3>
                 {sd.tagline && <p>{sd.tagline}</p>}
-                <span class="featured__more">Más información →</span>
+                <span class="featured__more">{t('home.destacados.mas')}</span>
               </div>
             </a>
           );
@@ -137,25 +180,25 @@ const gallery = [
   <!-- ===================== CARTELERA ===================== -->
   <section class="wrap section" id="cartelera">
     <header class="section__head reveal">
-      <p class="kicker kicker--coral">En cartel</p>
-      <h2 class="section__title">Mira nuestra cartelera</h2>
+      <p class="kicker kicker--coral">{t('home.cartelera.kicker')}</p>
+      <h2 class="section__title">{t('home.cartelera.titulo')}</h2>
     </header>
     {(genreFilters.length > 1 || hasThisWeek || langFilters.length > 1) && (
-      <div class="genre-filter" role="group" aria-label="Filtrar cartelera">
-        <button class="genre-chip is-active" data-genre="*" aria-pressed="true" type="button">Todos</button>
+      <div class="genre-filter" role="group" aria-label={t('home.cartelera.filtro.aria')}>
+        <button class="genre-chip is-active" data-genre="*" aria-pressed="true" type="button">{t('home.cartelera.filtro.todos')}</button>
         {hasThisWeek && (
-          <button class="genre-chip genre-chip--week" data-genre="__week" aria-pressed="false" type="button">Esta semana</button>
+          <button class="genre-chip genre-chip--week" data-genre="__week" aria-pressed="false" type="button">{t('home.cartelera.filtro.semana')}</button>
         )}
         {genreFilters.map((g) => (
-          <button class="genre-chip" data-genre={g} aria-pressed="false" type="button">{g}</button>
+          <button class="genre-chip" data-genre={g} aria-pressed="false" type="button">{gLabel(g)}</button>
         ))}
         {langFilters.length > 1 && (
           <>
-            <span class="genre-filter__langlabel">Idioma:</span>
+            <span class="genre-filter__langlabel">{t('home.cartelera.filtro.idioma')}</span>
             {langFilters.map((l) => (
               <button class="genre-chip genre-chip--lang" data-genre={`__lang:${l}`} aria-pressed="false" type="button">
                 <Flag lang={l === 'Catalán' ? 'ca' : 'es'} class="genre-chip__flag" />
-                {l === 'Catalán' ? 'Català' : l}
+                {l === 'Catalán' ? t('home.idioma.ca') : l === 'Bilingüe' ? t('home.idioma.bi') : t('home.idioma.es')}
               </button>
             ))}
           </>
@@ -164,20 +207,22 @@ const gallery = [
     )}
     <div class="shows-grid">
       {shows.map((show) => {
-        const d = show.data;
+        const d = textoDe(show);
         const sub = d.artist ?? d.tagline;
-        const cardGenres = d.genres.length ? d.genres : [d.category];
-        const genre = cardGenres.join(' · ');
-        const when = d.ticketAlarm ? 'Próximamente' : (d.dates.length ? summarize(d.dates).card : (d.dateText ?? 'Consultar fechas'));
+        // Para filtrar se usan SIEMPRE los géneros castellanos (canónicos);
+        // lo que se ve por pantalla va traducido.
+        const cardGenres = show.data.genres.length ? show.data.genres : [show.data.category];
+        const genre = (d.genres.length ? d.genres : [d.category]).map(gLabel).join(' · ');
+        const when = d.ticketAlarm ? t('home.card.proximamente') : (d.dates.length ? summarize(d.dates, lang).card : (d.dateText ?? t('home.card.consultar')));
         return (
           <article class="show-card reveal" style={`--card-accent:${d.accent};--card-ink:${d.accentInk}`} data-genres={cardGenres.join('|')} data-week={isThisWeek(d) ? '1' : '0'} data-lang={d.lang ?? ''}>
-            <a class="show-card__main" href={d.externalUrl ?? `${base}espectaculos/${show.id}/`}>
+            <a class="show-card__main" href={d.externalUrl ?? `${rutaBase}espectaculos/${show.id}/`}>
               <div class="show-card__bar"></div>
               <div class="show-card__img">
-                <Image src={d.poster} alt={`Cartel de ${d.title}`} widths={[300, 500]} sizes="(max-width: 600px) 50vw, 280px" />
+                <Image src={d.poster} alt={t('home.alt.cartel', { titulo: d.title })} widths={[300, 500]} sizes="(max-width: 600px) 50vw, 280px" />
                 {d.lang && (
                   <span class={`show-card__lang ${d.lang === 'Catalán' ? 'is-ca' : d.lang === 'Bilingüe' ? 'is-bi' : 'is-es'}`}>
-                    {d.lang === 'Catalán' ? 'Català' : d.lang === 'Bilingüe' ? 'ES · CA' : 'Castellano'}
+                    {d.lang === 'Catalán' ? t('home.idioma.ca') : d.lang === 'Bilingüe' ? t('home.idioma.bi') : t('home.idioma.es')}
                   </span>
                 )}
               </div>
@@ -189,11 +234,11 @@ const gallery = [
               </div>
             </a>
             <div class="show-card__actions">
-              <a class="show-card__more" href={d.externalUrl ?? `${base}espectaculos/${show.id}/`}>Ver más</a>
+              <a class="show-card__more" href={d.externalUrl ?? `${rutaBase}espectaculos/${show.id}/`}>{t('home.card.vermas')}</a>
               {d.ticketAlarm ? (
-                <a class="show-card__buy" href={`${base}espectaculos/${show.id}/`}>Avísame</a>
+                <a class="show-card__buy" href={`${rutaBase}espectaculos/${show.id}/`}>{t('home.card.avisame')}</a>
               ) : d.ticketUrl && (
-                <a class="show-card__buy" href={d.ticketUrl} target="_blank" rel="noopener">Comprar entradas</a>
+                <a class="show-card__buy" href={d.ticketUrl} target="_blank" rel="noopener">{t('home.card.comprar')}</a>
               )}
             </div>
           </article>
@@ -265,16 +310,16 @@ const gallery = [
   <section class="section teatro teatro--damask" id="teatro" style={`background-image: url(${damasco.src})`}>
     <div class="wrap split">
       <div class="split__media reveal">
-        <Image src={emporium} alt="Pared histórica Emporium 1927-1979 del Teatre Muntaner" widths={[600, 1000]} sizes="(max-width: 880px) 100vw, 520px" />
+        <Image src={emporium} alt={t('home.alt.emporium')} widths={[600, 1000]} sizes="(max-width: 880px) 100vw, 520px" />
       </div>
       <div class="split__text reveal">
-        <p class="kicker kicker--purple">El Teatro</p>
-        <h2 class="section__title">Un teatro centenario,<br /><em>con historia y carácter.</em></h2>
-        <p class="lead">Con sus tres plantas y 800 m² de espacio, en el Teatre Muntaner hemos cuidado cada rincón para que cada visita sea una experiencia memorable. Desde el logotipo al papel de la pared, buscamos la renovación práctica y cómoda de un teatro con más de un siglo de vida, en pleno centro de Barcelona.</p>
+        <p class="kicker kicker--purple">{t('home.teatro.kicker')}</p>
+        <h2 class="section__title">{t('home.teatro.titulo')}<br /><em>{t('home.teatro.titulo.em')}</em></h2>
+        <p class="lead">{t('home.teatro.lead')}</p>
         <ul class="pillars">
-          <li><strong>Comedia</strong><span>Monólogos y shows que llenan la sala de risas.</span></li>
-          <li><strong>Improvisación</strong><span>Espectáculos vivos, distintos cada noche.</span></li>
-          <li><strong>Magia</strong><span>Ilusionismo y espectáculos para todos los públicos.</span></li>
+          <li><strong>{t('home.teatro.pilar.comedia')}</strong><span>{t('home.teatro.pilar.comedia.texto')}</span></li>
+          <li><strong>{t('home.teatro.pilar.improvisacion')}</strong><span>{t('home.teatro.pilar.improvisacion.texto')}</span></li>
+          <li><strong>{t('home.teatro.pilar.magia')}</strong><span>{t('home.teatro.pilar.magia.texto')}</span></li>
         </ul>
       </div>
     </div>
@@ -284,8 +329,8 @@ const gallery = [
   <!-- ===================== GALERÍA ===================== -->
   <section class="wrap section" id="galeria">
     <header class="section__head reveal">
-      <p class="kicker kicker--blue">El local</p>
-      <h2 class="section__title">Galería</h2>
+      <p class="kicker kicker--blue">{t('home.galeria.kicker')}</p>
+      <h2 class="section__title">{t('home.galeria.titulo')}</h2>
     </header>
     <div class="gallery">
       {gallery.map((g) => (
@@ -300,33 +345,33 @@ const gallery = [
   <section class="section contacto" id="contacto">
     <div class="wrap">
       <header class="section__head reveal">
-        <p class="kicker kicker--purple">Contacto</p>
-        <h2 class="section__title">Cuéntanos.<br /><em>Te responderemos cuanto antes.</em></h2>
+        <p class="kicker kicker--purple">{t('home.contacto.kicker')}</p>
+        <h2 class="section__title">{t('home.contacto.titulo')}<br /><em>{t('home.contacto.titulo.em')}</em></h2>
       </header>
       <div class="contacto__grid">
         <form class="cform reveal" id="contactForm">
-          <input type="text" name="nombre" placeholder="Nombre" required />
-          <input type="email" name="email" placeholder="Email" required />
-          <textarea name="mensaje" placeholder="Tu mensaje" rows="5" required></textarea>
-          <button class="btn btn--accent" type="submit">Enviar</button>
-          <p class="cform__msg cform__ok" hidden>¡Gracias! Hemos recibido tu mensaje y te responderemos cuanto antes.</p>
-          <p class="cform__msg cform__err" hidden>No se ha podido enviar. Escríbenos a <a href="mailto:info@teatremuntaner.com">info@teatremuntaner.com</a>.</p>
+          <input type="text" name="nombre" placeholder={t('home.contacto.nombre')} required />
+          <input type="email" name="email" placeholder={t('home.contacto.email')} required />
+          <textarea name="mensaje" placeholder={t('home.contacto.mensaje')} rows="5" required></textarea>
+          <button class="btn btn--accent" type="submit">{t('home.contacto.enviar')}</button>
+          <p class="cform__msg cform__ok" hidden>{t('home.contacto.ok')}</p>
+          <p class="cform__msg cform__err" hidden>{t('home.contacto.error')} <a href="mailto:info@teatremuntaner.com">info@teatremuntaner.com</a>.</p>
         </form>
         <aside class="contacto__info reveal">
           <div class="info-card">
             <div class="info-card__bar"></div>
-            <p class="addr"><strong>Dirección</strong>Carrer de Muntaner, 4 · 08011 Barcelona</p>
-            <p class="addr"><strong>Taquilla</strong><a href="tel:+34614402738">+34 614 402 738</a></p>
-            <p class="addr"><strong>Horario taquilla</strong>Abierta desde 1 h 30 min antes de cada función</p>
-            <p class="addr"><strong>Información general</strong><a href="mailto:info@teatremuntaner.com">info@teatremuntaner.com</a></p>
-            <p class="addr"><strong>Entradas</strong><a href="mailto:entradas@teatremuntaner.com">entradas@teatremuntaner.com</a></p>
-            <p class="addr"><strong>Síguenos</strong><span class="social-row"><a href="https://www.instagram.com/teatremuntaner/" target="_blank" rel="noopener">Instagram ↗</a><a href="https://www.tiktok.com/@teatremuntaner" target="_blank" rel="noopener">TikTok ↗</a><a href="https://www.google.com/maps/place/Teatre+Muntaner/data=!4m7!3m6!1s0x12a4a31493c798f3:0x12a7966c424af8f6!8m2!3d41.3841653!4d2.1630793!16s%2Fg%2F11w9gjbjvn" target="_blank" rel="noopener">Google ↗</a></span></p>
-            <a class="btn btn--ghost" href="https://www.google.com/maps/dir/?api=1&destination=Teatre+Muntaner+Carrer+de+Muntaner+4+Barcelona" target="_blank" rel="noopener">Cómo llegar</a>
+            <p class="addr"><strong>{t('home.contacto.direccion')}</strong>Carrer de Muntaner, 4 · 08011 Barcelona</p>
+            <p class="addr"><strong>{t('home.contacto.taquilla')}</strong><a href="tel:+34614402738">+34 614 402 738</a></p>
+            <p class="addr"><strong>{t('home.contacto.horario')}</strong>{t('home.contacto.horario.texto')}</p>
+            <p class="addr"><strong>{t('home.contacto.informacion')}</strong><a href="mailto:info@teatremuntaner.com">info@teatremuntaner.com</a></p>
+            <p class="addr"><strong>{t('home.contacto.entradas')}</strong><a href="mailto:entradas@teatremuntaner.com">entradas@teatremuntaner.com</a></p>
+            <p class="addr"><strong>{t('home.contacto.siguenos')}</strong><span class="social-row"><a href="https://www.instagram.com/teatremuntaner/" target="_blank" rel="noopener">Instagram ↗</a><a href="https://www.tiktok.com/@teatremuntaner" target="_blank" rel="noopener">TikTok ↗</a><a href="https://www.google.com/maps/place/Teatre+Muntaner/data=!4m7!3m6!1s0x12a4a31493c798f3:0x12a7966c424af8f6!8m2!3d41.3841653!4d2.1630793!16s%2Fg%2F11w9gjbjvn" target="_blank" rel="noopener">Google ↗</a></span></p>
+            <a class="btn btn--ghost" href="https://www.google.com/maps/dir/?api=1&destination=Teatre+Muntaner+Carrer+de+Muntaner+4+Barcelona" target="_blank" rel="noopener">{t('home.contacto.comollegar')}</a>
           </div>
         </aside>
       </div>
       <div class="contacto__map reveal">
-        <iframe src="https://maps.google.com/maps?q=Carrer+de+Muntaner+4+Barcelona&z=16&output=embed" loading="lazy" title="Mapa del Teatre Muntaner en Carrer de Muntaner 4, Barcelona"></iframe>
+        <iframe src="https://maps.google.com/maps?q=Carrer+de+Muntaner+4+Barcelona&z=16&output=embed" loading="lazy" title={t('home.contacto.mapa')}></iframe>
       </div>
     </div>
   </section>

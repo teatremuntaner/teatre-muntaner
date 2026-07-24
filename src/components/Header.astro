@@ -1,35 +1,59 @@
 ---
 import Flag from './Flag.astro';
-const base = import.meta.env.BASE_URL; // p. ej. "/V1/"
-const items = [
-  { href: base, label: 'Inicio' },
-  { href: `${base}#cartelera`, label: 'Cartelera' },
-  { href: `${base}#calendario`, label: 'Calendario' },
-  { href: `${base}#galeria`, label: 'Galería' },
-  { href: `${base}alquiler/`, label: 'Alquiler' },
-  { href: `${base}#contacto`, label: 'Contacto' },
-];
+import { useT, langFromPath, equivalentPath, LANG_NAME } from '../i18n';
+
 const path = Astro.url.pathname;
+const lang = langFromPath(path);
+const t = useT(lang);
+
+// La raiz de cada idioma: "/" en castellano, "/ca/" en catalan.
+const home = lang === 'ca' ? '/ca/' : import.meta.env.BASE_URL;
+const items = [
+  { href: home, label: t('nav.inicio') },
+  { href: `${home}#cartelera`, label: t('nav.cartelera') },
+  { href: `${home}#calendario`, label: t('nav.calendario') },
+  { href: `${home}#galeria`, label: t('nav.galeria') },
+  { href: `${home}alquiler/`, label: t('nav.alquiler') },
+  { href: `${home}#contacto`, label: t('nav.contacto') },
+];
+
+// El selector de idioma ahora son ENLACES a la misma pagina en el otro idioma
+// (antes lo hacia Weglot por JavaScript).
+const hrefEs = equivalentPath(path, 'es');
+const hrefCa = equivalentPath(path, 'ca');
 ---
 <header class="site-header">
   <div class="wrap">
-    <a class="site-header__logo" href={base} aria-label="Teatre Muntaner · Inicio">
-      <img src={`${base}logo-muntaner.png`} alt="Teatre Muntaner" />
+    <a class="site-header__logo" href={home} aria-label={`Teatre Muntaner · ${t('nav.inicio')}`}>
+      <img src={`${import.meta.env.BASE_URL}logo-muntaner.png`} alt="Teatre Muntaner" />
     </a>
-    <nav class="site-nav" aria-label="Navegación principal">
+    <nav class="site-nav" aria-label={t('nav.principal')}>
       {items.map((i) => (
         <a
           href={i.href}
-          class={i.accent ? 'is-accent' : undefined}
           aria-current={path === i.href ? 'page' : undefined}
         >{i.label}</a>
       ))}
     </nav>
-    <div class="lang-switch" role="group" aria-label="Idioma">
-      <button class="lang-switch__btn" data-lang="es" type="button" aria-label="Castellano" title="Castellano"><Flag lang="es" class="lang-switch__flag" /></button>
-      <button class="lang-switch__btn" data-lang="ca" type="button" aria-label="Català" title="Català"><Flag lang="ca" class="lang-switch__flag" /></button>
+    <div class="lang-switch" role="group" aria-label={t('nav.idioma')}>
+      <a
+        class:list={['lang-switch__btn', { 'is-active': lang === 'es' }]}
+        href={hrefEs}
+        hreflang="es"
+        aria-label={LANG_NAME.es}
+        title={LANG_NAME.es}
+        aria-current={lang === 'es' ? 'true' : undefined}
+      ><Flag lang="es" class="lang-switch__flag" /></a>
+      <a
+        class:list={['lang-switch__btn', { 'is-active': lang === 'ca' }]}
+        href={hrefCa}
+        hreflang="ca"
+        aria-label={LANG_NAME.ca}
+        title={LANG_NAME.ca}
+        aria-current={lang === 'ca' ? 'true' : undefined}
+      ><Flag lang="ca" class="lang-switch__flag" /></a>
     </div>
-    <button class="site-nav__burger" aria-label="Abrir menú" aria-expanded="false">
+    <button class="site-nav__burger" aria-label={t('nav.abrirMenu')} aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -47,36 +71,6 @@ const path = Astro.url.pathname;
     a.addEventListener('click', () => header?.classList.remove('is-open')),
   );
 
-  // Selector de idioma (Weglot)
-  (function () {
-    const W = window as any;
-    const btns = Array.from(document.querySelectorAll('.lang-switch__btn')) as HTMLElement[];
-    if (!btns.length) return;
-    const setActive = (lang: string) =>
-      btns.forEach((b) => b.classList.toggle('is-active', b.dataset.lang === lang));
-    btns.forEach((b) =>
-      b.addEventListener('click', () => {
-        if (W.Weglot && W.Weglot.switchTo) W.Weglot.switchTo(b.dataset.lang);
-      }),
-    );
-    const hook = () => {
-      if (!W.Weglot || !W.Weglot.on) return false;
-      try {
-        if (W.Weglot.getCurrentLang) setActive(W.Weglot.getCurrentLang());
-        W.Weglot.on('languageChanged', (n: string) => setActive(n));
-        W.Weglot.on('initialized', () => setActive(W.Weglot.getCurrentLang()));
-      } catch (e) {}
-      return true;
-    };
-    if (!hook()) {
-      let n = 0;
-      const t = setInterval(() => {
-        if (hook() || ++n > 40) {
-          clearInterval(t);
-          // Si Weglot no está (p. ej. preview sin API key), ocultamos el selector
-          if (!W.Weglot) { const sw = document.querySelector('.lang-switch') as HTMLElement; if (sw) sw.style.display = 'none'; }
-        }
-      }, 150);
-    }
-  })();
+  // El selector de idioma ya no necesita JavaScript: son dos enlaces normales
+  // a la misma pagina en el otro idioma, generados en el build.
 </script>

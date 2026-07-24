@@ -14,6 +14,32 @@
 [functions]
   directory = "netlify/functions"
 
+# --------------------------------------------------------------------------
+# Catalán: de Weglot (subdominio) a páginas propias (/ca/)
+#
+# Hasta el 24/07/2026 el catalán lo servía Weglot en cat.teatremuntaner.com.
+# Ahora son páginas reales en teatremuntaner.com/ca/. Estas reglas mandan cada
+# URL vieja a su equivalente nueva con un 301, para no perder el posicionamiento
+# que ya tiene Google.
+#
+# OJO: estas reglas NO hacen nada hasta que se cumplan DOS pasos manuales:
+#   1) En cdmon: apuntar el CNAME de cat.teatremuntaner.com a Netlify
+#      (ahora apunta a Weglot). NO tocar el registro A de la raíz ni los MX.
+#   2) En Netlify: añadir cat.teatremuntaner.com como dominio alias del sitio.
+# Mientras no se hagan, el subdominio sigue en manos de Weglot.
+# --------------------------------------------------------------------------
+[[redirects]]
+  from = "https://cat.teatremuntaner.com/espectaculos/*"
+  to = "https://teatremuntaner.com/ca/espectaculos/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://cat.teatremuntaner.com/*"
+  to = "https://teatremuntaner.com/ca/:splat"
+  status = 301
+  force = true
+
 # CORS para funciones.json: lo consume el escaparate (tele.teatremuntaner.com),
 # que es OTRO origen. Astro pone la cabecera en el endpoint, pero al prerenderizarse
 # a archivo estático se pierde; Netlify la reañade aquí. Sin esto, el navegador

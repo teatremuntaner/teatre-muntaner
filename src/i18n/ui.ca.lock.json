@@ -1,0 +1,13 @@
+{
+  "_comentario": "Correcciones catalanas hechas a mano. Lo que este aqui GANA siempre sobre la traduccion automatica de Apertium y no se pisa nunca. Anade una clave solo cuando el automatico se equivoque.",
+
+  "cookies.masInfoDesc": "Consulta la nostra {enlace}.",
+  "footer.claim": "La casa de la comèdia a Barcelona: monòlegs, màgia, improvisació i teatre d'humor, al Carrer de Muntaner 4.",
+  "meta.descripcion": "Teatre Muntaner · Carrer de Muntaner 4, Barcelona. La casa de la comèdia: monòlegs, màgia, improvisació i teatre d'humor.",
+
+  "_nota_al_teatre": "Apertium traduce 'en el Teatre' literal; en catalan lo natural es 'al Teatre'.",
+  "home.alt.ambiente": "Elenc i públic al Teatre Muntaner",
+  "home.meta.descripcion": "Teatre Muntaner, la casa de la comèdia a Barcelona. Monòlegs, màgia, improvisació i teatre d'humor al Carrer de Muntaner 4.",
+  "home.teatro.lead": "Amb les seves tres plantes i 800 m² d'espai, al Teatre Muntaner hem cuidat cada racó perquè cada visita sigui una experiència memorable. Des del logotip al paper de la paret, busquem la renovació pràctica i còmoda d'un teatre amb més d'un segle de vida, en ple centre de Barcelona.",
+  "show.descFallback": "{titulo} al Teatre Muntaner"
+}

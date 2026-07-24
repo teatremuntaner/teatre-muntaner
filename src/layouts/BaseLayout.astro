@@ -3,6 +3,10 @@ import '../styles/global.css';
 import '../styles/fx.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import {
+  useT, langFromPath, equivalentPath, stripLocale,
+  HTML_LANG, OG_LOCALE, LANGS,
+} from '../i18n';
 
 // Capa de efectos visuales (tm-fx). true = activa para todo el mundo.
 // (?fx=0 en la URL la apaga puntualmente; la preferencia se recuerda en el
@@ -19,9 +23,12 @@ interface Props {
   image?: string;         // og:image
   bare?: boolean;         // landing de campaña: sin header/footer y siempre noindex
 }
+const lang = langFromPath(Astro.url.pathname);
+const t = useT(lang);
+
 const {
   title,
-  description = 'Teatre Muntaner · Carrer de Muntaner 4, Barcelona. La casa de la comedia: monólogos, magia, improvisación y teatro de humor.',
+  description = t('meta.descripcion'),
   accent = '#bd221f',
   accentInk = '#ffffff',
   titleFont,
@@ -35,16 +42,21 @@ const canonical = new URL(Astro.url.pathname, SITE).href;
 const ogImage = image ?? new URL('og.jpg', SITE).href;
 // Web de pruebas: noindex. Al pasar a teatremuntaner.com se pone INDEXABLE=true.
 const indexable = process.env.INDEXABLE === 'true';
-// Weglot (traducción automática al catalán). Latente hasta poner WEGLOT_API_KEY
-// como variable de entorno en Netlify; entonces se inyecta el script solo.
-const weglotKey = process.env.WEGLOT_API_KEY;
+
+// hreflang: cada pagina declara su equivalente en el otro idioma. Es lo que le
+// dice a Google que /ca/x es la version catalana de /x (y no contenido duplicado).
+const alternates = LANGS.map((l) => ({
+  lang: HTML_LANG[l],
+  href: new URL(equivalentPath(Astro.url.pathname, l), SITE).href,
+}));
+const xDefault = new URL(stripLocale(Astro.url.pathname), SITE).href;
 
 const bodyStyle =
   `--accent:${accent};--accent-ink:${accentInk};` +
   (titleFont ? `--f-title:'${titleFont}', var(--f-display);` : '');
 ---
 <!doctype html>
-<html lang="es">
+<html lang={HTML_LANG[lang]}>
   <head>
     <meta charset="utf-8" />
     <!-- Capa de efectos (tm-fx): activa la clase antes de pintar para no parpadear -->
@@ -77,6 +89,10 @@ const bodyStyle =
     <title>{title} · Teatre Muntaner</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {!bare && alternates.map((a) => (
+      <link rel="alternate" hreflang={a.lang} href={a.href} />
+    ))}
+    {!bare && <link rel="alternate" hreflang="x-default" href={xDefault} />}
     {(!indexable || bare) && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
     <link rel="icon" type="image/png" sizes="64x64" href={`${import.meta.env.BASE_URL}favicon-64.png`} />
@@ -98,18 +114,12 @@ const bodyStyle =
         --cc-link-color: #bd221f; --cc-toggle-on-bg: #bd221f;
       }
     </style>
-    {weglotKey && (
-      <>
-        <script is:inline src="https://cdn.weglot.com/weglot.min.js"></script>
-        <script is:inline set:html={`Weglot.initialize({ api_key: '${weglotKey}' });`}></script>
-      </>
-    )}
     <meta property="og:title" content={`${title} · Teatre Muntaner`} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:url" content={canonical} />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="es_ES" />
+    <meta property="og:locale" content={OG_LOCALE[lang]} />
     <meta property="og:site_name" content="Teatre Muntaner" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={`${title} · Teatre Muntaner`} />
@@ -150,7 +160,26 @@ const bodyStyle =
 
     <!-- Consentimiento de cookies: banner + Consent Mode v2 (actualiza GTM al aceptar) -->
     <script is:inline src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3.1.0/dist/cookieconsent.umd.js"></script>
-    <script is:inline>
+    <script is:inline define:vars={{ CC_LANG: lang, CC_T: {
+      titulo: t('cookies.titulo'),
+      descripcion: t('cookies.descripcion', { enlace: `<a href="${lang === 'ca' ? '/ca' : ''}/politica-de-cookies/">${t('cookies.enlaceTexto')}</a>` }),
+      aceptar: t('cookies.aceptar'),
+      rechazar: t('cookies.rechazar'),
+      configurar: t('cookies.configurar'),
+      prefTitulo: t('cookies.prefTitulo'),
+      aceptarTodo: t('cookies.aceptarTodo'),
+      rechazarTodo: t('cookies.rechazarTodo'),
+      guardar: t('cookies.guardar'),
+      cerrar: t('cookies.cerrar'),
+      necesariasTitulo: t('cookies.necesariasTitulo'),
+      necesariasDesc: t('cookies.necesariasDesc'),
+      analiticasTitulo: t('cookies.analiticasTitulo'),
+      analiticasDesc: t('cookies.analiticasDesc'),
+      marketingTitulo: t('cookies.marketingTitulo'),
+      marketingDesc: t('cookies.marketingDesc'),
+      masInfoTitulo: t('cookies.masInfoTitulo'),
+      masInfoDesc: t('cookies.masInfoDesc', { enlace: `<a href="${lang === 'ca' ? '/ca' : ''}/politica-de-cookies/">${t('cookies.enlaceTexto')}</a>` }),
+    } }}>
       (function () {
         if (!window.CookieConsent) return;
         function syncConsent() {
@@ -174,27 +203,27 @@ const bodyStyle =
           onConsent: syncConsent,
           onChange: syncConsent,
           language: {
-            default: 'es',
+            default: CC_LANG,
             translations: {
-              es: {
+              [CC_LANG]: {
                 consentModal: {
-                  title: 'Usamos cookies 🍪',
-                  description: 'Utilizamos cookies propias y de terceros para analítica y para mejorar tu experiencia. Puedes aceptarlas, rechazarlas o configurarlas. Más información en nuestra <a href="/politica-de-cookies/">Política de cookies</a>.',
-                  acceptAllBtn: 'Aceptar todo',
-                  acceptNecessaryBtn: 'Rechazar',
-                  showPreferencesBtn: 'Configurar'
+                  title: CC_T.titulo,
+                  description: CC_T.descripcion,
+                  acceptAllBtn: CC_T.aceptar,
+                  acceptNecessaryBtn: CC_T.rechazar,
+                  showPreferencesBtn: CC_T.configurar
                 },
                 preferencesModal: {
-                  title: 'Preferencias de cookies',
-                  acceptAllBtn: 'Aceptar todo',
-                  acceptNecessaryBtn: 'Rechazar todo',
-                  savePreferencesBtn: 'Guardar preferencias',
-                  closeIconLabel: 'Cerrar',
+                  title: CC_T.prefTitulo,
+                  acceptAllBtn: CC_T.aceptarTodo,
+                  acceptNecessaryBtn: CC_T.rechazarTodo,
+                  savePreferencesBtn: CC_T.guardar,
+                  closeIconLabel: CC_T.cerrar,
                   sections: [
-                    { title: 'Necesarias', description: 'Imprescindibles para el funcionamiento del sitio. Siempre activas.', linkedCategory: 'necessary' },
-                    { title: 'Analíticas', description: 'Nos ayudan a entender cómo se usa la web (Google Analytics vía Tag Manager).', linkedCategory: 'analytics' },
-                    { title: 'Marketing', description: 'Para medir campañas y mostrar contenido relevante.', linkedCategory: 'marketing' },
-                    { title: 'Más información', description: 'Consulta nuestra <a href="/politica-de-cookies/">Política de cookies</a>.' }
+                    { title: CC_T.necesariasTitulo, description: CC_T.necesariasDesc, linkedCategory: 'necessary' },
+                    { title: CC_T.analiticasTitulo, description: CC_T.analiticasDesc, linkedCategory: 'analytics' },
+                    { title: CC_T.marketingTitulo, description: CC_T.marketingDesc, linkedCategory: 'marketing' },
+                    { title: CC_T.masInfoTitulo, description: CC_T.masInfoDesc }
                   ]
                 }
               }
