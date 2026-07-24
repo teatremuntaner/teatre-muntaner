@@ -40,6 +40,27 @@
   status = 301
   force = true
 
+# --------------------------------------------------------------------------
+# Dominio teatremuntaner.cat -> web catalana (/ca/)
+#
+# Es un DOMINIO aparte (no un subdominio). Se manda entero a /ca/, conservando
+# la ruta. Igual que con cat., estas reglas solo hacen efecto cuando:
+#   1) En Netlify: teatremuntaner.cat y www.teatremuntaner.cat son alias del sitio.
+#   2) En cdmon (zona de teatremuntaner.cat): la RAIZ va con registro A -> 75.2.60.5
+#      (un dominio raiz no admite CNAME), y www con CNAME -> teatre-muntaner.netlify.app.
+# --------------------------------------------------------------------------
+[[redirects]]
+  from = "https://teatremuntaner.cat/*"
+  to = "https://teatremuntaner.com/ca/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.teatremuntaner.cat/*"
+  to = "https://teatremuntaner.com/ca/:splat"
+  status = 301
+  force = true
+
 # CORS para funciones.json: lo consume el escaparate (tele.teatremuntaner.com),
 # que es OTRO origen. Astro pone la cabecera en el endpoint, pero al prerenderizarse
 # a archivo estático se pierde; Netlify la reañade aquí. Sin esto, el navegador

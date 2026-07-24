@@ -11,11 +11,9 @@ price: Des de 18 €
 genres:
 - Comèdia
 - Monòlegs
-sourceHash: 378bf33cfd055132
+sourceHash: f581e9b21a29ca23
 generated: true
 ---
-
-Aquí tens una sinopsi amb un to molt seriós i institucional, però amb un humor absurd que va creixent a poc a poc. Et proposo aquesta versió:
 
 Hi ha dies que passen desapercebuts. I hi ha dies que es recorden per sempre. Aquest promet ser dels segons.
 

@@ -23,8 +23,6 @@ duration: 90´
 price: Desde 18 €
 draft: false
 ---
-Aquí tienes una sinopsis con un tono muy serio e institucional, pero con un humor absurdo que va creciendo poco a poco. Te propongo esta versión:
-
 Hay días que pasan desapercibidos. Y hay días que se recuerdan para siempre. Este promete ser de los segundos.
 
 Dos personas extraordinariamente divertidas se reúnen para ofrecer un espectáculo repleto de risas, sorpresas y momentos inolvidables. El programa es incierto: puede haber juegos, puede haber sándwiches, puede que alguien acabe con la cara pintada. Todo es posible.
