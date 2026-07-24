@@ -1,22 +1,23 @@
 ---
-title: "Barcelona Passió"
-category: "Música"
+title: Barcelona Passió
+category: Música
 genres:
-  - "Música"
-  - "Flamenco"
-lang: "Castellano"
-poster: "./barcelona-passio.jpg"
+  - Música
+  - Flamenco
+lang: Castellano
+poster: ./barcelona-passio.jpg
 accent: "#bf795f"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-06-22"
-    time: "17:30"
-ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20644"
+  - date: 2026-06-22
+    time: 17:30
+ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20644
 qwanticEventId: "20644"
-saleStart: "2026-02-23T15:09"
 priceFrom: 14
-price: "Desde 14 €"
-venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
+saleStart: 2026-02-23T15:09
+venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
+duration: 90 Minutos
+price: Desde 14 €
 draft: false
 ---
 
