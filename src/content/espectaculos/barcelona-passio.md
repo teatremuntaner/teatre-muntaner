@@ -9,12 +9,12 @@ poster: ./barcelona-passio.jpg
 accent: "#bf795f"
 accentInk: "#ffffff"
 dates:
-  - date: 2026-06-22
-    time: 17:30
+  - date: "2026-08-07"
+    time: "17:00"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20644
 qwanticEventId: "20644"
 priceFrom: 14
-saleStart: 2026-02-23T15:09
+saleStart: "2026-07-24T06:36"
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 duration: 90 Minutos
 price: Desde 14 €
