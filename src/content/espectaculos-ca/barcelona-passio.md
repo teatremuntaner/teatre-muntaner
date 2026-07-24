@@ -4,11 +4,12 @@
 # Cualquier cambio manual se pierde en la siguiente sincronizacion.
 category: Música
 lang: Castellà
+duration: 90 Minuts
 price: Des de 14 €
 genres:
 - Música
 - Flamenc
-sourceHash: 57beeb2cc08fc718
+sourceHash: 3504b08a79aedf1f
 generated: true
 ---
 
