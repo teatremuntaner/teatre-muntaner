@@ -1,0 +1,142 @@
+---
+/**
+ * Píldoras de redes (reels de Instagram / TikTok) incrustadas en la ficha.
+ *
+ * Se cargan con FACHADA: hasta que el visitante pulsa no se pide nada a la red
+ * social. Así la ficha no arrastra el peso ni las cookies de terceros de un
+ * puñado de iframes que casi nadie va a mirar, y el consentimiento de cookies
+ * lo da el propio clic.
+ *
+ * Los textos llegan por props porque la ficha es bilingüe (ver src/i18n).
+ */
+import { Image } from 'astro:assets';
+
+interface Props {
+  reels: { url: string; caption?: string; poster?: ImageMetadata }[];
+  title: string;
+  verEn: string; // "Ver en" / "Veure a"
+}
+const { reels, title, verEn } = Astro.props;
+
+/** De la URL pública al embed de cada red. Si no se reconoce, se descarta. */
+function toEmbed(url: string): { embed: string; red: string } | null {
+  const ig = url.match(/instagram\.com\/(?:reel|reels|p|tv)\/([A-Za-z0-9_-]+)/);
+  if (ig) return { embed: `https://www.instagram.com/reel/${ig[1]}/embed/`, red: 'Instagram' };
+  const tk = url.match(/tiktok\.com\/.*\/video\/(\d+)/) ?? url.match(/tiktok\.com\/embed\/v2\/(\d+)/);
+  if (tk) return { embed: `https://www.tiktok.com/embed/v2/${tk[1]}`, red: 'TikTok' };
+  return null;
+}
+
+const items = reels
+  .map((r) => ({ ...r, ...(toEmbed(r.url) ?? {}) }))
+  .filter(
+    (r): r is { url: string; caption?: string; poster?: ImageMetadata; embed: string; red: string } =>
+      'embed' in r,
+  );
+---
+
+{items.length > 0 && (
+  <section class="wrap reels">
+    <h2 class="reels__title">{title}</h2>
+    <div class="reels__grid">
+      {items.map((r) => (
+        <figure class="reel">
+          <button
+            class:list={['reel__cover', r.poster && 'reel__cover--foto']}
+            type="button"
+            data-embed={r.embed}
+            data-alto={r.red === 'TikTok' ? 760 : 560}
+            aria-label={`${verEn} ${r.red}`}
+          >
+            {r.poster && (
+              <Image
+                class="reel__poster"
+                src={r.poster}
+                alt=""
+                widths={[300, 600]}
+                sizes="(max-width: 700px) 90vw, 300px"
+              />
+            )}
+            <span class="reel__play" aria-hidden="true"></span>
+            <span class="reel__red">{r.red}</span>
+          </button>
+          {r.caption && <figcaption class="reel__caption">{r.caption}</figcaption>}
+          <a class="reel__link" href={r.url} target="_blank" rel="noopener">{`${verEn} ${r.red} ↗`}</a>
+        </figure>
+      ))}
+    </div>
+  </section>
+)}
+
+<style>
+  /* padding-block: con el atajo `padding: X 0 Y` se anularía el margen lateral
+     del .wrap y la sección se desalinearía del resto de la ficha. */
+  .reels { padding-block: clamp(20px, 4vw, 40px) clamp(10px, 2vw, 20px); }
+  .reels__title { font-family: var(--f-display); font-size: clamp(22px, 3vw, 32px); margin: 0 0 22px; }
+  .reels__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+  .reel { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .reel__cover {
+    position: relative; width: 100%; aspect-ratio: 9 / 16; border-radius: 12px; cursor: pointer;
+    border: 1px solid var(--line); overflow: hidden; padding: 0;
+    background:
+      radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--accent) 55%, transparent), transparent 65%),
+      linear-gradient(180deg, color-mix(in srgb, var(--accent) 22%, var(--ink)), var(--ink));
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+    transition: border-color 0.25s ease, transform 0.25s ease;
+  }
+  .reel__cover:hover { border-color: var(--accent); transform: translateY(-3px); }
+  /* Con portada: la foto ocupa toda la tarjeta y el play va encima, sobre un
+     velo oscuro para que se lea siempre. */
+  .reel__poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .reel__cover--foto::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%);
+    transition: background 0.25s ease;
+  }
+  .reel__cover--foto:hover::after { background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.3) 100%); }
+  .reel__cover--foto .reel__play, .reel__cover--foto .reel__red { position: relative; z-index: 1; }
+  .reel__cover--foto .reel__red { text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7); }
+  .reel__play {
+    width: 62px; height: 62px; border-radius: 50%;
+    background: var(--accent); box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.6);
+    display: block; position: relative;
+  }
+  .reel__play::after {
+    content: ""; position: absolute; top: 50%; left: 54%; transform: translate(-50%, -50%);
+    border-style: solid; border-width: 11px 0 11px 18px;
+    border-color: transparent transparent transparent var(--accent-ink, #fff);
+  }
+  .reel__red {
+    font-family: var(--f-display); font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--paper);
+  }
+  /* El iframe lo crea el script al pulsar, así que NO lleva el atributo de
+     ámbito de Astro: se le dan los estilos en línea (ver el script). */
+  .reel__caption { font-size: 14px; color: var(--paper-dim); line-height: 1.5; }
+  .reel__link { font-size: 13px; color: var(--paper-faint); }
+  .reel__link:hover { color: var(--accent); }
+</style>
+
+<script is:inline>
+  // Al pulsar la portada se sustituye por el iframe de la red social.
+  document.querySelectorAll('.reel__cover').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var src = btn.getAttribute('data-embed');
+      if (!src || btn.querySelector('iframe')) return;
+      var f = document.createElement('iframe');
+      f.src = src;
+      f.loading = 'lazy';
+      f.title = btn.getAttribute('aria-label') || 'Video';
+      f.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;background:#000';
+      f.setAttribute('allow', 'autoplay; clipboard-write; encrypted-media; picture-in-picture');
+      f.setAttribute('allowfullscreen', '');
+      btn.innerHTML = '';
+      btn.appendChild(f);
+      btn.style.cursor = 'default';
+      // El recuadro de la red social es más alto que la portada 9:16: se le
+      // deja su sitio para que no salga con scroll interno.
+      btn.style.aspectRatio = 'auto';
+      btn.style.height = (btn.getAttribute('data-alto') || 560) + 'px';
+    });
+  });
+</script>

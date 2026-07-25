@@ -73,6 +73,17 @@ collections:
         required: false
         field: { name: "image", label: "Foto", widget: "image" }
 
+      - name: "reels"
+        label: "Píldoras de redes (reels de Instagram / TikTok)"
+        widget: "list"
+        required: false
+        summary: "{{fields.url}}"
+        hint: "Pega el enlace del reel. En la ficha se ve la portada y el vídeo solo se carga si el visitante pulsa."
+        fields:
+          - { name: "url", label: "Enlace del reel", widget: "string" }
+          - { name: "caption", label: "Pie (opcional)", widget: "string", required: false }
+          - { name: "poster", label: "Portada del vídeo (opcional, pero recomendable)", widget: "image", required: false, hint: "Foto que se ve antes de pulsar. Sin ella la tarjeta sale lisa, sin imagen." }
+
       # --- Arte por espectáculo (automático; oculto en el editor para no saturar) ---
       - { name: "accent", widget: "hidden", default: "#bd221f" }
       - { name: "accentInk", widget: "hidden", default: "#ffffff" }

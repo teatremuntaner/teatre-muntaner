@@ -27,6 +27,18 @@ const espectaculos = defineCollection({
       videoUploadDate: z.string().optional(), // fecha de publicación del vídeo subido (uploadDate del VideoObject; obligatorio para Google)
       gallery: z.array(image()).default([]), // galería de fotos (se optimizan en el build)
 
+      // Píldoras de redes (reels de Instagram / TikTok). Se incrustan con
+      // fachada: hasta que el visitante pulsa no se carga nada de la red social.
+      reels: z
+        .array(
+          z.object({
+            url: z.string(),
+            caption: z.string().optional(),
+            poster: image().optional(), // portada; sin ella la fachada sale lisa
+          }),
+        )
+        .default([]),
+
       // --- Arte por espectáculo: color y tipografía del cartel ---
       accent: z.string().default('#b3122a'),
       accentInk: z.string().default('#ffffff'),

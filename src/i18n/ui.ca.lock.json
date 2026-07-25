@@ -9,5 +9,9 @@
   "home.alt.ambiente": "Elenc i públic al Teatre Muntaner",
   "home.meta.descripcion": "Teatre Muntaner, la casa de la comèdia a Barcelona. Monòlegs, màgia, improvisació i teatre d'humor al Carrer de Muntaner 4.",
   "home.teatro.lead": "Amb les seves tres plantes i 800 m² d'espai, al Teatre Muntaner hem cuidat cada racó perquè cada visita sigui una experiència memorable. Des del logotip al paper de la paret, busquem la renovació pràctica i còmoda d'un teatre amb més d'un segle de vida, en ple centre de Barcelona.",
-  "show.descFallback": "{titulo} al Teatre Muntaner"
+  "show.descFallback": "{titulo} al Teatre Muntaner",
+
+  "_nota_xarxes": "Apertium calca la preposicion: 'En xarxes' / 'Veure en Instagram'. En catalan es 'A les xarxes' y 'Veure a'.",
+  "show.enRedes": "A les xarxes",
+  "show.verEn": "Veure a"
 }

@@ -8,6 +8,9 @@ lang: Castellano
 poster: ./barcelona-passio.jpg
 accent: "#bf795f"
 accentInk: "#ffffff"
+reels:
+  - url: https://www.instagram.com/reels/DV87tx6gpg7/
+    poster: ./barcelona-passio-reel.jpg
 dates:
   - date: "2026-08-07"
     time: "17:00"

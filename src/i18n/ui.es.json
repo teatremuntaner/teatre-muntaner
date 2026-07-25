@@ -297,6 +297,7 @@
   "show.comprarEntradas": "Comprar entradas",
   "show.descFallback": "{titulo} en el Teatre Muntaner",
   "show.duracion": "Duración",
+  "show.enRedes": "En redes",
   "show.enlacesRedes": "Enlaces y redes",
   "show.finalizadas": "Funciones finalizadas · vuelve pronto",
   "show.fotoDe": "Foto de {titulo}",
@@ -309,6 +310,7 @@
   "show.precio": "Precio",
   "show.proximamente": "Próximamente · entradas aún no a la venta",
   "show.tuEmail": "Tu email",
+  "show.verEn": "Ver en",
   "show.videoDe": "Vídeo de {titulo}",
   "show.volverCartelera": "Volver a cartelera"
 }
