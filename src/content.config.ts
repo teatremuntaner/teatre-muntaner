@@ -71,6 +71,27 @@ const espectaculos = defineCollection({
       duration: z.string().optional(),
       price: z.string().optional(),
 
+      // Reparto / artistas, como en la web del Sofía (lo pidió Lucas, 29/07/2026).
+      // La foto es opcional: sin ella se listan los nombres y ya.
+      // Los NOMBRES son nombres propios y no se traducen nunca: por eso el reparto
+      // vive solo en esta colección y no en la catalana, igual que title/artist.
+      // El `role` sí es texto común, pero de momento se muestra en castellano
+      // también en catalán, porque translate_ca.py solo sabe con campos sueltos y
+      // listas de texto, no con listas de objetos. Ver docs al final del script.
+      cast: z
+        .array(
+          z.object({
+            name: z.string(),
+            role: z.string().optional(),
+            photo: image().optional(),
+            // Quien no sale a escena (dirección, música…): mismo tamaño que el
+            // resto, pero algo separado para no dar a entender que actúa.
+            offstage: z.boolean().default(false),
+          }),
+        )
+        .default([]),
+      castNote: z.string().optional(), // "El elenco cambia cada semana", etc.
+
       featured: z.boolean().default(false),
       ticketAlarm: z.boolean().default(false), // próximamente: sin venta aún, captar avisos
       unlisted: z.boolean().default(false), // oculto de la cartelera, pero su página/URL sigue viva

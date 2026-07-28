@@ -119,6 +119,23 @@ collections:
       - { name: "duration", label: "Duración", widget: "string", required: false }
       - { name: "price", label: "Precio", widget: "string", required: false }
 
+      # --- Reparto / artistas ---
+      - name: "cast"
+        label: "Artistas"
+        widget: "list"
+        required: false
+        summary: "{{fields.name}}"
+        fields:
+          - { name: "name", label: "Nombre", widget: "string" }
+          - { name: "role", label: "Papel (Actriz, Dirección, Cantante…)", widget: "string", required: false }
+          - name: "photo"
+            label: "Foto"
+            widget: "image"
+            required: false
+            hint: "Cuadrada y de cara, que se recorta en círculo a 120 px. Si falta, sale solo el nombre."
+          - { name: "offstage", label: "No sale a escena (dirección, música…)", widget: "boolean", default: false, required: false }
+      - { name: "castNote", label: "Nota sobre el reparto", widget: "string", required: false, hint: "Ej.: «El cartel cambia cada semana»." }
+
       - { name: "featured", label: "Destacado en portada", widget: "boolean", default: false, required: false }
       - { name: "ticketAlarm", label: "Próximamente — aún sin venta (mostrar 'Avísame' y captar emails)", widget: "boolean", default: false, required: false }
       - { name: "unlisted", label: "Ocultar de la cartelera (mantener la página y su URL)", widget: "boolean", default: false, required: false, hint: "Para cancelados o que no quieres listar, pero cuya página debe seguir accesible por su enlace." }
