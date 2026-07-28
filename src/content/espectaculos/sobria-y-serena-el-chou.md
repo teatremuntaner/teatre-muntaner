@@ -14,6 +14,7 @@ qwanticEventId: "21707"
 priceFrom: 20
 saleStart: 2026-07-28T07:59
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
+duration: 90 Minutos
 price: Desde 20 €
 draft: false
 ---
