@@ -4,8 +4,8 @@
 # Cualquier cambio manual se pierde en la siguiente sincronizacion.
 tagline: IDIOMA DEL XOU EN ITALIÀ
 category: Espectacle
-price: Des de 15 €
-sourceHash: c4cee88a0d9946cb
+price: Des de 30 €
+sourceHash: e794b191cb2dbb96
 generated: true
 ---
 
