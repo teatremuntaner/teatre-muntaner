@@ -2,9 +2,11 @@
 # ARCHIVO GENERADO — no editar a mano.
 # Lo produce scripts/translate_ca.py a partir de la ficha en castellano.
 # Cualquier cambio manual se pierde en la siguiente sincronizacion.
-category: Espectacle
+category: Comèdia
+lang: Castellà
+duration: 90 Minuts
 price: Des de 20 €
-sourceHash: 1ec266eab7b07692
+sourceHash: fc76926b888cf2a1
 generated: true
 ---
 
