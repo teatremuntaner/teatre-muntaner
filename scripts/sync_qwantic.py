@@ -59,6 +59,24 @@ def strip_html(s):
     lines = [re.sub(r"[ \t]+", " ", l).strip() for l in s.splitlines()]
     return "\n\n".join(l for l in lines if l).strip()
 
+# Géneros del sitio y pistas para deducirlos del título+sinopsis (ES/CA/IT). Es
+# el PRERRELLENO de las fichas nuevas: si nadie los completa en el CMS, al menos
+# no salen vacíos. Se pueden corregir después; el sync no los vuelve a tocar.
+GENRE_HINTS = [
+    ("Comedia",       r"comedia|com[eè]dia|c[oó]mic|humor|risa|riure|rialles|carcajada"),
+    ("Música",        r"concierto|\bconcert\b|musical|m[uú]sica|canciones|can[cç]ons|\bbanda\b|\bcoro\b|flamenco|jazz|piano"),
+    ("Monólogos",     r"mon[oó]log|mon[oò]leg|stand.?up|humorista|monologuista"),
+    ("Improvisación", r"improvis"),
+    ("Magia",         r"\bm[aà]gia\b|\bmago\b|\bmaga\b|ilusionis|il·lusionis|mentalis"),
+    ("Familiar",      r"familiar|infantil|para ni[nñ]os|per a nens|t[ií]teres|titelles|tota la fam[ií]lia|toda la familia"),
+    ("Teatro",        r"\bobra\b|\bdrama\b|tragicom[eè]dia"),
+]
+
+def deduce_genres(title, synopsis):
+    """Deduce géneros por palabras clave (máx. 3). Sin señal clara: [] (lo avisa el vigía)."""
+    t = f"{title} {synopsis}".lower()
+    return [g for g, pat in GENRE_HINTS if re.search(pat, t)][:3]
+
 def fetch_feed():
     """Eventos desde la API oficial, normalizados al formato que usa el script."""
     data = json.loads(get(API_URL, headers={"Accept": "application/json", "Content-Type": "application/json"}))
@@ -237,7 +255,10 @@ for e in feed:
             try: shutil.copyfile(ph, dst)
             except Exception: pass
 
-    fm = ["---", f'title: "{title.replace(chr(34), chr(39))}"', 'category: "Espectáculo"', "genres: []"]
+    synopsis = strip_html(e.get("longDescription", ""))
+    genres = deduce_genres(title, synopsis)
+    genres_line = "genres: [" + ", ".join(f'"{g}"' for g in genres) + "]"
+    fm = ["---", f'title: "{title.replace(chr(34), chr(39))}"', 'category: "Espectáculo"', genres_line]
     fm.append(f'poster: "{poster_rel or "./" + slug + ".jpg"}"')
     fm += [f'accent: "{accent}"', f'accentInk: "{ink}"']
     if sessions:
@@ -251,12 +272,11 @@ for e in feed:
         fm.append(f'duration: "{duracion} min"')
     if precio:
         fm.append(f'price: "Desde {precio:.0f} €"')
-    synopsis = strip_html(e.get("longDescription", ""))
     body_txt = synopsis or f"{title} en el Teatre Muntaner, en el corazón de Barcelona. (Sinopsis pendiente de completar.)"
     fm += ['venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"', "draft: true", "---", "", body_txt, ""]
     if not DRY:
         open(os.path.join(DEST, slug + ".md"), "w", encoding="utf-8").write("\n".join(fm))
-    report["new"].append((eid, slug, len(sessions)))
+    report["new"].append((eid, slug, len(sessions), genres))
 
 # Bajas: fichas con qwanticEventId que ya no está en el feed
 for eid, (path, t) in existing.items():
@@ -291,8 +311,9 @@ print(f"\nFECHAS ACTUALIZADAS ({len(report['upd'])}):")
 for eid, fn, nd in report["upd"]:
     print(f"  · {fn:42} {nd} funciones  (id {eid})")
 print(f"\nALTAS / BORRADORES NUEVOS ({len(report['new'])}):")
-for eid, slug, nd in report["new"]:
-    print(f"  + {slug:42} {nd} funciones  (id {eid})  ⚠ completar géneros/artista/sinopsis en el CMS")
+for eid, slug, nd, gen in report["new"]:
+    gtxt = "/".join(gen) if gen else "SIN GÉNEROS (deducción sin señal)"
+    print(f"  + {slug:42} {nd} funciones  (id {eid})  géneros deducidos: {gtxt}  ⚠ revisar géneros/artista/sinopsis en el CMS")
 print(f"\nBAJAS (ya no en feed; revisar a mano) ({len(report['baja'])}):")
 for eid, fn in report["baja"]:
     print(f"  - {fn}  (id {eid})")

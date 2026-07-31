@@ -2,7 +2,8 @@
 title: Abbi Pazienza. Pierluca Mariti
 tagline: IDIOMA DEL SHOW EN ITALIANO
 category: Espectáculo
-genres: []
+genres: ["Comedia", "Monólogos"]
+artist: Pierluca Mariti
 poster: ./abbi-pazienza-pierluca-mariti.jpg
 accent: "#606ebe"
 accentInk: "#ffffff"

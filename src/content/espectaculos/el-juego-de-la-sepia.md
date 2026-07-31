@@ -2,7 +2,7 @@
 title: El Juego de la Sepia
 promo: "PROMO LIMITADA: 15% DESCUENTO "
 category: Espectáculo
-genres: []
+genres: ["Comedia", "Improvisación", "Teatro"]
 poster: ./el-juego-de-la-sepia.jpg
 accent: "#be6073"
 accentInk: "#ffffff"
