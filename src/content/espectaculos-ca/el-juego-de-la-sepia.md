@@ -6,7 +6,11 @@ promo: 'PROMO LIMITADA: 15% DESCOMPTE'
 category: Espectacle
 duration: 70 minuts
 price: Des de 15 €
-sourceHash: a9660242ce839e60
+genres:
+- Comèdia
+- Improvisació
+- Teatre
+sourceHash: 0ec25d43e37f358b
 generated: true
 ---
 

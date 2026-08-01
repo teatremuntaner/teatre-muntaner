@@ -6,7 +6,10 @@ category: Comèdia
 lang: Castellà
 duration: 60´
 price: Des de 18 €
-sourceHash: 2d0f5b1e551d09ab
+genres:
+- Comèdia
+- Monòlegs
+sourceHash: 558307958b9c7340
 generated: true
 ---
 

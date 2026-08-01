@@ -6,7 +6,10 @@ category: Espectacle
 lang: Castellà
 duration: 80 minuts
 price: Des de 30 €
-sourceHash: e30e56048dcdb9e3
+genres:
+- Comèdia
+- Monòlegs
+sourceHash: f950861bd28fc98e
 generated: true
 ---
 

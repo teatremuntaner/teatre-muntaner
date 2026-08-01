@@ -5,7 +5,10 @@
 tagline: IDIOMA DEL XOU EN ITALIÀ
 category: Espectacle
 price: Des de 30 €
-sourceHash: e794b191cb2dbb96
+genres:
+- Comèdia
+- Monòlegs
+sourceHash: 1ca16e14790f3252
 generated: true
 ---
 

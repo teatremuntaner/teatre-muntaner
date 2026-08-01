@@ -6,7 +6,9 @@ category: Comèdia
 lang: Castellà
 duration: 90 Minuts
 price: Des de 20 €
-sourceHash: fc76926b888cf2a1
+genres:
+- Comèdia
+sourceHash: 740407ea62c0b6fc
 generated: true
 ---
 
