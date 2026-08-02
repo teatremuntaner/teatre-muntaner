@@ -9,10 +9,6 @@ poster: ./corta-el-cable-rojo.jpg
 accent: "#ef2e31"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-08-01"
-    time: "18:30"
-  - date: "2026-08-01"
-    time: "20:30"
   - date: "2026-08-05"
     time: "20:00"
   - date: "2026-08-06"
