@@ -10,12 +10,12 @@ poster: ./el-juego-de-la-sepia.jpg
 accent: "#be6073"
 accentInk: "#ffffff"
 dates:
-  - date: 2026-09-18
-    time: 22:30
+  - date: "2026-09-18"
+    time: "22:30"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21671
 qwanticEventId: "21671"
 priceFrom: 15.3
-saleStart: 2026-07-20T09:15
+saleStart: "2026-07-20T09:15"
 youtube: https://youtu.be/u0JqTVIWwKE
 youtubeUploadDate: 2026-07-08T09:11:20-07:00
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
