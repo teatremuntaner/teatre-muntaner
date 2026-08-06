@@ -1,26 +1,26 @@
 ---
-title: "L’aneguet Lleig"
-artist: "NS Dansa"
-category: "Teatro"
+title: L’aneguet Lleig
+category: Teatro
 genres:
-  - "Teatro"
-  - "Familiar"
-lang: "Catalán"
-poster: "./laneguet-lleig.jpg"
+  - Teatro
+  - Familiar
+lang: Catalán
+poster: ./laneguet-lleig.jpg
 accent: "#6060be"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-11-08"
-    time: "12:00"
-  - date: "2026-12-20"
-    time: "12:00"
-ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20723"
+  - date: 2026-11-08
+    time: 12:00
+  - date: 2026-12-27
+    time: 12:00
+ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20723
 qwanticEventId: "20723"
-saleStart: "2026-03-10T07:03"
 priceFrom: 12
-price: "Desde 12 €"
-venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
+saleStart: 2026-03-10T07:03
+venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
+price: Desde 12 €
 draft: false
+artist: NS Dansa
 ---
 
 L’ANEGUET LLEIG es un espectáculo de danza para el público familiar inspirado en el cuento clásico El Patito Feo de Hans Christian Andersen, reconocido en todo el mundo como uno de los grandes autores de cuentos infantiles. A través del movimiento, la música y los objetos, la escena se transforma en un universo poético donde el cuerpo se convierte en lenguaje para contar la historia de un pequeño patito que se siente diferente y que inicia un viaje lleno de descubrimientos, emociones y aprendizajes.
