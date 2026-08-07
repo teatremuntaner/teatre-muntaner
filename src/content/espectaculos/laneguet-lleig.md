@@ -9,14 +9,14 @@ poster: ./laneguet-lleig.jpg
 accent: "#6060be"
 accentInk: "#ffffff"
 dates:
-  - date: 2026-11-08
-    time: 12:00
-  - date: 2026-12-27
-    time: 12:00
+  - date: "2026-11-08"
+    time: "12:00"
+  - date: "2026-12-27"
+    time: "12:00"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20723
 qwanticEventId: "20723"
 priceFrom: 12
-saleStart: 2026-03-10T07:03
+saleStart: "2026-03-10T07:03"
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 12 €
 draft: false
