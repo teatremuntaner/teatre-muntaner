@@ -1,7 +1,7 @@
 ---
 title: El Juego de la Sepia
 promo: "PROMO LIMITADA: 15% DESCUENTO "
-category: null
+category: "Espectáculo"
 genres:
   - Comedia
   - Improvisación
@@ -17,7 +17,7 @@ qwanticEventId: "21671"
 priceFrom: 15.3
 saleStart: "2026-07-20T09:15"
 youtube: https://youtu.be/u0JqTVIWwKE
-youtubeUploadDate: 2026-07-08T09:11:20-07:00
+youtubeUploadDate: "2026-07-08T09:11:20-07:00"
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 duration: 70 minutos
 price: Desde 15 €

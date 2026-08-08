@@ -6,7 +6,7 @@ const lang = langFromPath(Astro.url.pathname);
 const t = useT(lang);
 const base = import.meta.env.BASE_URL;
 ---
-<BaseLayout title={t('aviso.meta.titulo')} description={t('aviso.meta.descripcion')}>
+<BaseLayout title={t('aviso.meta.titulo')} description={t('aviso.meta.descripcion')} noindex>
   <section class="ok">
     <p class="ok__big" aria-hidden="true">✓</p>
     <h1>{t('aviso.titulo')}</h1>
