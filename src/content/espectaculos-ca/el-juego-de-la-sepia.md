@@ -3,13 +3,14 @@
 # Lo produce scripts/translate_ca.py a partir de la ficha en castellano.
 # Cualquier cambio manual se pierde en la siguiente sincronizacion.
 promo: 'PROMO LIMITADA: 15% DESCOMPTE'
+category: Espectacle
 duration: 70 minuts
 price: Des de 15 €
 genres:
 - Comèdia
 - Improvisació
 - Teatre
-sourceHash: b266692d32a8b0c6
+sourceHash: 0ec25d43e37f358b
 generated: true
 ---
 
