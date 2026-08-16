@@ -2,13 +2,16 @@
 # ARCHIVO GENERADO — no editar a mano.
 # Lo produce scripts/translate_ca.py a partir de la ficha en castellano.
 # Cualquier cambio manual se pierde en la siguiente sincronizacion.
+promo: PROMO LIMITADA 15% DESCOMPTE
 category: Espectacle
+lang: Castellà
+duration: 90 minuts
 price: Des de 15 €
 genres:
 - Comèdia
 - Monòlegs
 - Improvisació
-sourceHash: f7bd0a4eb67ef954
+sourceHash: 10ba145efab9cec6
 generated: true
 ---
 
@@ -19,3 +22,7 @@ Un espectacle carregat d'acudits, monòlegs, improvisació i jocs amb el públic
 Amb més de dos milions de seguidors en xarxes socials Fernando i Juancho són garantia de riallada en directe. La seva complicitat en l'escenari converteix cada funció en única, fresca i plena de bon rotllo.
 
 "CHISTEANDO" és humor en estat pur. No t'ho perdis!
+
+
+
+A partir de 18 anys

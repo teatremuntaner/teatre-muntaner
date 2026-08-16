@@ -3,11 +3,13 @@
 # Lo produce scripts/translate_ca.py a partir de la ficha en castellano.
 # Cualquier cambio manual se pierde en la siguiente sincronizacion.
 category: Espectacle
+lang: Castellà
+duration: 80 minuts
 price: Des de 20 €
 genres:
 - Comèdia
 - Monòlegs
-sourceHash: e159fcb04cee6fa8
+sourceHash: c3747bfdd6d941c3
 generated: true
 ---
 
@@ -22,3 +24,5 @@ En CREMAT, Fernando transforma les situacions més comunes en moments desopilant
 Referent indiscutit de la comèdia argentina i formador de noves generacions de comediants, Sanjiao compta amb un especial en Netflix, set especials per a Comedy Central Llatinoamèrica i Espanya, i presentacions en més d'onze països.
 
 Amb una hora i quart de riures assegurats, CREMAT confirma perquè Fernando Sanjiao continua sent una de les figures més destacades de l'estand up en parla hispana.
+
+**A partir de 15 anys.**

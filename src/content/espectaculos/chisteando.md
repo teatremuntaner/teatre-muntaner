@@ -11,12 +11,12 @@ poster: ./chisteando.jpg
 accent: "#dca87b"
 accentInk: "#0c0a0f"
 dates:
-  - date: 2026-10-02
-    time: 22:30
+  - date: "2026-10-02"
+    time: "22:30"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21755
 qwanticEventId: "21755"
 priceFrom: 15.3
-saleStart: 2026-08-16T18:23
+saleStart: "2026-08-16T18:23"
 links:
   - label: "Fernando Bernal "
     url: https://www.instagram.com/pichacomico/?hl=es
