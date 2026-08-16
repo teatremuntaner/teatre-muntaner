@@ -31,7 +31,7 @@ cast:
   - offstage: false
     name: Juancho Bernabe
     photo: juancho-bernabe.jpg
-draft: true
+draft: false
 ---
 
 Tras triunfar con el show "Nos Vemos en las Redes" por diversas ciudades de toda España, los cómicos gaditanos Fernando Bernal y Juancho Bernabé presentan un show completamente nuevo: "CHISTEANDO".
