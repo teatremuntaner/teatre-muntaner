@@ -1,19 +1,36 @@
 ---
-title: "Chisteando"
-category: "Espectáculo"
-genres: ["Comedia", "Monólogos", "Improvisación"]
-poster: "./chisteando.jpg"
+title: Chisteando
+promo: PROMO LIMITADA 15% DESCUENTO
+category: Espectáculo
+genres:
+  - Comedia
+  - Monólogos
+  - Improvisación
+lang: Castellano
+poster: ./chisteando.jpg
 accent: "#dca87b"
 accentInk: "#0c0a0f"
 dates:
-  - date: "2026-10-02"
-    time: "22:30"
-ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21755"
+  - date: 2026-10-02
+    time: 22:30
+ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21755
 qwanticEventId: "21755"
 priceFrom: 15.3
-saleStart: "2026-08-16T18:23"
-price: "Desde 15 €"
-venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
+saleStart: 2026-08-16T18:23
+links:
+  - label: "Fernando Bernal "
+    url: https://www.instagram.com/pichacomico/?hl=es
+  - url: https://www.instagram.com/juanchobernabe/?hl=es
+    label: Juancho Bernabe
+venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
+price: Desde 15 €
+cast:
+  - offstage: false
+    name: Fernando Bernal
+    photo: fernandoberanlart.jpg
+  - offstage: false
+    name: Juancho Bernabe
+    photo: juancho-bernabe.jpg
 draft: true
 ---
 
