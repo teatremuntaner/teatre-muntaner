@@ -10,21 +10,28 @@ poster: ./joaquin-caserza-conversaciones-con-mi-mente.jpg
 accent: "#608cbe"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-09-12"
-    time: "21:00"
-  - date: "2026-09-13"
-    time: "12:30"
-  - date: "2026-10-24"
-    time: "21:00"
-  - date: "2026-10-25"
-    time: "12:30"
+  - date: 2026-09-12
+    time: 21:00
+  - date: 2026-09-13
+    time: 12:30
+  - date: 2026-10-24
+    time: 21:00
+  - date: 2026-10-25
+    time: 12:30
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20531
 qwanticEventId: "20531"
 youtube: https://youtu.be/0MeVPwmADt8?si=wXFIFCUglmm4nNMr
 draft: false
 artist: Joaquín Caserza
 priceFrom: 20
-saleStart: "2026-02-23T13:58"
+saleStart: 2026-02-23T13:58
+links:
+  - label: Instgram
+    url: https://www.instagram.com/joaquincaserza_actor/
+  - label: TikTok
+    url: https://www.tiktok.com/@joaquincaserza_actor
+  - label: YouTube
+    url: https://www.youtube.com/@joaquincaserza_actor
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 20 €
 cast:
