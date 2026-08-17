@@ -9,12 +9,12 @@ poster: ./quemado-fernando-sanjiao.jpg
 accent: "#c57a59"
 accentInk: "#ffffff"
 dates:
-  - date: 2026-11-13
-    time: 22:30
+  - date: "2026-11-13"
+    time: "22:30"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21754
 qwanticEventId: "21754"
 priceFrom: 20
-saleStart: 2026-08-16T18:10
+saleStart: "2026-08-16T18:10"
 video: ""
 links:
   - label: Instagram
