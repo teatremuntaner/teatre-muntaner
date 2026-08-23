@@ -48,10 +48,15 @@ collections:
         options: ["Espectáculo", "Comedia", "Música", "Magia", "Flamenco", "Teatro", "Infantil", "Otros"]
         default: "Espectáculo"
       - name: "genres"
-        label: "Géneros (varios; ej. Comedia, Música, Impro)"
+        label: "Géneros (varios)"
         widget: "list"
         required: false
-        field: { name: "genero", label: "Género", widget: "string" }
+        hint: "Estas son las etiquetas que filtran en la cartelera. Si hiciera falta una nueva, se añade en la web (GENRE_ORDER en la portada) y luego aquí; escribirla a mano no sirve, el espectáculo se quedaría fuera de los filtros."
+        field:
+          name: "genero"
+          label: "Género"
+          widget: "select"
+          options: ["Comedia", "Monólogos", "Improvisación", "Magia", "Teatro", "Familiar", "Música", "Flamenco", "Bienestar emocional"]
       - name: "lang"
         label: "Idioma de la función"
         widget: "select"

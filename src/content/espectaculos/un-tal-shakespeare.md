@@ -3,7 +3,7 @@ title: Un Tal Shakespeare
 category: Comedia
 genres:
   - Comedia
-  - Teatre
+  - Teatro
 lang: Catalán
 priority: 0
 poster: ./un-tal-shakespeare.jpg
