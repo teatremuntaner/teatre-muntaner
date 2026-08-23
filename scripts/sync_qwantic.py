@@ -22,8 +22,8 @@ except Exception:
     pass
 
 # Ruta portable (funciona en Windows y en el runner de GitHub Actions)
-DEST = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                    "src", "content", "espectaculos")
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DEST = os.path.join(ROOT, "src", "content", "espectaculos")
 # API oficial de Qwantic (sin login): proveedor -> venues -> events, con
 # longDescription (sinopsis), poster, precio, fechas y saleStatus.
 API_URL = "https://es.entradas.plus/api2/events/2?idProvider=2079"
@@ -59,6 +59,25 @@ def strip_html(s):
     lines = [re.sub(r"[ \t]+", " ", l).strip() for l in s.splitlines()]
     return "\n\n".join(l for l in lines if l).strip()
 
+# La lista de géneros VÁLIDOS no vive aquí: vive en src/lib/generos.ts, que es la
+# misma de los filtros de la portada y del CMS. Se lee de allí para que el sync no
+# pueda prerrellenar una etiqueta que luego no filtre — pasó con «Familiar», que
+# en la web del Sofía se llamaba «Infantil» y no casaba.
+# Si no se pudiera leer, no se prerrellena nada: más vale una ficha vacía, que el
+# vigía ve y avisa, que una etiqueta muerta, que no ve nadie.
+def _generos_validos():
+    p = os.path.join(ROOT, "src", "lib", "generos.ts")
+    try:
+        src = open(p, encoding="utf-8").read()
+    except OSError:
+        return []
+    m = re.search(r"GENRE_ORDER[^=]*=\s*\[(.*?)\]", src, re.S)
+    if not m:
+        return []
+    return [x.strip().strip("'\"") for x in m.group(1).split(",") if x.strip()]
+
+GENRE_OK = _generos_validos()
+
 # Géneros del sitio y pistas para deducirlos del título+sinopsis (ES/CA/IT). Es
 # el PRERRELLENO de las fichas nuevas: si nadie los completa en el CMS, al menos
 # no salen vacíos. Se pueden corregir después; el sync no los vuelve a tocar.
@@ -73,9 +92,11 @@ GENRE_HINTS = [
 ]
 
 def deduce_genres(title, synopsis):
-    """Deduce géneros por palabras clave (máx. 3). Sin señal clara: [] (lo avisa el vigía)."""
+    """Deduce géneros por palabras clave (máx. 3), siempre de la lista válida.
+    Sin señal clara: [] (lo avisa el vigía)."""
     t = f"{title} {synopsis}".lower()
-    return [g for g, pat in GENRE_HINTS if re.search(pat, t)][:3]
+    hallados = [g for g, pat in GENRE_HINTS if re.search(pat, t)]
+    return [g for g in hallados if g in GENRE_OK][:3]
 
 def fetch_feed():
     """Eventos desde la API oficial, normalizados al formato que usa el script."""

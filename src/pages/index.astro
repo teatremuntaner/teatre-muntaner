@@ -5,6 +5,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Flag from '../components/Flag.astro';
 import Calendario from '../components/Calendario.astro';
 import { summarize } from '../lib/schedule';
+import { GENRE_ORDER } from '../lib/generos';
 import { useT, langFromPath } from '../i18n';
 
 import hero from '../assets/venue/platea.jpg';            // patio de butacas con cortina roja
@@ -74,7 +75,7 @@ if (lang === 'ca') {
 const gLabel = (g: string) => etiquetaGenero.get(g) ?? g;
 
 // Filtro de géneros: solo los presentes en la cartelera, en orden preferente.
-const GENRE_ORDER = ['Comedia', 'Monólogos', 'Improvisación', 'Magia', 'Teatro', 'Familiar', 'Música', 'Flamenco', 'Bienestar emocional'];
+// La lista manda desde src/lib/generos.ts (ver allí por qué).
 const presentGenres = new Set(shows.flatMap((s) => s.data.genres));
 const genreFilters = GENRE_ORDER.filter((g) => presentGenres.has(g));
 

@@ -9,6 +9,7 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { summarize } from '../lib/schedule';
+import { GENRE_ORDER } from '../lib/generos';
 
 export const GET: APIRoute = async ({ site }) => {
   const base = site ?? new URL('https://teatremuntaner.com');
@@ -35,7 +36,8 @@ export const GET: APIRoute = async ({ site }) => {
       ticketUrl: d.ticketUrl ?? null,
       pageUrl: new URL(`${import.meta.env.BASE_URL}espectaculos/${s.id}/`, base).href,
       unlisted: d.unlisted,
-      genres: d.genres,                      // etiquetas de género ([] = ficha sin completar)
+      genres: d.genres,                      // etiquetas de género ([] = ficha sin completar;
+                                                //  lo que no esté en genreFilters no filtra)
       category: d.category,                  // categoría genérica (fallback si no hay géneros)
       priority: d.priority ?? 0,             // jerarquía de cartelera (mayor = más importante)
       ticketAlarm: d.ticketAlarm,            // true = próximamente, sin venta aún
@@ -52,7 +54,7 @@ export const GET: APIRoute = async ({ site }) => {
   out.sort((a, b) => (a.nextDate ?? '9999').localeCompare(b.nextDate ?? '9999'));
 
   return new Response(
-    JSON.stringify({ venue: 'Teatre Muntaner', generated: today, shows: out }, null, 2),
+    JSON.stringify({ venue: 'Teatre Muntaner', generated: today, genreFilters: GENRE_ORDER, shows: out }, null, 2),
     { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*' } },
   );
 };
