@@ -78,6 +78,77 @@ collections:
         required: false
         field: { name: "image", label: "Foto", widget: "image" }
 
+      - name: "reviews"
+        label: "Reseñas reales (público / crítica)"
+        widget: "list"
+        required: false
+        summary: "{{fields.author}} — {{fields.source}}"
+        hint: "Solo reseñas REALES. Las citas NO se traducen al catalán: se dejan tal como se dijeron."
+        fields:
+          - { name: "text", label: "Texto de la reseña", widget: "text" }
+          - { name: "author", label: "Autor (opcional)", widget: "string", required: false }
+          - { name: "source", label: "Medio / plataforma (El Periódico, atrapalo.com…)", widget: "string", required: false }
+          - { name: "url", label: "Enlace a la reseña (opcional)", widget: "string", required: false }
+          - name: "kind"
+            label: "¿De quién es?"
+            widget: "select"
+            required: false
+            default: "publico"
+            options:
+              - { label: "Público", value: "publico" }
+              - { label: "Crítica / prensa", value: "prensa" }
+            hint: "Las de prensa salen en un bloque aparte, antes de las del público."
+
+      - name: "ratings"
+        label: "Puntuaciones de las webs de venta y Google"
+        widget: "list"
+        required: false
+        summary: "{{fields.source}} — {{fields.score}}"
+        hint: "La fila de notas que sale bajo la sinopsis. Pon solo puntuaciones REALES, tal como aparecen en cada web."
+        fields:
+          - { name: "source", label: "Plataforma (Atrápalo, Google, taquilla.com…)", widget: "string" }
+          - { name: "score", label: "Nota", widget: "number", value_type: "float" }
+          - { name: "max", label: "Sobre cuánto (5, 10…)", widget: "number", value_type: "float", default: 5 }
+          - { name: "count", label: "Nº de opiniones (opcional)", widget: "number", value_type: "int", required: false }
+          - { name: "url", label: "Enlace a esa ficha (opcional)", widget: "string", required: false }
+          - { name: "logo", label: "Logo de la plataforma (opcional)", widget: "image", required: false }
+
+      - name: "cast"
+        label: "Los artistas (elenco)"
+        widget: "list"
+        required: false
+        summary: "{{fields.name}}"
+        hint: "Los nombres no se traducen. Si pones el papel de cada uno, escríbelo pensando en que sale igual en las dos versiones de la web."
+        fields:
+          - { name: "name", label: "Nombre", widget: "string" }
+          - { name: "role", label: "Papel / qué hace (opcional)", widget: "string", required: false }
+          - { name: "photo", label: "Foto (opcional)", widget: "image", required: false }
+          - { name: "offstage", label: "No sale al escenario (dirección, música…)", widget: "boolean", default: false, required: false, hint: "Se muestra igual de grande, pero algo apartado del resto." }
+      - { name: "castNote", label: "Nota bajo el elenco", widget: "string", required: false }
+
+      - name: "offers"
+        label: "Descuentos y tarifas (+65, 2x1…)"
+        widget: "list"
+        required: false
+        summary: "{{fields.label}}"
+        fields:
+          - { name: "label", label: "Descuento (ej. 'Mayores de 65')", widget: "string" }
+          - { name: "detail", label: "Condiciones en una línea", widget: "string", required: false }
+      - { name: "offersNote", label: "Aviso al pie de los descuentos", widget: "string", required: false }
+
+      - name: "groups"
+        label: "Bloque de grupos, cumpleaños y quedadas"
+        widget: "object"
+        required: false
+        collapsed: true
+        hint: "Las peticiones llegan a entradas@teatremuntaner.com."
+        fields:
+          - { name: "enabled", label: "Mostrar el bloque", widget: "boolean", default: false, required: false }
+          - { name: "text", label: "Texto (si no se pone, sale uno por defecto)", widget: "text", required: false }
+          - { name: "minPeople", label: "A partir de cuántas personas", widget: "number", value_type: "int", required: false }
+          - { name: "email", label: "Email de contacto directo (opcional)", widget: "string", required: false }
+          - { name: "phone", label: "Teléfono de contacto directo (opcional)", widget: "string", required: false }
+
       - name: "reels"
         label: "Píldoras de redes (reels de Instagram / TikTok)"
         widget: "list"

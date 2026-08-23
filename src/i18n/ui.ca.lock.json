@@ -13,5 +13,9 @@
 
   "_nota_xarxes": "Apertium calca la preposicion: 'En xarxes' / 'Veure en Instagram'. En catalan es 'A les xarxes' y 'Veure a'.",
   "show.enRedes": "A les xarxes",
-  "show.verEn": "Veure a"
+  "show.verEn": "Veure a",
+
+  "_nota_grups": "Apertium mezcla el tu y el vosaltres: el bloque de grupos habla de vosotros, asi que el texto de entrada tambien.",
+  "show.gruposLead": "Veniu en grup, celebreu un aniversari o munteu una quedada? Expliqueu-nos-ho i us passem preu.",
+  "show.gruposLeadMin": "Veniu en grup, celebreu un aniversari o munteu una quedada? Expliqueu-nos-ho i us passem preu per a grups a partir de {n} persones."
 }

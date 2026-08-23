@@ -39,6 +39,55 @@ const espectaculos = defineCollection({
         )
         .default([]),
 
+      // Reseñas reales (público/crítica). Solo se muestran en la ficha; NO se
+      // emiten como JSON-LD Review para no arriesgar avisos de Search Console.
+      // OJO: las citas NO se traducen al catalán (son literales de quien las dijo).
+      reviews: z
+        .array(
+          z.object({
+            text: z.string(),
+            author: z.string().optional(),
+            source: z.string().optional(),
+            url: z.string().optional(),
+            kind: z.enum(['publico', 'prensa']).default('publico'),
+          }),
+        )
+        .default([]),
+
+      // Puntuaciones de las plataformas de venta y de Google, en fila.
+      ratings: z
+        .array(
+          z.object({
+            source: z.string(),
+            score: z.number(),
+            max: z.number().default(5),
+            count: z.number().optional(),
+            url: z.string().optional(),
+            logo: image().optional(),
+          }),
+        )
+        .default([]),
+
+      // (El reparto/`cast` se declara más abajo, junto a duration y price.)
+
+      // Tarifas y descuentos vigentes (+65, 2x1…).
+      offers: z
+        .array(z.object({ label: z.string(), detail: z.string().optional() }))
+        .default([]),
+      offersNote: z.string().optional(),
+
+      // Bloque de grupos: formulario de petición de precio (Netlify Forms, que
+      // ya avisa a entradas@teatremuntaner.com) + contacto directo si lo hay.
+      groups: z
+        .object({
+          enabled: z.boolean().default(false),
+          text: z.string().optional(),
+          minPeople: z.number().optional(),
+          email: z.string().optional(),
+          phone: z.string().optional(),
+        })
+        .optional(),
+
       // --- Arte por espectáculo: color y tipografía del cartel ---
       accent: z.string().default('#b3122a'),
       accentInk: z.string().default('#ffffff'),

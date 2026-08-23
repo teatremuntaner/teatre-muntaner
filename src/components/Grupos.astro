@@ -1,0 +1,97 @@
+---
+/**
+ * Bloque de grupos, cumpleaños y quedadas: todo enfocado a que pidan precio y
+ * se les atienda, no a vender aquí.
+ *
+ * El formulario lo recoge Netlify Forms, que ya avisa a
+ * entradas@teatremuntaner.com de cualquier envío. Los textos llegan por props
+ * porque la ficha es bilingüe (ver src/i18n).
+ */
+interface Props {
+  show: string;
+  groups: { enabled?: boolean; text?: string; minPeople?: number; email?: string; phone?: string };
+  t: (clave: string, vars?: Record<string, string | number>) => string;
+  accion: string; // página de "gracias", que cambia según el idioma
+}
+const { show, groups, t, accion } = Astro.props;
+const min = groups.minPeople;
+const lead = groups.text ?? (min ? t('show.gruposLeadMin', { n: min }) : t('show.gruposLead'));
+---
+
+<section class="wrap grupos" id="grupos">
+  <div class="grupos__box">
+    <div class="grupos__intro">
+      <h2 class="grupos__title">{t('show.grupos')}</h2>
+      <p class="grupos__lead">{lead}</p>
+      {(groups.email || groups.phone) && (
+        <p class="grupos__direct">
+          {t('show.gruposDirecto')}
+          {groups.email && <a href={`mailto:${groups.email}`}>{groups.email}</a>}
+          {groups.email && groups.phone && <span aria-hidden="true"> · </span>}
+          {groups.phone && <a href={`tel:${groups.phone.replace(/\s+/g, '')}`}>{groups.phone}</a>}
+        </p>
+      )}
+    </div>
+
+    <form
+      class="grupos__form"
+      name="grupos"
+      method="POST"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      action={accion}
+    >
+      <input type="hidden" name="form-name" value="grupos" />
+      <input type="hidden" name="show" value={show} />
+      <p hidden><label>{t('show.noRellenar')} <input name="bot-field" /></label></p>
+
+      <div class="grupos__row">
+        <label>{t('show.gruposNombre')}<input type="text" name="nombre" required autocomplete="name" /></label>
+        <label>{t('show.gruposEmail')}<input type="email" name="email" required autocomplete="email" /></label>
+      </div>
+      <div class="grupos__row">
+        <label>{t('show.gruposTelefono')}<input type="tel" name="telefono" autocomplete="tel" /></label>
+        <label>{t('show.gruposPersonas')}<input type="number" name="personas" min="1" inputmode="numeric" /></label>
+        <label>{t('show.gruposFecha')}<input type="text" name="fecha" placeholder={t('show.gruposFechaEj')} /></label>
+      </div>
+      <label class="grupos__msg">{t('show.gruposMensaje')}<textarea name="mensaje" rows="3" placeholder={t('show.gruposMensajeEj')}></textarea></label>
+
+      <button class="btn btn--accent" type="submit">{t('show.gruposEnviar')}</button>
+    </form>
+  </div>
+</section>
+
+<style>
+  /* padding-block: con el atajo `padding: X 0` se anularía el margen lateral
+     del .wrap y la sección se desalinearía del resto de la ficha. */
+  .grupos { padding-block: clamp(20px, 4vw, 40px); }
+  .grupos__box {
+    border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 14px;
+    background: color-mix(in srgb, var(--accent) 6%, var(--ink));
+    padding: clamp(22px, 4vw, 36px);
+    display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(20px, 4vw, 48px); align-items: start;
+  }
+  @media (max-width: 900px) { .grupos__box { grid-template-columns: 1fr; } }
+  .grupos__title { font-family: var(--f-display); font-size: clamp(22px, 3vw, 32px); margin: 0 0 10px; }
+  .grupos__lead { color: var(--paper-dim); margin: 0; max-width: 46ch; line-height: 1.6; }
+  .grupos__form { display: flex; flex-direction: column; gap: 14px; }
+  .grupos__row { display: flex; flex-wrap: wrap; gap: 14px; }
+  .grupos__form label { display: flex; flex-direction: column; gap: 6px; font-family: var(--f-display); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--paper-faint); }
+  /* El reparto flexible solo dentro de las filas: en la columna del formulario
+     un flex-basis se leería como ALTURA y dejaba un hueco muerto bajo el área de texto. */
+  .grupos__row label { flex: 1 1 180px; }
+  .grupos__msg { width: 100%; }
+  .grupos__form input, .grupos__form textarea {
+    font: inherit; text-transform: none; letter-spacing: normal; color: var(--paper);
+    padding: 12px 14px; border-radius: 8px; border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.04); width: 100%;
+  }
+  .grupos__form input:focus, .grupos__form textarea:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+  .grupos__form button { align-self: flex-start; margin-top: 4px; }
+  .grupos__direct { margin: 18px 0 0; font-size: 15px; color: var(--paper-dim); line-height: 1.7; }
+  .grupos__direct a { color: var(--accent); }
+</style>

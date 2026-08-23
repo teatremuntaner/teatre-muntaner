@@ -3,6 +3,7 @@ import { getCollection, getEntry, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Reels from '../../components/Reels.astro';
+import Grupos from '../../components/Grupos.astro';
 import { summarize } from '../../lib/schedule';
 import { useT, langFromPath } from '../../i18n';
 
@@ -46,6 +47,11 @@ const sch = d.dates.length ? summarize(d.dates, lang) : null;
 const today = new Date().toISOString().slice(0, 10);
 const archived = d.dates.length > 0 && !d.dates.some((x) => x.date >= today);
 const genre = d.genres.length ? d.genres.join(' · ') : d.category;
+// La crítica y el público van en bloques separados.
+const prensa = d.reviews.filter((r) => r.kind === 'prensa');
+const publico = d.reviews.filter((r) => r.kind !== 'prensa');
+// Puntuación con un decimal, con la coma decimal del idioma que toque
+const fmtScore = (n: number) => n.toLocaleString(lang === 'ca' ? 'ca-ES' : 'es-ES', { maximumFractionDigits: 1 });
 // Acepta ID o cualquier URL de YouTube (watch, youtu.be, embed, shorts)
 const ytId = d.youtube
   ? (d.youtube.match(/(?:youtu\.be\/|v=|embed\/|shorts\/|^)([A-Za-z0-9_-]{11})/)?.[1] ?? '')
@@ -225,20 +231,73 @@ const videoLd = (ytId || d.video) && videoUploadDate
       </aside>
     </section>
 
-    {(d.video || ytId) && (
-      <section class="wrap">
-        <div class="show__video">
-          {d.video ? (
-            <video controls preload="metadata" src={d.video} aria-label={t('show.videoDe', { titulo: d.title })}></video>
-          ) : (
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${ytId}`}
-              title={t('show.videoDe', { titulo: d.title })}
-              loading="lazy"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
-          )}
+    {d.ratings.length > 0 && (
+      <section class="wrap ratings">
+        <ul class="ratings__row">
+          {d.ratings.map((r) => {
+            const Tag = r.url ? 'a' : 'div';
+            return (
+              <li>
+                <Tag class="rating" {...(r.url ? { href: r.url, target: '_blank', rel: 'noopener' } : {})}>
+                  {r.logo ? (
+                    <Image class="rating__logo" src={r.logo} alt={r.source} widths={[120]} />
+                  ) : (
+                    <span class="rating__brand">{r.source}</span>
+                  )}
+                  <span class="rating__score">
+                    <strong>{fmtScore(r.score)}</strong><span class="rating__max">/{fmtScore(r.max)}</span>
+                  </span>
+                  {r.count && <span class="rating__count">{`${r.count} ${t('show.opiniones')}`}</span>}
+                </Tag>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    )}
+
+    {prensa.length > 0 && (
+      <section class="wrap show__reviews">
+        <h2 class="show__reviews-title">{t('show.critica')}</h2>
+        <div class="show__reviews-grid">
+          {prensa.map((r) => (
+            <figure class="review review--press">
+              <blockquote class="review__text">{r.text}</blockquote>
+              {(r.author || r.source) && (
+                <figcaption class="review__by">
+                  {r.author && <span class="review__author">{r.author}</span>}
+                  {r.source && (r.url ? (
+                    <a class="review__source" href={r.url} target="_blank" rel="noopener">{r.source}</a>
+                  ) : (
+                    <span class="review__source">{r.source}</span>
+                  ))}
+                </figcaption>
+              )}
+            </figure>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {publico.length > 0 && (
+      <section class="wrap show__reviews">
+        <h2 class="show__reviews-title">{t('show.publico')}</h2>
+        <div class="show__reviews-grid">
+          {publico.map((r) => (
+            <figure class="review">
+              <blockquote class="review__text">{r.text}</blockquote>
+              {(r.author || r.source) && (
+                <figcaption class="review__by">
+                  {r.author && <span class="review__author">{r.author}</span>}
+                  {r.source && (r.url ? (
+                    <a class="review__source" href={r.url} target="_blank" rel="noopener">{r.source}</a>
+                  ) : (
+                    <span class="review__source">{r.source}</span>
+                  ))}
+                </figcaption>
+              )}
+            </figure>
+          ))}
         </div>
       </section>
     )}
@@ -256,6 +315,43 @@ const videoLd = (ytId || d.video) && videoUploadDate
           ))}
         </ul>
         {d.castNote && <p class="cast__note">{d.castNote}</p>}
+      </section>
+    )}
+
+    {d.offers.length > 0 && (
+      <section class="wrap offers">
+        <h2 class="offers__title">{t('show.descuentos')}</h2>
+        <ul class="offers__grid">
+          {d.offers.map((o) => (
+            <li class="offer">
+              <span class="offer__label">{o.label}</span>
+              {o.detail && <span class="offer__detail">{o.detail}</span>}
+            </li>
+          ))}
+        </ul>
+        {d.offersNote && <p class="offers__note">{d.offersNote}</p>}
+      </section>
+    )}
+
+    {d.groups?.enabled && (
+      <Grupos show={d.title} groups={d.groups} t={t} accion={lang === 'ca' ? '/ca/aviso-recibido/' : '/aviso-recibido/'} />
+    )}
+
+    {(d.video || ytId) && (
+      <section class="wrap">
+        <div class="show__video">
+          {d.video ? (
+            <video controls preload="metadata" src={d.video} aria-label={t('show.videoDe', { titulo: d.title })}></video>
+          ) : (
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${ytId}`}
+              title={t('show.videoDe', { titulo: d.title })}
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          )}
+        </div>
       </section>
     )}
 
@@ -364,6 +460,61 @@ const videoLd = (ytId || d.video) && videoUploadDate
     .cast__item--aparte { margin-left: 0; padding-left: 0; border-left: 0; padding-top: 14px; border-top: 1px solid var(--line); flex-basis: 100%; }
   }
   .cast__note { margin: 18px 0 0; font-size: 15px; color: var(--paper-dim); }
+
+  /* OJO: en las secciones .wrap hay que usar padding-block. Con el atajo
+     `padding: X 0 Y` se anula el margen lateral del .wrap y la sección se
+     desalinea del resto de la ficha. */
+
+  /* Reseñas reales (público/crítica): prueba social entre la sinopsis y la galería. */
+  .show__reviews { padding-block: clamp(6px, 2vw, 20px) clamp(20px, 4vw, 40px); }
+  .show__reviews-title { font-family: var(--f-display); font-size: clamp(22px, 3vw, 32px); margin: 0 0 22px; }
+  .show__reviews-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .review {
+    margin: 0; display: flex; flex-direction: column; gap: 14px;
+    background: color-mix(in srgb, var(--accent) 7%, var(--ink));
+    border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    border-radius: 12px; padding: 22px 22px 18px;
+  }
+  .review__text { margin: 0; font-size: 17px; line-height: 1.6; color: var(--paper); }
+  .review__text::before { content: "\201C"; color: var(--accent); font-family: Georgia, serif; font-size: 1.5em; line-height: 0; vertical-align: -0.3em; margin-right: 3px; }
+  .review__by { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+  .review__author { font-family: var(--f-display); font-weight: 700; font-size: 15px; color: var(--paper); }
+  .review__source { font-size: 13px; color: var(--paper-faint); }
+  a.review__source { transition: color 0.2s ease; }
+  a.review__source:hover { color: var(--accent); }
+  .review--press { border-left-color: var(--ink-soft, var(--paper-faint)); background: color-mix(in srgb, var(--paper) 5%, var(--ink)); }
+  .review--press .review__text::before { color: var(--paper-faint); }
+
+  /* Puntuaciones de las plataformas de venta y de Google, en una fila. */
+  .ratings { padding-block: clamp(18px, 3vw, 30px) clamp(4px, 1vw, 10px); }
+  .ratings__row { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 12px; }
+  .rating {
+    display: flex; align-items: center; gap: 10px;
+    border: 1px solid var(--line); border-radius: 999px; padding: 10px 18px;
+    background: color-mix(in srgb, var(--accent) 5%, var(--ink));
+    transition: border-color 0.25s ease, transform 0.25s ease;
+  }
+  a.rating:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .rating__brand { font-family: var(--f-display); font-size: 14px; letter-spacing: 0.04em; color: var(--paper-dim); }
+  .rating__logo { height: 20px; width: auto; display: block; }
+  .rating__score { font-family: var(--f-display); font-size: 20px; color: var(--accent); line-height: 1; }
+  .rating__max { font-size: 13px; color: var(--paper-faint); }
+  .rating__count { font-size: 12px; color: var(--paper-faint); }
+
+  /* (Los estilos del elenco ya están más abajo, con el bloque que ya existía.) */
+
+  /* Tarifas y descuentos (+65, 2x1…) */
+  .offers { padding-block: clamp(20px, 4vw, 40px); }
+  .offers__title { font-family: var(--f-display); font-size: clamp(22px, 3vw, 32px); margin: 0 0 22px; }
+  .offers__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+  .offer {
+    display: flex; flex-direction: column; gap: 6px;
+    border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 12px;
+    padding: 16px 18px; background: color-mix(in srgb, var(--accent) 7%, var(--ink));
+  }
+  .offer__label { font-family: var(--f-display); font-size: 17px; color: var(--accent); }
+  .offer__detail { font-size: 15px; color: var(--paper-dim); line-height: 1.5; }
+  .offers__note { margin: 16px 0 0; font-size: 14px; color: var(--paper-faint); max-width: 70ch; line-height: 1.6; }
 
   .show__gallery { padding-block: clamp(34px, 5vw, 60px) clamp(56px, 9vw, 110px); }
   .show__gallery-title { font-family: var(--f-display); font-size: clamp(22px, 3vw, 32px); margin: 0 0 22px; }
