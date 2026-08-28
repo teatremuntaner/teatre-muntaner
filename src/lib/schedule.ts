@@ -167,6 +167,44 @@ function unicoHorario(dias: DiaConFuncion[]): boolean {
   return true;
 }
 
+/* EL PRIMER DÍA PUEDE ESTAR A MEDIAS, y eso no es un horario.
+ *
+ * La taquilla va retirando las funciones según se dan. Así que a las ocho de la tarde de un
+ * viernes de dos pases, la ficha ya solo tiene el de las 21:00 de ese día: el de las 19:00
+ * ya se ha hecho. Ese viernes truncado parecía entonces un horario distinto del de los
+ * viernes siguientes, y el aviso se callaba porque veía tres patrones de viernes donde solo
+ * hay dos.
+ *
+ * Pasó de verdad, con «Corta el cable rojo», la misma tarde del cambio: el sincronizador
+ * quitó el pase de las 19:00 del 28 de agosto y el aviso del 11 de septiembre desapareció.
+ *
+ * Así que si el primer día lleva un juego de horas que es parte del que tiene ese mismo día
+ * de la semana más adelante, no se le hace caso para decidir el patrón. Sigue viéndose en la
+ * lista, que es donde tiene que estar: quien entre esta tarde verá su función de las 21:00. */
+function sinElPrimeroAMedias(dias: DiaConFuncion[], hoy: string): DiaConFuncion[] {
+  if (dias.length < 2) return dias;
+  const primero = dias[0];
+
+  // SOLO HOY puede estar truncado, porque lo trunca el paso de las horas. Si el primer día
+  // de la ventana es de la semana que viene y tiene menos pases, eso es un horario distinto
+  // y hay que contarlo. Lo señaló Codex: sin esta línea, un viernes 4 con un solo pase se
+  // descartaba y el cambio real del 11 se quedaba sin avisar.
+  if (primero.date !== hoy) return dias;
+
+  const wd = dateOf(primero.date).getDay();
+  const siguiente = dias.slice(1).find((d) => dateOf(d.date).getDay() === wd);
+  if (!siguiente) return dias;
+
+  // Y lo que queda tiene que ser el FINAL del horario completo, no cualquier trozo: la
+  // taquilla retira los pases por orden, así que de «19:00 y 21:00» puede quedar «21:00»,
+  // pero nunca «19:00» a solas.
+  const suyas = primero.pases.map((p) => p.time);
+  const completas = siguiente.pases.map((p) => p.time);
+  const cola = completas.slice(completas.length - suyas.length);
+  const esElFinalDe = suyas.length < completas.length && suyas.every((h, i) => h === cola[i]);
+  return esElFinalDe ? dias.slice(1) : dias;
+}
+
 export interface ScheduleSummary {
   card: string;              // compacto para la cartelera
   full: string;              // el patrón, SOLO si hay un único horario de aquí al final
@@ -300,11 +338,18 @@ export function summarize(sessions: Session[] = [], lang: Lang = 'es', hoy: stri
     return { card: L.consultar, full: '', loose: [], hasPattern: false, dias: [], aviso: '' };
 
   const dias = porDia(list);
-  const aviso = avisoDeCambio(dias);
+  // El patrón se decide sin el primer día si viene a medias (ver sinElPrimeroAMedias). La
+  // lista, `dias`, se queda entera: esa función de esta tarde hay que seguir enseñándola.
+  const paraElPatron = sinElPrimeroAMedias(dias, hoy);
+  const aviso = avisoDeCambio(paraElPatron);
+  // Y el patrón entero -- la frase, la hora de la tarjeta y las fechas sueltas -- se calcula
+  // sobre esos mismos días. Si no, la función de hoy a medias convertía en excepción la hora
+  // que sí es la normal a partir de mañana. (Codex, 28/08/2026.)
+  const paraContar = paraElPatron.flatMap((d) => d.pases.map((p) => ({ date: d.date, time: p.time })));
 
   // Agrupa por (día de la semana | hora)
   const combos = new Map<string, string[]>();
-  for (const s of list) {
+  for (const s of paraContar) {
     const key = `${dateOf(s.date).getDay()}|${s.time || ''}`;
     (combos.get(key) ?? combos.set(key, []).get(key)!).push(s.date);
   }
@@ -329,7 +374,7 @@ export function summarize(sessions: Session[] = [], lang: Lang = 'es', hoy: stri
   });
   // La frase solo sale si todos los días por venir comparten un mismo horario, y eso se
   // comprueba también semana a semana (ver unicoHorario).
-  const full = unicoHorario(dias) ? cap(joinY(phrases)) : '';
+  const full = unicoHorario(paraElPatron) ? cap(joinY(phrases)) : '';
 
   const looseSorted = [...new Set(looseIsos)].sort();
   const loose = looseSorted.map(looseLabel);
@@ -343,9 +388,10 @@ export function summarize(sessions: Session[] = [], lang: Lang = 'es', hoy: stri
     // 22 y 29» a las 20:00, la tarjeta decía «Viernes y sábados · 20:00» y volvía a prometer
     // lo que se le acababa de quitar a la frase. Los nombres de los días sí se quedan: son
     // ciertos del periodo entero, y las fechas exactas están a un clic. (Codex, 28/08/2026.)
-    card = byTime.size === 1 && times[0] && unicoHorario(dias) ? `${names} · ${times[0]}` : names;
-  } else if (list.length <= 3) {
-    card = cap(joinY(looseSorted.map((iso) => dayMonthFull(iso))));
+    card = byTime.size === 1 && times[0] && unicoHorario(paraElPatron) ? `${names} · ${times[0]}` : names;
+  } else if (dias.reduce((n, d) => n + d.pases.length, 0) <= 3) {
+    // Aquí sí se enseñan los días de verdad, con el de hoy incluido.
+    card = cap(joinY(dias.map((d) => dayMonthFull(d.date))));
   } else {
     card = L.consultar;
   }

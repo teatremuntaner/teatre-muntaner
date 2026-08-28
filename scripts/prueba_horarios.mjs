@@ -193,6 +193,49 @@ const CASOS = [
   ['y funciona en el cambio de mes y de ano',
    () => [sumaDias('2026-12-28', 7), sumaDias('2026-02-25', 7)],
    (r) => r[0] === '2027-01-04' && r[1] === '2026-03-04'],
+
+  // --- el primer dia a medias, encontrado con los datos reales de esta misma tarde ---
+  ['un primer dia truncado no inventa un horario',
+   // es «Corta el cable rojo» el 28/08/2026 por la tarde: la taquilla ya habia retirado el
+   // pase de las 19:00, asi que ese viernes se quedaba en {21:00} y parecia un tercer patron
+   () => S([f('2026-08-28', '21:00'),
+            f('2026-08-29', '18:30'), f('2026-08-29', '20:30'),
+            f('2026-09-04', '19:00'), f('2026-09-04', '21:00'),
+            f('2026-09-05', '18:30'), f('2026-09-05', '20:30'),
+            f('2026-09-11', '18:30'), f('2026-09-11', '20:30'),
+            f('2026-09-12', '17:00'), f('2026-09-12', '19:00'),
+            f('2026-09-18', '18:30'), f('2026-09-18', '20:30'),
+            f('2026-09-19', '17:00'), f('2026-09-19', '19:00')], HOY).aviso,
+   (r) => r === 'Desde el 11 de septiembre el horario cambia'],
+
+  ['pero ese primer dia se sigue enseñando entero en la lista',
+   () => S([f('2026-08-28', '21:00'), f('2026-09-04', '19:00'), f('2026-09-04', '21:00')], HOY).dias[0],
+   (r) => r.date === '2026-08-28' && r.pases.length === 1 && r.pases[0].time === '21:00'],
+
+  ['y si el primer dia NO es parte del siguiente, cuenta como siempre',
+   // 22:00 no esta entre las horas del viernes siguiente: es otro horario, no un truncado
+   () => S([f('2026-08-28', '22:00'),
+            f('2026-09-04', '19:00'), f('2026-09-11', '19:00')], HOY).aviso,
+   (r) => r === 'Desde el 4 de septiembre el horario cambia'],
+
+  // --- y solo HOY puede venir truncado: lo de mas alla es un horario de verdad ---
+  ['un primer dia FUTURO con menos pases no se descarta: es un cambio real',
+   () => S([f('2026-09-04', '21:00'),
+            f('2026-09-11', '19:00'), f('2026-09-11', '21:00'),
+            f('2026-09-18', '19:00'), f('2026-09-18', '21:00')], HOY).aviso,
+   (r) => r === 'Desde el 11 de septiembre el horario cambia'],
+
+  ['el dia truncado tampoco contamina la frase ni la tarjeta',
+   // con un solo viernes entero detras no hay patron que valga: ni frase, ni hora en la tarjeta
+   () => S([f('2026-08-28', '21:00'), f('2026-09-04', '19:00'), f('2026-09-04', '21:00')], HOY),
+   (r) => r.full === '' && !r.card.includes('21:00')],
+
+  ['si hoy es el dia del cambio y viene truncado, no se inventa un aviso',
+   () => S([f('2026-08-28', '21:00'),
+            f('2026-09-04', '19:00'), f('2026-09-04', '21:00'),
+            f('2026-09-11', '19:00'), f('2026-09-11', '21:00')], HOY).aviso,
+   (r) => r === ''],
+
   // --- el catalan ---
   ["en catalan el aviso se apostrofa cuando toca: «de l'11»",
    () => S(CCR, HOY, 'ca').aviso,
