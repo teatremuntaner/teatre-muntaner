@@ -7,6 +7,7 @@ import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { summarize } from '../../lib/schedule';
+import { limpiaEspacios } from '../../lib/espacios.mjs';
 
 export async function getStaticPaths() {
   // Solo shows publicados con entradas a la venta: un landing sin botón de
@@ -31,12 +32,12 @@ const ytId = d.youtube
   ? (d.youtube.match(/(?:youtu\.be\/|v=|embed\/|shorts\/|^)([A-Za-z0-9_-]{11})/)?.[1] ?? '')
   : '';
 
-const plain = (show.body ?? '')
+const plain = limpiaEspacios((show.body ?? '')
   .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
   .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
   .replace(/[#*_>`~]/g, '')
   .replace(/\s+/g, ' ')
-  .trim();
+  .trim());
 const desc =
   d.tagline ??
   (plain ? (plain.length > 155 ? plain.slice(0, 152).replace(/\s+\S*$/, '') + '…' : plain) : `${d.title} en el Teatre Muntaner`);

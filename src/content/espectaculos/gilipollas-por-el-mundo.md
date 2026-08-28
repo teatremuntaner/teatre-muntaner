@@ -23,9 +23,9 @@ price: Desde 18 €
 draft: false
 ---
 
-No te pierdas Gilipollas por el Mundo- Noche inolvidable de Risas con Carolina Noriega en el Teatre Muntaner.
+No te pierdas Gilipollas por el Mundo- Noche inolvidable de Risas con Carolina Noriega en el Teatre Muntaner.
 
-Ven a disfrutar del show de humor de Carolina Noriega, una de las mejores monologuistas del país, actriz, guionista, y autora participando como cómica y guionista en programas de TV como el Club de la Comedia, Comedy Central, Ilustres Ignorantes, o El Hormiguero. También participa del exitoso ciclo La Noche de la Risa en Gran Via Madrid.
+Ven a disfrutar del show de humor de Carolina Noriega, una de las mejores monologuistas del país, actriz, guionista, y autora participando como cómica y guionista en programas de TV como el Club de la Comedia, Comedy Central, Ilustres Ignorantes, o El Hormiguero. También participa del exitoso ciclo La Noche de la Risa en Gran Via Madrid.
 
 ¿Hay gente maravillosa por el mundo? Sí.
 

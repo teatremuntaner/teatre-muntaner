@@ -4,6 +4,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Reels from '../../components/Reels.astro';
 import { summarize } from '../../lib/schedule';
+import { limpiaEspacios } from '../../lib/espacios.mjs';
 import { useT, langFromPath } from '../../i18n';
 
 export async function getStaticPaths() {
@@ -53,12 +54,12 @@ const ytId = d.youtube
 
 // Descripción SEO: tagline si existe; si no, un extracto de la sinopsis
 // (en el idioma de la página).
-const plain = (fuente.body ?? '')
+const plain = limpiaEspacios((fuente.body ?? '')
   .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
   .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
   .replace(/[#*_>`~]/g, '')
   .replace(/\s+/g, ' ')
-  .trim();
+  .trim());
 const desc =
   d.tagline ??
   (plain ? (plain.length > 155 ? plain.slice(0, 152).replace(/\s+\S*$/, '') + '…' : plain) : t('show.descFallback', { titulo: d.title }));

@@ -20,11 +20,11 @@ price: Desde 20 €
 draft: false
 ---
 
-Arantxa y Jazmín, a las que también podéis dirigiros como Sobria y Serena, aunque nunca han sido ni lo uno ni lo otro, os invitan a acompañarlas por un recorrido de su vida y su visión del mundo, y, sobre todo, a reír. A reír mucho. Para ello, se han inspirado en las mejores parejas cómicas de la historia, como Rajoy y la dicción, Paquirrín y el SEPE o     Shakira y hacienda.
+Arantxa y Jazmín, a las que también podéis dirigiros como Sobria y Serena, aunque nunca han sido ni lo uno ni lo otro, os invitan a acompañarlas por un recorrido de su vida y su visión del mundo, y, sobre todo, a reír. A reír mucho. Para ello, se han inspirado en las mejores parejas cómicas de la historia, como Rajoy y la dicción, Paquirrín y el SEPE o Shakira y hacienda.
 
 Más de una hora de risoterapia. El resto de la información es Secreto de Estado y sólo la conocerá un grupo muy selecto de población: el de las mentes privilegiadas. O sea, el de la gente que va al teatro.
 
-"Este viaje lo haremos desde la comedia, porque es una de las mejores terapias que existen, y porque , entre broma y broma, la verdad siempre asoma"
+"Este viaje lo haremos desde la comedia, porque es una de las mejores terapias que existen, y porque, entre broma y broma, la verdad siempre asoma"
 
 Ara y Jaz.
 

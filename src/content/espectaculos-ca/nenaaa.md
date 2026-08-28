@@ -12,7 +12,7 @@ sourceHash: 63e9005951b48053
 generated: true
 ---
 
-Alicia i Claudia són dues amigues actrius   que combinen la seva professió amb la cura de les seves mares gairebé centenàries. Això porta les seves forces i paciència al límit, i han de deixar de costat gran part de la seva vida personal i professional.
+Alicia i Claudia són dues amigues actrius que combinen la seva professió amb la cura de les seves mares gairebé centenàries. Això porta les seves forces i paciència al límit, i han de deixar de costat gran part de la seva vida personal i professional.
 
 En un esdeveniment de l'associació d'actors es retroben i decideixen portar a escena fragments de “les seves experiències”
 

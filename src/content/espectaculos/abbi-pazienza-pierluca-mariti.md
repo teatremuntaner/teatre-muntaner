@@ -20,13 +20,13 @@ draft: false
 ---
 **SPETTACOLO IN ITALIANO**
 
-**Abbi pazienza** è un viaggio comico attraverso le nevrosi individuali e collettive di una società che corre senza sosta.
+**Abbi pazienza** è un viaggio comico attraverso le nevrosi individuali e collettive di una società che corre senza sosta.
 
 Dai matrimoni performativi dei millennial squattrinati alle mode alimentari tutte fumo e poco arrosto, dall’ossessione per salute, bellezza e giovinezza nonostante il tempo che passa alle tecnologie nate per servirci e finite spesso per governarci, Pierluca Mariti osserva con ironia le contraddizioni del presente.
 
 In un mondo che ci chiede efficienza e produttività, la risata diventa un modo per inceppare gli ingranaggi, tirare il fiato e riconoscersi, almeno per un momento, nelle proprie fragilità.
 
-Dopo il successo di **Grazie per la domanda**, Pierluca torna a teatro con un nuovo spettacolo comico, tra racconti personali e analisi antropologiche, per guardare con leggerezza i tormenti suoi e quelli della sua generazione.
+Dopo il successo di **Grazie per la domanda**, Pierluca torna a teatro con un nuovo spettacolo comico, tra racconti personali e analisi antropologiche, per guardare con leggerezza i tormenti suoi e quelli della sua generazione.
 
 **Abbi pazienza**: un po’ richiesta di tregua, un po’ consiglio da dare agli altri, e soprattutto a se stessi.
 
@@ -34,7 +34,7 @@ Dopo il successo di **Grazie per la domanda**, Pierluca torna a teatro con un n
 
 **IMPORTANTE: ESPECTÁCULO EN ITALIANO**
 
-Abbi Pazienza  es un viaje cómico a través de las neurosis individuales y colectivas de una sociedad que corre sin descanso.
+Abbi Pazienza es un viaje cómico a través de las neurosis individuales y colectivas de una sociedad que corre sin descanso.
 
 Desde las bodas performativas de los millennials sin un duro hasta las modas alimentarias que son mucho ruido y pocas nueces, pasando por la obsesión por la salud, la belleza y la juventud a pesar del paso del tiempo, o las tecnologías nacidas para servirnos que a menudo acaban gobernándonos; Pierluca Mariti observa con ironía las contradicciones del presente.
 

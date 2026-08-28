@@ -13,9 +13,9 @@ sourceHash: 558307958b9c7340
 generated: true
 ---
 
-No et perdis Carallot pel Món- Nit inoblidable de Riures amb Carolina Noriega en el Teatre Muntaner.
+No et perdis Carallot pel Món- Nit inoblidable de Riures amb Carolina Noriega en el Teatre Muntaner.
 
-Veuen a gaudir del xou d'humor de Carolina Noriega, una de les millors monologuistes del país, actriu, guionista, i autora participant com a còmica i guionista en programes de TV com el Club de la Comèdia, Comedy Central, Il·lustres Ignorants, o El Formiguer. També participa del reeixit cicle La Nit del Riure en Gran Via Madrid.
+Veuen a gaudir del xou d'humor de Carolina Noriega, una de les millors monologuistes del país, actriu, guionista, i autora participant com a còmica i guionista en programes de TV com el Club de la Comèdia, Comedy Central, Il·lustres Ignorants, o El Formiguer. També participa del reeixit cicle La Nit del Riure en Gran Via Madrid.
 
 Hi ha gent meravellosa pel món? Sí.
 

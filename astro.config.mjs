@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import remarkEspacios from './plugins/remark-espacios.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -12,4 +13,11 @@ export default defineConfig({
   integrations: [sitemap({
     filter: (page) => !page.includes('/landing/') && !page.includes('/aviso-recibido/'),
   })],
+  // Las sinopsis se pegan en el gestor desde Word o Google Docs y traen espacios duros
+  // y espacios delante de coma o punto. Se limpian al publicar, no en el archivo, y así
+  // vale igual para la colección en catalán, que se genera sola.
+  // El porqué está en plugins/remark-espacios.mjs.
+  markdown: {
+    remarkPlugins: [remarkEspacios],
+  },
 });

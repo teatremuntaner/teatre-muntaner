@@ -20,7 +20,7 @@ venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
 draft: false
 ---
 
-Alicia y Claudia son dos amigas actrices   que combinan su profesión con el cuidado de sus madres casi centenarias. Esto lleva sus fuerzas y paciencia al límite, y deben dejar de lado gran parte de su vida personal y profesional.
+Alicia y Claudia son dos amigas actrices que combinan su profesión con el cuidado de sus madres casi centenarias. Esto lleva sus fuerzas y paciencia al límite, y deben dejar de lado gran parte de su vida personal y profesional.
 
 En un evento de la asociación de actores se reencuentran y deciden llevar a escena fragmentos de “sus experiencias”
 
