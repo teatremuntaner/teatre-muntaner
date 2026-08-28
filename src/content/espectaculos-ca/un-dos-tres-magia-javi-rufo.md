@@ -8,7 +8,7 @@ price: Des de 14 €
 genres:
 - Màgia
 - Familiar
-sourceHash: 886e360c53ba5d9f
+sourceHash: 6e06c061e38f46dc
 generated: true
 ---
 

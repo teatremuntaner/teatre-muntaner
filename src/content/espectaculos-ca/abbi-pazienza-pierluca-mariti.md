@@ -8,7 +8,7 @@ price: Des de 30 €
 genres:
 - Comèdia
 - Monòlegs
-sourceHash: 1ca16e14790f3252
+sourceHash: 2d558ed63b4b2e3d
 generated: true
 ---
 
