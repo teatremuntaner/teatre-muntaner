@@ -41,6 +41,10 @@ const UMBERTO = [
   f('2026-11-07', '17:00'), f('2026-11-08', '17:00'),
 ];
 
+// Cinco dias con tres franjas distintas: contado entero son 83 caracteres.
+const CINCO_DIAS = [f('2026-09-02', '19:00'), f('2026-09-03', '19:00'), f('2026-09-04', '18:30'), f('2026-09-05', '17:00'), f('2026-09-06', '17:00'),
+            f('2026-09-09', '19:00'), f('2026-09-10', '19:00'), f('2026-09-11', '18:30'), f('2026-09-12', '17:00'), f('2026-09-13', '17:00')];
+
 const CASOS = [
   ['las funciones pasadas no cuentan',
    () => S([f('2026-08-27', '20:00'), f('2026-08-28', '20:30')], HOY).dias,
@@ -55,9 +59,16 @@ const CASOS = [
    () => S([f('2026-09-04', '20:30'), f('2026-09-11', '20:30')], HOY).full,
    (r) => r === 'Viernes a las 20:30'],
 
-  ['dos horarios: la frase resumen desaparece',
+  // Carlos, 28/08/2026: «que salga mas a menudo, aunque simplifique». Asi que la frase ya
+  // no intenta resumir las dos temporadas: cuenta la de ahora, y del cambio avisa la linea
+  // de debajo. Lo que no puede es describir un horario que esta semana no es el que hay.
+  ['dos horarios: la frase cuenta SOLO el vigente, el de hoy al corte',
    () => S(CCR, HOY).full,
-   (r) => r === ''],
+   (r) => r === 'Viernes a las 19:00 y 21:00; sábados a las 18:30 y 20:30'],
+
+  ['y no se pasa de 60 caracteres, que es de donde veniamos',
+   () => S(CCR, HOY).full.length,
+   (r) => r <= 60],
 
   ['el aviso dice la fecha en que cambia',
    () => S(CCR, HOY).aviso,
@@ -258,6 +269,60 @@ const CASOS = [
   ['y la frase resumen tambien',
    () => S([f('2026-09-04', '20:30'), f('2026-09-11', '20:30')], HOY, 'ca').full,
    (r) => r === 'Divendres a les 20:30'],
+
+  // --- la frase cuenta el horario de ahora, y si es larga, solo los dias ---
+  ['cinco dias con tres franjas: la frase larga se cambia por los dias',
+   // «Miercoles y jueves a las 19:00; viernes a las 18:30; sabados y domingos a las 17:00»
+   // son 83 caracteres. Las horas estan una a una en la lista de fechas de debajo.
+   () => S(CINCO_DIAS, HOY).full,
+   (r) => r === 'De miércoles a domingo'],
+
+  ['y en catalan igual: «De dimecres a diumenge»',
+   () => S(CINCO_DIAS, HOY, 'ca').full,
+   (r) => r === 'De dimecres a diumenge'],
+
+  ['y si los dias no van seguidos, se enumeran',
+   () => S([f('2026-09-02', '20:00'), f('2026-09-04', '20:00'), f('2026-09-05', '20:00'),
+            f('2026-09-09', '20:00'), f('2026-09-11', '20:00'), f('2026-09-12', '20:00')], HOY).full,
+   (r) => r === 'Miércoles, viernes y sábados a las 20:00'],
+
+  ['ninguna frase pasa de 60 caracteres',
+   () => [S([f('2026-09-02', '19:00'), f('2026-09-03', '19:00'), f('2026-09-04', '18:30'), f('2026-09-05', '17:00'), f('2026-09-06', '17:00'),
+            f('2026-09-09', '19:00'), f('2026-09-10', '19:00'), f('2026-09-11', '18:30'), f('2026-09-12', '17:00'), f('2026-09-13', '17:00')], HOY).full.length, S([f('2026-09-02', '20:00'), f('2026-09-04', '20:00'), f('2026-09-05', '20:00'),
+            f('2026-09-09', '20:00'), f('2026-09-11', '20:00'), f('2026-09-12', '20:00')], HOY).full.length],
+   (r) => r.every((n) => n <= 60)],
+
+  ['lo que viene DESPUES del corte no cuenta como hueco',
+   // el corte es el viernes 11: ese viernes ya es del horario nuevo y no se le puede pedir
+   // al tramo viejo. Lo de antes del corte, en cambio, se comprueba entero (ver la de abajo)
+   () => S([f('2026-09-02', '20:00'), f('2026-09-03', '20:00'), f('2026-09-04', '20:00'),
+            f('2026-09-09', '20:00'), f('2026-09-10', '20:00'), f('2026-09-11', '18:00'),
+            f('2026-09-18', '18:00'), f('2026-09-25', '18:00')], HOY),
+   (r) => r.full === 'Miércoles, jueves y viernes a las 20:00' && r.aviso === 'Desde el 11 de septiembre el horario cambia'],
+
+  // --- las dos que encontro Codex en la ronda 9 ---
+  ['un dia que falta ANTES del corte si es un hueco, y quita la frase',
+   // se probo a dejar fuera la semana del corte entera, y asi la frase prometia un miercoles
+   // 9 que no existe. El tramo se comprueba hasta el corte, sin perdonar nada de por medio
+   () => S([f('2026-09-02', '20:00'), f('2026-09-03', '20:00'), f('2026-09-04', '20:00'),
+            f('2026-09-10', '20:00'), f('2026-09-11', '18:00'),
+            f('2026-09-18', '18:00'), f('2026-09-25', '18:00')], HOY).full,
+   (r) => r === ''],
+
+  ['si el cambio no se puede anunciar, no se prometen horas: solo el dia',
+   // «sabados 5 y 12 a las 17:00, sabado 19 a las 19:00»: el sabado 19 es una excepcion y no
+   // se anuncia, pero desmiente a «Sabados a las 17:00». Las horas se callan; el dia no,
+   // porque los tres son sabados y eso sigue siendo cierto
+   () => S([f('2026-09-05', '17:00'), f('2026-09-12', '17:00'), f('2026-09-19', '19:00')], HOY),
+   (r) => r.full === 'Sábados' && r.aviso === '' && !r.card.includes('17:00')],
+
+  ['y si la semana ANTERIOR al cambio se cae entera, tampoco hay frase',
+   // miercoles, jueves y viernes a las 20:00; el 9 y el 10 no existen; el 11 cambia a 18:00.
+   // El tramo se comprueba hasta el corte, no hasta su ultima funcion: si no, el periodo se
+   // acababa el dia 4 y esos dos huecos no se veian (Codex, ronda 10)
+   () => S([f('2026-09-02', '20:00'), f('2026-09-03', '20:00'), f('2026-09-04', '20:00'),
+            f('2026-09-11', '18:00'), f('2026-09-18', '18:00'), f('2026-09-25', '18:00')], HOY),
+   (r) => r.full === '' && r.aviso === 'Desde el 11 de septiembre el horario cambia'],
 ];
 
 let fallos = 0;

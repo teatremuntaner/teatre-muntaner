@@ -53,6 +53,11 @@ interface Locale {
   /** El aviso de cambio de horario, ya montado. `day` viene aparte porque en catalán la
    *  contracción depende de cómo suena el número: «a partir de l'11», «a partir del 12». */
   cambio: (dayMonth: string, day: number) => string;
+  /** Los días seguidos: «De miércoles a domingo» / «De dimecres a diumenge». En catalán se
+   *  escribe igual que en castellano porque todos los días empiezan por «di-»: no hay
+   *  elisión que hacer. Va en el diccionario de todos modos, para no dar por hecho que
+   *  seguirá coincidiendo si algún día se traduce a otro idioma. */
+  deA: (primero: string, ultimo: string) => string;
 }
 
 const LOCALES: Record<Lang, Locale> = {
@@ -66,6 +71,7 @@ const LOCALES: Record<Lang, Locale> = {
     consultar: 'Consultar fechas',
     dayOfMonth: (day, month) => `${day} de ${month}`,
     cambio: (dayMonth) => `Desde el ${dayMonth} el horario cambia`,
+    deA: (primero, ultimo) => `De ${primero} a ${ultimo}`,
   },
   ca: {
     dow: ['diumenge', 'dilluns', 'dimarts', 'dimecres', 'dijous', 'divendres', 'dissabte'],
@@ -84,6 +90,7 @@ const LOCALES: Record<Lang, Locale> = {
       day === 1 || day === 11
         ? `A partir de l'${dayMonth} l'horari canvia`
         : `A partir del ${dayMonth} l'horari canvia`,
+    deA: (primero, ultimo) => `De ${primero} a ${ultimo}`,
   },
 };
 
@@ -142,25 +149,37 @@ const lunesDe = (iso: string): Date => {
  * del patrón tiene que estar. Solo se perdona lo que cae fuera del periodo por los extremos:
  * si la temporada empieza un viernes, el sábado anterior no cuenta como hueco.
  *
- * ESTO ES ESTRICTO A PROPÓSITO Y TIENE UN PRECIO MEDIDO. El 28/08/2026, de los 15
- * espectáculos de las dos casas que enseñaban frase, 12 la perdieron: son montajes que hacen
- * un sábado al mes, no todos los sábados, y decir «Sábados a las 19:00» prometía funciones
- * que no existen. Las fechas exactas se ven debajo, en la lista, que es donde hay que
- * mirarlas. Si algún día se prefiere volver a la frase aproximada, el sitio es este. */
-function unicoHorario(dias: DiaConFuncion[]): boolean {
+ * ESTO ES ESTRICTO A PROPÓSITO, Y AQUÍ ESTÁ MEDIDO LO QUE CUESTA. El 28/08/2026, entre las
+ * dos casas había 51 fichas. Diez no tenían ninguna función por venir y dieciséis tenían
+ * una sola: donde una frase puede existir siquiera es en 25. De esas 25, la enseñan 9.
+ *
+ * LAS DIECISÉIS QUE SE QUEDAN SIN ELLA NO SON UN DEFECTO QUE ARREGLAR. Son montajes sin
+ * semana regular: un sábado al mes, o tres funciones sueltas en tres semanas. No hay
+ * patrón que resumir, y «Sábados a las 19:00» prometería funciones que no existen. Sus
+ * fechas se ven una a una en la lista de debajo, que para eso está.
+ *
+ * Así que si alguien llega aquí dentro de seis meses porque «la frase sale en pocas
+ * fichas»: el número no se sube aflojando esta comprobación. Aflojarla no hace que salga
+ * más veces, hace que salga mintiendo, que es de donde venimos. */
+/** `limite`, si viene, es la fecha del cambio de horario: el tramo se comprueba HASTA ahí,
+ *  no hasta su última función. Sin eso, si desaparecían todos los días de la última semana
+ *  antes del cambio, el periodo terminaba antes de tiempo y esos huecos no se veían: la
+ *  frase prometía un miércoles y un jueves que no existen. (Codex, 28/08/2026.) */
+function unicoHorario(dias: DiaConFuncion[], limite?: string): boolean {
   if (!horario(dias)) return false;
   if (dias.length < 2) return true;
   const presentes = new Set(dias.map((d) => d.date));
   const patron = new Set(dias.map((d) => dateOf(d.date).getDay()));
   const primera = dias[0].date;
   const ultima = dias[dias.length - 1].date;
-  const finDeSemanas = isoDe(lunesDe(ultima));
+  const finDeSemanas = isoDe(lunesDe(limite ?? ultima));
   for (let w = lunesDe(primera); isoDe(w) <= finDeSemanas; w.setDate(w.getDate() + 7)) {
     for (const wd of patron) {
       const d = new Date(w);
       d.setDate(d.getDate() + ((wd + 6) % 7));
       const iso = isoDe(d);
-      if (iso < primera || iso > ultima) continue;   // fuera del periodo: no es un hueco
+      if (iso < primera) continue;                          // antes de empezar: no es hueco
+      if (limite ? iso >= limite : iso > ultima) continue;   // ya es del horario nuevo
       if (!presentes.has(iso)) return false;
     }
   }
@@ -240,6 +259,16 @@ export function sumaDias(iso: string, dias: number): string {
 
 const HOY = hoyEnMadrid;
 
+/** Los días del horario, sin las horas, lo más corto que se pueda: «De miércoles a
+ *  domingo» cuando van seguidos, «Miércoles, viernes y sábados» cuando no. */
+function soloLosDias(mapa: Map<number, string>, L: Locale): string {
+  const dows = [...mapa.keys()].sort((a, b) => monKey(a) - monKey(b));
+  const seguidos = dows.length >= 3 && dows.every((d, i) => i === 0 || monKey(d) === monKey(dows[i - 1]) + 1);
+  const nombres = dows.map((d) => plural(L.dow[d]));
+  const lista = nombres.length < 2 ? nombres[0] : `${nombres.slice(0, -1).join(', ')} ${L.y} ${nombres[nombres.length - 1]}`;
+  return seguidos ? L.deA(L.dow[dows[0]], L.dow[dows[dows.length - 1]]) : cap(lista);
+}
+
 /** `hoy` se puede pasar para poder probar esto sin depender del día en que se ejecute. */
 export function summarize(sessions: Session[] = [], lang: Lang = 'es', hoy: string = HOY()): ScheduleSummary {
   const L = LOCALES[lang] ?? LOCALES.es;
@@ -298,8 +327,9 @@ export function summarize(sessions: Session[] = [], lang: Lang = 'es', hoy: stri
    * sería abrirle la puerta otra vez a una frase que miente, que es de donde venimos.
    *
    * Una frase. Nunca dos. Si no hay un corte limpio, ninguna. */
-  const avisoDeCambio = (dias: DiaConFuncion[]): string => {
-    if (dias.length < 2) return '';
+  const corteDeHorario = (dias: DiaConFuncion[]): { corte: number; anunciable: boolean } => {
+    const NADA = { corte: -1, anunciable: false };
+    if (dias.length < 2) return NADA;
 
     // El corte: la primera fecha en la que un día de la semana repite con otras horas. Todo
     // lo anterior es regular por construcción, porque el corte es justo la primera vez que
@@ -312,12 +342,14 @@ export function summarize(sessions: Session[] = [], lang: Lang = 'es', hoy: stri
       if (visto.has(wd) && visto.get(wd) !== horas) { corte = i; break; }
       visto.set(wd, horas);
     }
-    if (corte < 0) return '';                              // un solo horario: nada que avisar
+    if (corte < 0) return NADA;                            // un solo horario: nada que avisar
 
     const desde = dias.slice(corte);
     const horarioDesde = horario(desde);
-    if (!horarioDesde) return '';                          // hay un segundo corte: silencio
-    if (mismoHorario(horario(dias.slice(0, corte))!, horarioDesde)) return '';
+    // A partir de aqui el cambio existe pero puede no ser anunciable. El corte se devuelve
+    // igual: sirve para saber hasta donde llega el horario de esta semana.
+    if (!horarioDesde) return { corte, anunciable: false };  // hay un segundo corte: silencio
+    if (mismoHorario(horario(dias.slice(0, corte))!, horarioDesde)) return { corte, anunciable: false };
 
     /* Y UNA PRUEBA MÁS, la que pedía el caso de la función suelta al final. Con «sábados 1 y
      * 8 a las 17:00, sábado 15 a las 19:00» todo lo de arriba se cumplía —lo de después era
@@ -328,9 +360,9 @@ export function summarize(sessions: Session[] = [], lang: Lang = 'es', hoy: stri
      * función suelta distinta es una excepción y no se anuncia; ya se ve sola en su fecha. */
     const diaQueCambia = dateOf(dias[corte].date).getDay();
     const veces = desde.filter((d) => dateOf(d.date).getDay() === diaQueCambia).length;
-    if (veces < 2) return '';
+    if (veces < 2) return { corte, anunciable: false };
 
-    return L.cambio(dias[corte].dayMonth, dateOf(dias[corte].date).getDate());
+    return { corte, anunciable: true };
   };
 
   const list = (sessions ?? []).filter((s) => s && s.date && s.date >= hoy);
@@ -341,11 +373,36 @@ export function summarize(sessions: Session[] = [], lang: Lang = 'es', hoy: stri
   // El patrón se decide sin el primer día si viene a medias (ver sinElPrimeroAMedias). La
   // lista, `dias`, se queda entera: esa función de esta tarde hay que seguir enseñándola.
   const paraElPatron = sinElPrimeroAMedias(dias, hoy);
-  const aviso = avisoDeCambio(paraElPatron);
-  // Y el patrón entero -- la frase, la hora de la tarjeta y las fechas sueltas -- se calcula
-  // sobre esos mismos días. Si no, la función de hoy a medias convertía en excepción la hora
-  // que sí es la normal a partir de mañana. (Codex, 28/08/2026.)
-  const paraContar = paraElPatron.flatMap((d) => d.pases.map((p) => ({ date: d.date, time: p.time })));
+  const { corte, anunciable } = corteDeHorario(paraElPatron);
+  const aviso = anunciable ? L.cambio(paraElPatron[corte].dayMonth, dateOf(paraElPatron[corte].date).getDate()) : '';
+
+  /* EL HORARIO VIGENTE: de hoy hasta el próximo cambio, y nada más.
+   *
+   * La frase resumen intentaba antes describir TODAS las funciones por venir de una vez, y
+   * por eso o mentía (las dos temporadas de «Corta el cable rojo» fundidas en 187
+   * caracteres) o se callaba en 12 de las 15 fichas que la tenían.
+   *
+   * Ahora describe solo el tramo que va de hoy al corte. Es corta, sale casi siempre, y
+   * sobre todo es cierta HOY, que es lo único que no se puede perder. Del resto avisa la
+   * línea de arriba, y las fechas exactas están debajo en la lista.
+   *
+   * El corte se usa aunque el cambio no se pueda anunciar: si más adelante hay algo que no
+   * sabemos contar, con más razón la frase tiene que hablar solo de lo de aquí. Y dentro del
+   * tramo se sigue exigiendo horario único de verdad, semana a semana: si ni siquiera esto
+   * es regular, no hay frase. (Carlos, 28/08/2026: «que salga más a menudo, aunque
+   * simplifique» — pero simplificar nunca es decir algo que hoy sea falso.) */
+  /* SE PROBÓ A MEDIRLO POR SEMANAS ENTERAS Y ERA MENTIRA. El cambio cae a mitad de semana,
+   * así que la última semana del tramo está partida y le faltan días; dejarla fuera de la
+   * comprobación le daba frase a dos espectáculos más, y por eso se hizo. Pero también
+   * escondía los huecos de esa semana que son ANTERIORES al cambio: con «miércoles, jueves
+   * y viernes a las 20:00» y un miércoles 9 que no existe, la frase prometía ese miércoles.
+   * Lo encontró Codex el 28/08/2026. El tramo llega hasta el corte y se comprueba entero. */
+  const vigentes = corte >= 0 ? paraElPatron.slice(0, corte) : paraElPatron;
+  const hastaDonde = corte >= 0 ? paraElPatron[corte].date : undefined;
+
+  // El patrón entero -- la frase, la hora de la tarjeta y las fechas sueltas -- se calcula
+  // sobre el tramo vigente. `dias` sigue entero: la lista de fechas las enseña todas.
+  const paraContar = vigentes.flatMap((d) => d.pases.map((p) => ({ date: d.date, time: p.time })));
 
   // Agrupa por (día de la semana | hora)
   const combos = new Map<string, string[]>();
@@ -362,19 +419,81 @@ export function summarize(sessions: Session[] = [], lang: Lang = 'es', hoy: stri
     else looseIsos.push(...isos);
   }
 
-  // Construye frases del patrón, agrupando días que comparten hora
-  const byTime = new Map<string, number[]>();
-  for (const r of recurring) (byTime.get(r.time) ?? byTime.set(r.time, []).get(r.time)!).push(r.dow);
+  /* LA FRASE SE AGRUPA POR EL HORARIO DE CADA DÍA, no por hora suelta.
+   *
+   * Antes se agrupaba al revés, juntando los días que comparten una hora, y con dos pases
+   * diarios salía «Sábados a las 18:30, viernes a las 19:00, sábados a las 20:30 y viernes
+   * a las 21:00»: 84 caracteres para decir dos cosas. Agrupando por día sale «Viernes a las
+   * 19:00 y 21:00; sábados a las 18:30 y 20:30». Cuando solo hay un pase al día el
+   * resultado es el de siempre: «Viernes y sábados a las 20:00». */
+  // Y sale del horario del tramo, no de contar repeticiones. Contarlas dejaba sin frase a
+  // los tramos de una sola semana -- ahi nada se repite dos veces -- que son justo los que
+  // mas falta hacia describir. Lo que garantiza que esto es cierto es unicoHorario, que
+  // comprueba el tramo semana a semana y sin huecos.
+  const mapa = horario(vigentes);
 
-  const times = [...byTime.keys()].sort();
-  const phrases = times.map((time) => {
-    const dows = byTime.get(time)!.sort((a, b) => monKey(a) - monKey(b));
-    const names = joinY(dows.map((d) => plural(L.dow[d])));
-    return time ? `${names} ${L.aLas} ${time}` : names;
-  });
+  const grupos = new Map<string, number[]>();
+  for (const [dow, horas] of mapa ?? []) (grupos.get(horas) ?? grupos.set(horas, []).get(horas)!).push(dow);
+
+  const phrases = [...grupos.entries()]
+    .map(([clave, dows]) => ({
+      horas: clave ? clave.split(String.fromCharCode(124)) : [],
+      dows: dows.sort((a, b) => monKey(a) - monKey(b)),
+    }))
+    .sort((a, b) => monKey(a.dows[0]) - monKey(b.dows[0]))
+    .map(({ horas, dows }) => {
+      const names = joinY(dows.map((d) => plural(L.dow[d])));
+      return horas.length ? `${names} ${L.aLas} ${joinY(horas)}` : names;
+    });
+
+  // Las horas de todo el tramo, para decidir si la tarjeta puede llevar una.
+  const horasTodas = [...new Set(recurring.map((r) => r.time))];
   // La frase solo sale si todos los días por venir comparten un mismo horario, y eso se
   // comprueba también semana a semana (ver unicoHorario).
-  const full = unicoHorario(paraElPatron) ? cap(joinY(phrases)) : '';
+  // Los grupos van con punto y coma: con «y» entre ellos y «y» dentro se lee fatal.
+  // Con un solo dia por delante no hay horario que resumir: la fecha lo dice mejor, y una
+  // frase en plural a partir de un unico dia promete una semana que no existe.
+  const conHoras = mapa && vigentes.length >= 2 && unicoHorario(vigentes, hastaDonde) ? cap(phrases.join('; ')) : '';
+
+  /* Y SI SE PASA DE 60 CARACTERES, SOLO LOS DÍAS: «De miércoles a domingo».
+   *
+   * Un espectáculo de cinco días con tres franjas necesita 83 caracteres para contarse
+   * entero, y eso vuelve a ser el ladrillo del que venimos, aunque ahora sea cierto.
+   *
+   * LAS HORAS NO SE PIERDEN: están una por una en la lista de fechas, justo debajo, que es
+   * donde se miran de verdad. Lo que hace falta saber aquí arriba es si el espectáculo cae
+   * en el día que a uno le viene bien. (Decidido por Carlos el 28/08/2026.)
+   *
+   * El límite es de presentación, no de verdad: las dos frases dicen lo mismo, una con más
+   * detalle que la otra. Por eso se puede tocar sin miedo; lo que no se puede tocar es la
+   * condición de arriba, que es la que decide si hay algo cierto que decir. */
+  /* Y SI HAY CAMBIO PERO NO SE PUEDE ANUNCIAR, NO HAY FRASE.
+   *
+   * Con «sábados 5 y 12 a las 17:00, sábado 19 a las 19:00» el corte existe pero no se
+   * anuncia: una función suelta distinta es una excepción, no un cambio de temporada. La
+   * frase se calculaba entonces sobre lo de antes del corte y decía «Sábados a las 17:00»,
+   * sin que nada le pusiera fecha de caducidad al lector. El sábado 19 la desmiente.
+   *
+   * Así que cuando el corte no se puede contar, la frase se calla y mandan las fechas.
+   * (Codex, 28/08/2026.) */
+  const corteMudo = corte >= 0 && !anunciable;
+  const conFecha = corteMudo ? '' : conHoras.length > 60 ? soloLosDias(mapa!, L) : conHoras;
+
+  /* CUANDO NO SE PUEDEN PROMETER LAS HORAS, LOS DÍAS A VECES SÍ.
+   *
+   * «En ocasiones veo a Umberto» hace de miércoles a domingo todas las semanas hasta enero.
+   * Lo único que se le mueve es un sábado, el 31 de octubre, que va a las 19:00 en vez de a
+   * las 17:00: una excepción, que no se anuncia y que por eso deja la frase con horas sin
+   * fecha de caducidad. Pero esa excepción no toca los DÍAS, y los días es justo lo que
+   * hace falta saber aquí arriba: si cae el día que a uno le viene bien.
+   *
+   * Así que se vuelve a comprobar lo mismo, con la misma exigencia de semana a semana y sin
+   * huecos, pero mirando solo los días. Si el reparto de días aguanta el periodo entero, la
+   * frase los dice. Y si tampoco aguanta -- «Clap» pierde un jueves, «Corta el cable rojo»
+   * un miércoles --, no se dice nada: no hay semana que resumir. */
+  const sinHoras = paraElPatron.map((d) => ({ ...d, pases: [{ time: '' }] }));
+  const diasEstables = paraElPatron.length >= 2 && unicoHorario(sinHoras);
+  const full = conFecha || (diasEstables ? soloLosDias(horario(sinHoras)!, L) : '');
 
   const looseSorted = [...new Set(looseIsos)].sort();
   const loose = looseSorted.map(looseLabel);
@@ -388,7 +507,7 @@ export function summarize(sessions: Session[] = [], lang: Lang = 'es', hoy: stri
     // 22 y 29» a las 20:00, la tarjeta decía «Viernes y sábados · 20:00» y volvía a prometer
     // lo que se le acababa de quitar a la frase. Los nombres de los días sí se quedan: son
     // ciertos del periodo entero, y las fechas exactas están a un clic. (Codex, 28/08/2026.)
-    card = byTime.size === 1 && times[0] && unicoHorario(paraElPatron) ? `${names} · ${times[0]}` : names;
+    card = horasTodas.length === 1 && horasTodas[0] && !corteMudo && unicoHorario(vigentes, hastaDonde) ? `${names} · ${horasTodas[0]}` : names;
   } else if (dias.reduce((n, d) => n + d.pases.length, 0) <= 3) {
     // Aquí sí se enseñan los días de verdad, con el de hoy incluido.
     card = cap(joinY(dias.map((d) => dayMonthFull(d.date))));
