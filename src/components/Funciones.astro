@@ -1,0 +1,143 @@
+---
+// LAS PRÓXIMAS FUNCIONES de un espectáculo.
+//
+// Cada línea es un día que se puede elegir, y cada hora va pegada a su fecha. Esa es toda la
+// idea: así ninguna hora puede leerse suelta y parecer de otro día, que es lo que pasaba con
+// la frase resumen cuando el espectáculo tenía dos horarios.
+//
+// Se ven `visibles` días y el resto se despliega. Sin JavaScript: <details> ya es accesible
+// con teclado y respeta que alguien haya pedido menos animación.
+//
+// LAS HORAS ENLAZAN HOY AL CALENDARIO DE VENTA DEL ESPECTÁCULO, no a la sesión concreta, y
+// conviene ser exactos sobre lo que falta para lo segundo. `pase.sessionId` llega hasta aquí
+// pero siempre vacío, porque no lo traen ni el esquema (`src/content.config.ts`, que solo
+// admite `date` y `time`) ni el sincronizador (`scripts/sync_qwantic.py`, que escribe esos
+// dos campos). El día que se quiera, hay que tocar esos dos sitios y pasar aquí `urlDelPase`;
+// esta plantilla ya no habrá que rehacerla. Se deja `urlDelPase` como prop en vez de armar la
+// dirección aquí dentro porque el formato de compra directa es cosa de la taquilla, no de la
+// web, y no está confirmado en las dos casas.
+import type { DiaConFuncion, Pase } from '../lib/schedule';
+
+interface Props {
+  dias: DiaConFuncion[];
+  aviso?: string;
+  ticketUrl?: string;
+  visibles?: number;
+  rotulo?: string;
+  verTodas?: (n: number) => string;
+  etiquetaCompra?: (dia: string, fecha: string, hora: string) => string;
+  /** Dirección de compra de UN pase concreto. Si no se pasa, todas las horas llevan al
+   *  calendario de venta del espectáculo. */
+  urlDelPase?: (pase: Pase) => string | undefined;
+}
+
+const {
+  dias,
+  aviso = '',
+  ticketUrl,
+  visibles = 6,
+  rotulo = 'Próximas funciones',
+  verTodas = (n: number) => `Ver las ${n} fechas`,
+  etiquetaCompra = (dia: string, fecha: string, hora: string) =>
+    `Comprar entradas para el ${dia} ${fecha} a las ${hora}`,
+  urlDelPase,
+} = Astro.props;
+
+const primeros = dias.slice(0, visibles);
+const resto = dias.slice(visibles);
+// La hora es opcional en el esquema. Un pase sin hora no pinta pastilla: un enlace vacío no
+// se puede pulsar y su etiqueta acabaría en «a las» y nada más.
+const conHora = (dia: DiaConFuncion) => dia.pases.filter((p) => p.time);
+const enlace = (pase: Pase) => urlDelPase?.(pase) ?? ticketUrl;
+---
+
+{dias.length > 0 && (
+  <div class="funciones">
+    <p class="funciones__rotulo">{rotulo}</p>
+    <ul class="funciones__lista">
+      {primeros.map((dia) => (
+        <li class="funcion">
+          <time class="funcion__dia" datetime={dia.date}>
+            <span class="funcion__dow">{dia.dow}</span> {dia.dayMonth}
+          </time>
+          <span class="funcion__horas">
+            {conHora(dia).map((pase) => (
+              enlace(pase)
+                ? <a class="hora" href={enlace(pase)} target="_blank" rel="noopener"
+                     aria-label={etiquetaCompra(dia.dow, dia.dayMonth, pase.time)}>{pase.time}</a>
+                : <span class="hora hora--sin-venta">{pase.time}</span>
+            ))}
+          </span>
+        </li>
+      ))}
+    </ul>
+
+    {aviso && <p class="funciones__aviso">{aviso}</p>}
+
+    {resto.length > 0 && (
+      <details class="funciones__mas">
+        <summary>{verTodas(dias.length)}</summary>
+        <ul class="funciones__lista">
+          {resto.map((dia) => (
+            <li class="funcion">
+              <time class="funcion__dia" datetime={dia.date}>
+                <span class="funcion__dow">{dia.dow}</span> {dia.dayMonth}
+              </time>
+              <span class="funcion__horas">
+                {conHora(dia).map((pase) => (
+                  enlace(pase)
+                    ? <a class="hora" href={enlace(pase)} target="_blank" rel="noopener"
+                         aria-label={etiquetaCompra(dia.dow, dia.dayMonth, pase.time)}>{pase.time}</a>
+                    : <span class="hora hora--sin-venta">{pase.time}</span>
+                ))}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </details>
+    )}
+  </div>
+)}
+
+<style>
+  .funciones { margin-top: 22px; max-width: 420px; }
+  .funciones__rotulo {
+    font-family: var(--f-display); font-size: 12px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--paper-faint); margin: 0 0 10px;
+  }
+  .funciones__lista { list-style: none; padding: 0; margin: 0; }
+  .funcion {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 14px;
+    padding: 8px 0; border-bottom: 1px solid var(--line);
+  }
+  .funcion:last-child { border-bottom: 0; }
+  .funcion__dia { font-family: var(--f-body); font-size: 15px; color: var(--paper); }
+  .funcion__dow { color: var(--paper-dim); }
+  .funcion__horas { display: flex; gap: 6px; flex-shrink: 0; }
+  .hora {
+    font-family: var(--f-body); font-variant-numeric: tabular-nums;
+    font-size: 13px; font-weight: 600; text-decoration: none; color: var(--paper);
+    border: 1px solid var(--line); border-radius: 4px; padding: 5px 9px;
+    transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+  }
+  a.hora:hover, a.hora:focus-visible { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .hora--sin-venta { color: var(--paper-dim); }
+  .funciones__aviso {
+    font-family: var(--f-body); font-size: 14px; margin: 12px 0 0;
+    color: var(--accent); border-left: 2px solid var(--accent); padding-left: 10px;
+  }
+  .funciones__mas { margin-top: 12px; }
+  .funciones__mas summary {
+    font-family: var(--f-body); font-size: 14px; color: var(--paper-dim);
+    cursor: pointer; padding: 4px 0; list-style: none;
+  }
+  .funciones__mas summary::-webkit-details-marker { display: none; }
+  .funciones__mas summary::before { content: '+ '; color: var(--accent); }
+  .funciones__mas[open] summary::before { content: '– '; }
+  .funciones__mas summary:hover, .funciones__mas summary:focus-visible { color: var(--paper); }
+  .funciones__mas .funciones__lista { margin-top: 4px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hora { transition: none; }
+  }
+</style>

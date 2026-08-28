@@ -8,12 +8,12 @@
 // (nextLabel / scheduleFull) listo para mostrar.
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
-import { summarize } from '../lib/schedule';
+import { summarize, hoyEnMadrid } from '../lib/schedule';
 import { GENRE_ORDER } from '../lib/generos';
 
 export const GET: APIRoute = async ({ site }) => {
   const base = site ?? new URL('https://teatremuntaner.com');
-  const today = new Date().toISOString().slice(0, 10);
+  const today = hoyEnMadrid();
 
   // Solo borradores fuera; los "unlisted" se incluyen con su flag por si el
   // escaparate los quiere (siguen teniendo funciones reales).

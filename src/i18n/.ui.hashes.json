@@ -296,6 +296,7 @@
   "show.avisoLead": "8fac125d685a4c6e",
   "show.cartelDe": "6616bfa7080a82dc",
   "show.comprarEntradas": "6f38fefa6e11bbdc",
+  "show.comprarPara": "0b153296f57328ee",
   "show.descFallback": "7eb0bdfcaa15ca77",
   "show.duracion": "d5a804455b3392ca",
   "show.enRedes": "1fa7d2aaab6bb61a",
@@ -310,8 +311,10 @@
   "show.noRellenar": "41520d21b70963a7",
   "show.precio": "2e4385b6057f6d7f",
   "show.proximamente": "70b619ff53602051",
+  "show.proximasFunciones": "bfb90893d43a80a9",
   "show.tuEmail": "30f2b96f0da26216",
   "show.verEn": "a356b77a5c0b432c",
+  "show.verFechas": "322c002c6dbb788a",
   "show.videoDe": "d1328d4040b07e21",
   "show.volverCartelera": "b72adfce1b7e4fa1"
 }

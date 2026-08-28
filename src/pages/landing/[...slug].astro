@@ -6,7 +6,7 @@
 import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { summarize } from '../../lib/schedule';
+import { summarize, hoyEnMadrid } from '../../lib/schedule';
 import { limpiaEspacios } from '../../lib/espacios.mjs';
 
 export async function getStaticPaths() {
@@ -25,7 +25,7 @@ const { Content } = await render(show);
 const d = show.data;
 
 const sch = d.dates.length ? summarize(d.dates) : null;
-const today = new Date().toISOString().slice(0, 10);
+const today = hoyEnMadrid();
 const archived = d.dates.length > 0 && !d.dates.some((x) => x.date >= today);
 const genre = d.genres.length ? d.genres.join(' · ') : d.category;
 const ytId = d.youtube
@@ -68,7 +68,10 @@ const desc =
             <p class="lp__schedule lp__schedule--ended">Funciones finalizadas</p>
           ) : (
             <>
-              {sch?.full && <p class="lp__schedule">{sch.full}</p>}
+              {/* Si hay mas de un horario, `full` viene vacio a proposito (ver src/lib/schedule.ts).
+                  Aqui, que es una pagina de comprar y nada mas, se cae a la version compacta en vez de
+                  dejar el hueco sin decir cuando hay funcion. */}
+              {(sch?.full || sch?.card) && <p class="lp__schedule">{sch.full || sch.card}</p>}
               {sch && sch.loose.length > 0 && (
                 <p class="lp__loose">{sch.full ? 'Funciones especiales: ' : ''}{sch.loose.join(' · ')}</p>
               )}
@@ -135,7 +138,7 @@ const desc =
 
     {!archived && (
       <section class="wrap lp__final">
-        <p class="lp__final-lead">{sch?.full ?? d.dateText ?? ''}</p>
+        <p class="lp__final-lead">{sch?.full || sch?.card || d.dateText || ''}</p>
         <a class="btn btn--accent lp__buy lp__buy--big" data-buy href={d.ticketUrl} target="_blank" rel="noopener">
           Comprar entradas{d.price ? ` · ${d.price.toLowerCase()}` : ''}
         </a>

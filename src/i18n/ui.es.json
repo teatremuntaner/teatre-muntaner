@@ -296,6 +296,7 @@
   "show.avisoLead": "Déjanos tu email y te avisamos en cuanto salgan las entradas.",
   "show.cartelDe": "Cartel de {titulo}",
   "show.comprarEntradas": "Comprar entradas",
+  "show.comprarPara": "Comprar entradas para el {dia} {fecha} a las {hora}",
   "show.descFallback": "{titulo} en el Teatre Muntaner",
   "show.duracion": "Duración",
   "show.enRedes": "En redes",
@@ -310,8 +311,10 @@
   "show.noRellenar": "No rellenar",
   "show.precio": "Precio",
   "show.proximamente": "Próximamente · entradas aún no a la venta",
+  "show.proximasFunciones": "Próximas funciones",
   "show.tuEmail": "Tu email",
   "show.verEn": "Ver en",
+  "show.verFechas": "Ver las {n} fechas",
   "show.videoDe": "Vídeo de {titulo}",
   "show.volverCartelera": "Volver a cartelera"
 }

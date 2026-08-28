@@ -3,7 +3,8 @@ import { getCollection, getEntry, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Reels from '../../components/Reels.astro';
-import { summarize } from '../../lib/schedule';
+import Funciones from '../../components/Funciones.astro';
+import { summarize, hoyEnMadrid } from '../../lib/schedule';
 import { limpiaEspacios } from '../../lib/espacios.mjs';
 import { useT, langFromPath } from '../../i18n';
 
@@ -43,8 +44,10 @@ const d = {
     : {}),
 };
 
-const sch = d.dates.length ? summarize(d.dates, lang) : null;
-const today = new Date().toISOString().slice(0, 10);
+const today = hoyEnMadrid();
+const sch = d.dates.length ? summarize(d.dates, lang, today) : null;
+// Cuantos dias se ven sin desplegar. Quien entra viene a decidir uno, no a leerlos todos.
+const VISIBLES = 6;
 const archived = d.dates.length > 0 && !d.dates.some((x) => x.date >= today);
 const genre = d.genres.length ? d.genres.join(' · ') : d.category;
 // Acepta ID o cualquier URL de YouTube (watch, youtu.be, embed, shorts)
@@ -111,7 +114,10 @@ const mkEvent = (dt: { date: string; time?: string }) => ({
 });
 // Limitamos los TheaterEvent del JSON-LD a las próximas ~50 funciones: shows con
 // muchísimas fechas (Corta el cable rojo) inflarían el HTML sin aportar a SEO.
-const eventsLd = d.dates.slice(0, 50).map(mkEvent);
+// Solo funciones POR VENIR, y el corte se aplica DESPUES de filtrar: si no, en un
+// espectaculo largo las funciones ya dadas se comian el cupo y las de verdad se quedaban
+// fuera de Google. Lo vio Codex el 28/08/2026.
+const eventsLd = d.dates.filter((x) => x.date >= today).slice(0, 50).map(mkEvent);
 
 // VideoObject del tráiler. Google EXIGE uploadDate (y thumbnailUrl): sin
 // uploadDate el dato estructurado es inválido y Search Console lo marca como
@@ -166,10 +172,18 @@ const videoLd = (ytId || d.video) && videoUploadDate
           ) : (
             <>
               {sch?.full && <p class="show__schedule">{sch.full}</p>}
-              {sch && sch.loose.length > 0 && (
-                <p class="show__loose">{sch.full ? t('show.funcionesEspeciales') : ''}{sch.loose.join(' · ')}</p>
-              )}
               {!sch && d.dateText && <p class="show__schedule">{d.dateText}</p>}
+              {sch && (
+                <Funciones
+                  dias={sch.dias}
+                  aviso={sch.aviso}
+                  ticketUrl={d.ticketUrl}
+                  visibles={VISIBLES}
+                  rotulo={t('show.proximasFunciones')}
+                  verTodas={(n) => t('show.verFechas', { n })}
+                  etiquetaCompra={(dia, fecha, hora) => t('show.comprarPara', { dia, fecha, hora })}
+                />
+              )}
             </>
           )}
 
@@ -327,6 +341,7 @@ const videoLd = (ytId || d.video) && videoUploadDate
   .show__schedule { font-family: var(--f-display); font-size: 19px; margin: 24px 0 0; color: var(--accent); letter-spacing: 0.02em; }
   .show__schedule--ended { color: var(--paper-faint); }
   .show__loose { font-family: var(--f-body); font-size: 15px; margin: 8px 0 0; color: var(--paper-dim); }
+
   .show__cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 32px; }
   .show__promo { display: inline-block; background: var(--c-gold, #d5a846); color: #14100e; font-weight: 800; font-family: var(--f-display); letter-spacing: 0.02em; padding: 9px 16px; border-radius: 999px; margin: 22px 0 0; font-size: 16px; }
   .ticketalarm { margin-top: 30px; max-width: 460px; }

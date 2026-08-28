@@ -10,6 +10,7 @@
     "build": "astro build",
     "check:generos": "python scripts/check_generos.py",
     "test:espacios": "node plugins/prueba-espacios.mjs && python scripts/prueba_limpiar_espacios.py",
+    "test:horarios": "node scripts/prueba_horarios.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },

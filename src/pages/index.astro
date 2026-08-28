@@ -4,7 +4,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Flag from '../components/Flag.astro';
 import Calendario from '../components/Calendario.astro';
-import { summarize } from '../lib/schedule';
+import { summarize, hoyEnMadrid, sumaDias } from '../lib/schedule';
 import { GENRE_ORDER } from '../lib/generos';
 import { useT, langFromPath } from '../i18n';
 
@@ -22,7 +22,8 @@ const t = useT(lang);
 const base = import.meta.env.BASE_URL;
 // Los enlaces internos deben quedarse dentro del idioma: en catalán, /ca/...
 const rutaBase = lang === 'ca' ? '/ca/' : base;
-const today = new Date().toISOString().slice(0, 10);
+// La fecha, en Madrid: en UTC, entre la medianoche y las dos de aqui todavia era ayer.
+const today = hoyEnMadrid();
 const isArchived = (d: { dates: { date: string }[] }) =>
   d.dates.length > 0 && !d.dates.some((x) => x.date >= today);
 const nextDate = (d: { dates: { date: string }[] }) => {
@@ -84,7 +85,9 @@ const LANG_ORDER = ['Castellano', 'Catalán', 'Bilingüe'];
 const langFilters = LANG_ORDER.filter((l) => shows.some((s) => s.data.lang === l));
 
 // Filtro "Esta semana": shows con función en los próximos 7 días.
-const weekEnd = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
+// Siete DIAS de calendario, no 168 horas ni un setDate(): la semana del cambio de hora no
+// dura 168 horas, y setDate() sumaria en el huso del servidor, que en Netlify es UTC.
+const weekEnd = sumaDias(today, 7);
 const isThisWeek = (data: { dates: { date: string }[] }) =>
   data.dates?.some((x) => x.date >= today && x.date <= weekEnd);
 const hasThisWeek = shows.some((s) => isThisWeek(s.data));
