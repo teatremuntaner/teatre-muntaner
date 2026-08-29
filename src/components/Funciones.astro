@@ -58,7 +58,7 @@ const enlace = (pase: Pase) => urlDelPase?.(pase) ?? ticketUrl;
       {primeros.map((dia) => (
         <li class="funcion">
           <time class="funcion__dia" datetime={dia.date}>
-            <span class="funcion__dow">{dia.dow}</span> {dia.dayMonth}
+            <span class="funcion__dow">{dia.dow}</span>{` ${dia.dayMonth}`}
           </time>
           <span class="funcion__horas">
             {conHora(dia).map((pase) => (
@@ -81,7 +81,7 @@ const enlace = (pase: Pase) => urlDelPase?.(pase) ?? ticketUrl;
           {resto.map((dia) => (
             <li class="funcion">
               <time class="funcion__dia" datetime={dia.date}>
-                <span class="funcion__dow">{dia.dow}</span> {dia.dayMonth}
+                <span class="funcion__dow">{dia.dow}</span>{` ${dia.dayMonth}`}
               </time>
               <span class="funcion__horas">
                 {conHora(dia).map((pase) => (
