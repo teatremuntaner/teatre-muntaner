@@ -226,33 +226,11 @@ const videoLd = (ytId || d.video) && videoUploadDate
     </section>
 
     <!-- CUERPO -->
-    <section class="wrap show__body">
-      <div class="show__prose">
-        {d.photo && (
-          <Image class="show__photo" src={d.photo} alt={t('show.fotoDe', { titulo: d.title })} widths={[400, 800]} sizes="(max-width: 760px) 100vw, 480px" />
-        )}
-        <Content />
-      </div>
-      <aside class="show__meta">
-        <dl>
-          {d.duration && (<><dt>{t('show.duracion')}</dt><dd>{d.duration}</dd></>)}
-          {d.lang && (<><dt>{t('show.idioma')}</dt><dd>{d.lang}</dd></>)}
-          {d.price && (<><dt>{t('show.precio')}</dt><dd>{d.price}</dd></>)}
-          <dt>{t('show.lugar')}</dt><dd>{d.venue}</dd>
-        </dl>
-        {d.links.length > 0 && (
-          <div class="show__links">
-            <span class="show__links-title">{t('show.enlacesRedes')}</span>
-            <div class="show__links-row">
-              {d.links.map((l) => (
-                <a href={l.url} target="_blank" rel="noopener">{l.label} ↗</a>
-              ))}
-            </div>
-          </div>
-        )}
-      </aside>
-    </section>
-
+    {/* LAS VALORACIONES VAN ANTES DE LA SINOPSIS, no al final. Son la prueba social:
+        quien está decidiendo si compra las mira antes de leerse el texto, y abajo del
+        todo no las veía nadie. Van sueltas, sin título de sección y en pastillas
+        pequeñas, para no competir con el cartel ni con el botón de comprar, que están
+        justo encima. (Carlos, 29/08/2026.) */}
     {ratings.length > 0 && (
       <section class="wrap ratings">
         <ul class="ratings__row">
@@ -308,6 +286,33 @@ const videoLd = (ytId || d.video) && videoUploadDate
         </ul>
       </section>
     )}
+
+    <section class="wrap show__body">
+      <div class="show__prose">
+        {d.photo && (
+          <Image class="show__photo" src={d.photo} alt={t('show.fotoDe', { titulo: d.title })} widths={[400, 800]} sizes="(max-width: 760px) 100vw, 480px" />
+        )}
+        <Content />
+      </div>
+      <aside class="show__meta">
+        <dl>
+          {d.duration && (<><dt>{t('show.duracion')}</dt><dd>{d.duration}</dd></>)}
+          {d.lang && (<><dt>{t('show.idioma')}</dt><dd>{d.lang}</dd></>)}
+          {d.price && (<><dt>{t('show.precio')}</dt><dd>{d.price}</dd></>)}
+          <dt>{t('show.lugar')}</dt><dd>{d.venue}</dd>
+        </dl>
+        {d.links.length > 0 && (
+          <div class="show__links">
+            <span class="show__links-title">{t('show.enlacesRedes')}</span>
+            <div class="show__links-row">
+              {d.links.map((l) => (
+                <a href={l.url} target="_blank" rel="noopener">{l.label} ↗</a>
+              ))}
+            </div>
+          </div>
+        )}
+      </aside>
+    </section>
 
     {(d.video || ytId) && (
       <section class="wrap">
@@ -431,7 +436,9 @@ const videoLd = (ytId || d.video) && videoUploadDate
      El borde y el fondo son de la pastilla entera; el relleno, de cada mitad. Así las dos
      mitades -- la nota y el botón de opinar -- caben dentro del mismo óvalo con una raya
      entre medias, y cada una se ilumina sola al pasar por encima. */
-  .ratings { padding-block: clamp(18px, 3vw, 30px) clamp(4px, 1vw, 10px); }
+  /* Encima está el cartel y debajo la sinopsis, así que el aire va repartido: el de
+     arriba separa de la compra, el de abajo la deja pegada a lo que explica el espectáculo. */
+  .ratings { padding-block: clamp(20px, 3.5vw, 34px) clamp(2px, 0.5vw, 6px); }
   .ratings__row { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 12px; }
   .rating {
     display: flex; align-items: stretch;

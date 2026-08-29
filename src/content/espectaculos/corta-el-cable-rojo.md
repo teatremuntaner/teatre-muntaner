@@ -137,6 +137,12 @@ dates:
     time: "17:00"
   - date: "2026-11-01"
     time: "19:00"
+links:
+  # La web oficial del espectáculo. Su botón de comprar de Barcelona lleva a
+  # lamuntaner.entradas.plus, la taquilla de esta casa, así que no se va la venta a otro
+  # sitio. Mismo trato que le da la web del Sofía a clapshow.es.
+  - label: "Web oficial"
+    url: "https://www.cortaelcablerojo.com/CCRBarna.html"
 ratings:
   - source: "Atrápalo"
     score: 9.6
