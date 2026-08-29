@@ -8,7 +8,7 @@
 // La fecha de hoy se pasa a mano en cada caso: si no, estas pruebas dejarían de valer al día
 // siguiente de escribirlas.
 
-import { summarize, hoyEnMadrid, sumaDias } from '../src/lib/schedule.ts';
+import { summarize, hoyEnMadrid, sumaDias, mesesDe } from '../src/lib/schedule.ts';
 
 // Aqui summarize lleva el idioma en medio; se envuelve para que los casos se lean igual
 // que en el Sofia y la unica diferencia sean los que prueban el catalan.
@@ -323,6 +323,42 @@ const CASOS = [
    () => S([f('2026-09-02', '20:00'), f('2026-09-03', '20:00'), f('2026-09-04', '20:00'),
             f('2026-09-11', '18:00'), f('2026-09-18', '18:00'), f('2026-09-25', '18:00')], HOY),
    (r) => r.full === '' && r.aviso === 'Desde el 11 de septiembre el horario cambia'],
+
+  // --- quien enseña el calendario del mes: se cuentan SEMANAS, no funciones ---
+  ['un sabado de vez en cuando durante meses SI es periodico',
+   // «Perdido en los 80»: tres funciones en 105 dias. Por numero de funciones se quedaria
+   // fuera; por semanas entra, que es lo que Carlos pidio
+   () => S([f('2026-10-03', '20:00'), f('2026-12-20', '20:00'), f('2027-01-16', '20:00')], HOY).periodico,
+   (r) => r === true],
+
+  ['tres funciones seguidas en una semana NO lo son',
+   // el Festival de Teatro de Bolsillo: lunes, martes y miercoles. Las mismas tres funciones
+   // que el caso de arriba, y no es una periodicidad: es un ciclo
+   () => S([f('2026-10-19', '20:00'), f('2026-10-20', '20:00'), f('2026-10-21', '21:00')], HOY).periodico,
+   (r) => r === false],
+
+  ['dos fines de semana sueltos tampoco',
+   // «Conversaciones con mi mente»: dos bloques a seis semanas de distancia. Son dos
+   // semanas distintas, no tres
+   () => S([f('2026-09-12', '20:00'), f('2026-09-13', '19:00'),
+            f('2026-10-24', '20:00'), f('2026-10-25', '19:00')], HOY).periodico,
+   (r) => r === false],
+
+  ['y los meses SIN funcion no salen en el calendario',
+   // de octubre a enero hay cuatro meses, pero noviembre esta vacio: son tres flechas, no
+   // cuatro, y por eso mesesDe solo devuelve los que tienen algo
+   () => mesesDe(S([f('2026-10-03', '20:00'), f('2026-12-20', '20:00'), f('2027-01-16', '20:00')], HOY).dias)
+           .map((m) => m.clave),
+   (r) => r.join(' ') === '2026-10 2026-12 2027-01'],
+
+  ['y cada dia cae en su casilla, con el hueco del principio bien puesto',
+   // el 1 de octubre de 2026 es jueves: tres huecos antes (lunes, martes, miercoles)
+   () => {
+     const m = mesesDe(S([f('2026-10-03', '20:00'), f('2026-10-10', '20:00'),
+                          f('2026-10-17', '20:00')], HOY).dias)[0];
+     return [m.huecoInicial, m.celdas.length, m.celdas.filter((c) => c.dia).map((c) => c.num).join(',')];
+   },
+   (r) => r[0] === 3 && r[1] === 31 && r[2] === '3,10,17'],
 ];
 
 let fallos = 0;

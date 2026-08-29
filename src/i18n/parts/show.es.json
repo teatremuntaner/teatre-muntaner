@@ -6,6 +6,11 @@
   "show.opina": "Opina",
   "show.opinaEn": "Opina en {plataforma}",
   "show.proximasFunciones": "Próximas funciones",
+  "show.verCalendario": "Ver el calendario del mes",
+  "show.mesAnterior": "Mes anterior con funciones",
+  "show.mesSiguiente": "Mes siguiente con funciones",
+  "show.verHorasDelDia": "Ver las horas de este día",
+  "show.tocaUnDia": "Toca un día señalado para ver sus horas.",
   "show.verFechas": "Ver las {n} fechas",
   "show.comprarPara": "Comprar entradas para el {dia} {fecha} a las {hora}",
 

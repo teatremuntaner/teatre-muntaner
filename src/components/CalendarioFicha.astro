@@ -1,0 +1,254 @@
+---
+// EL CALENDARIO DEL MES DE UN ESPECTÁCULO, dentro de su ficha.
+//
+// Bilingüe: TODO el texto llega por props, desde el diccionario de la ficha. Aquí no se
+// escribe ni una palabra en castellano.
+//
+// NO ES EL CALENDARIO DE LA PORTADA. Aquel (`Calendario.astro`) enseña la programación
+// entera del teatro: muchos espectáculos, con su cartel, su título y su botón de comprar
+// dentro de cada día. Este enseña UNO, y lo que necesita dentro del día son las horas, cada
+// una enlazada a su compra. Son dos preguntas distintas —«qué hay en el teatro» y «cuándo es
+// esto»— y por eso son dos componentes; lo que no puede haber es dos sitios que decidan qué
+// funciones existen, y no los hay: los dos días que se pintan aquí son los MISMOS que pinta
+// la lista de fechas, salidos de `summarize()` en src/lib/schedule.ts.
+//
+// LOS MESES VACÍOS NO EXISTEN: `mesesDe()` solo devuelve los que tienen función, así que las
+// flechas saltan de octubre a diciembre sin pasar por noviembre. «Perdido en los 80» tiene
+// tres funciones en tres meses con uno vacío por medio, y verlas es dar dos flechas.
+//
+// EN EL MÓVIL las horas no caben dentro del día: siete columnas en una pantalla de 360
+// píxeles dejan cada día en unos 44. Así que ahí el día con función lleva un punto y las
+// horas salen debajo al tocarlo. Y si el JavaScript no llega a ejecutarse, las horas se
+// quedan dentro de la casilla como en pantalla grande: apretadas, pero se pueden pulsar.
+import type { MesConFunciones, Pase } from '../lib/schedule';
+
+interface Props {
+  meses: MesConFunciones[];
+  /** El día de hoy, para apagar lo que ya ha pasado del mes en curso. */
+  hoy: string;
+  ticketUrl?: string;
+  urlDelPase?: (pase: Pase) => string | undefined;
+  etiquetaCompra: (dia: string, fecha: string, hora: string) => string;
+  /** Las siete columnas, en el idioma de la página. */
+  dows: string[];
+  textos: { anterior: string; siguiente: string; toca: string; vacio: string };
+}
+
+const {
+  meses,
+  hoy,
+  ticketUrl,
+  urlDelPase,
+  etiquetaCompra,
+  dows,
+  textos,
+} = Astro.props;
+
+const enlace = (pase: Pase) => urlDelPase?.(pase) ?? ticketUrl;
+const conHora = (pases: Pase[]) => pases.filter((p) => p.time);
+const semanas = (mes: MesConFunciones) => Math.ceil((mes.huecoInicial + mes.celdas.length) / 7);
+---
+
+{meses.length > 0 && (
+  <div class="calf" data-calendario-ficha>
+    {meses.map((mes, i) => (
+      <section class:list={['calf__mes', { 'calf__mes--otro': i > 0 }]}>
+        <div class="calf__barra">
+          <button class="calf__flecha" type="button" data-ir="-1" aria-label={textos.anterior} disabled={i === 0}>‹</button>
+          <h3 class="calf__titulo" tabindex="-1">{mes.etiqueta}</h3>
+          <button class="calf__flecha" type="button" data-ir="1" aria-label={textos.siguiente} disabled={i === meses.length - 1}>›</button>
+        </div>
+
+        <table class="calf__rejilla">
+          <thead>
+            <tr>{dows.map((d) => <th scope="col">{d}</th>)}</tr>
+          </thead>
+          <tbody>
+            {Array.from({ length: semanas(mes) }, (_, fila) => (
+              <tr>
+                {Array.from({ length: 7 }, (_, col) => {
+                  const idx = fila * 7 + col - mes.huecoInicial;
+                  const celda = idx >= 0 && idx < mes.celdas.length ? mes.celdas[idx] : null;
+                  if (!celda) return <td class="calf__celda calf__celda--fuera"></td>;
+                  const pases = celda.dia ? conHora(celda.dia.pases) : [];
+                  const cuando = celda.dia ? `${celda.dia.dow} ${celda.dia.dayMonth}` : '';
+                  return (
+                    <td
+                      class:list={['calf__celda', {
+                        'calf__celda--hay': pases.length > 0,
+                        'calf__celda--pasado': celda.date < hoy,
+                      }]}
+                      data-cuando={cuando}
+                    >
+                      <span class="calf__num">{celda.num}</span>
+                      {pases.length > 0 && (
+                        <>
+                          <button class="calf__toca" type="button" aria-label={`${textos.toca}: ${cuando}`}>
+                            <span class="calf__punto"></span>
+                          </button>
+                          <span class="calf__horas">
+                            {pases.map((pase) => (
+                              enlace(pase)
+                                ? <a class="calf__hora" href={enlace(pase)} target="_blank" rel="noopener"
+                                     aria-label={etiquetaCompra(celda.dia!.dow, celda.dia!.dayMonth, pase.time)}>{pase.time}</a>
+                                : <span class="calf__hora calf__hora--sin-venta">{pase.time}</span>
+                            ))}
+                          </span>
+                        </>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+    ))}
+
+    <div class="calf__panel" aria-live="polite"><p class="calf__panel-vacio">{textos.vacio}</p></div>
+  </div>
+)}
+
+
+<style>
+  .calf { margin-top: 10px; }
+  .calf__barra { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+  .calf__titulo {
+    font-family: var(--f-display); font-size: 15px; letter-spacing: 0.08em;
+    text-transform: uppercase; margin: 0; text-align: center; flex: 1; color: var(--paper);
+  }
+  .calf__mes--otro { display: block; }
+  .calf[data-js] .calf__mes--otro { display: none; }
+  /* Las flechas solo existen si hay JavaScript: sin él no cambiarían de mes, y un botón
+     que no hace nada es peor que no tener botón. Sin JavaScript los meses salen todos
+     seguidos, cada uno con su título. */
+  .calf__flecha { display: none; }
+  .calf[data-js] .calf__flecha {
+    display: block;
+    width: 44px; height: 44px; flex: none; border-radius: 50%;
+    border: 1px solid var(--line); background: none; color: var(--paper);
+    font-size: 18px; line-height: 1; cursor: pointer;
+  }
+  .calf[data-js] .calf__flecha:hover:not(:disabled), .calf[data-js] .calf__flecha:focus-visible { border-color: var(--accent); color: var(--accent); }
+  .calf__flecha:disabled { opacity: 0.3; cursor: default; }
+
+  .calf__rejilla { width: 100%; border-collapse: separate; border-spacing: 4px; table-layout: fixed; }
+  .calf__rejilla th {
+    font-family: var(--f-display); font-size: 11px; letter-spacing: 0.1em; font-weight: 400;
+    text-transform: uppercase; color: var(--paper-faint); padding: 2px 0 4px;
+  }
+  .calf__celda {
+    position: relative;
+    vertical-align: top; border-radius: 6px; padding: 4px 3px;
+    background: color-mix(in srgb, var(--paper) 4%, transparent);
+  }
+  .calf__celda--fuera { background: none; }
+  .calf__celda--pasado { opacity: 0.32; }
+  .calf__celda--hay { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+  .calf__num {
+    display: block; text-align: right; padding: 0 2px 2px;
+    font-family: var(--f-body); font-variant-numeric: tabular-nums;
+    font-size: 12px; color: var(--paper-dim);
+  }
+  .calf__celda--hay .calf__num { color: var(--paper); }
+  .calf__horas { display: flex; flex-direction: column; gap: 2px; }
+  .calf__hora {
+    font-family: var(--f-body); font-variant-numeric: tabular-nums;
+    font-size: 12px; font-weight: 600; text-align: center; text-decoration: none;
+    color: var(--paper); background: color-mix(in srgb, var(--paper) 8%, transparent);
+    border-radius: 4px; padding: 3px 1px;
+    transition: background-color 140ms ease, color 140ms ease;
+  }
+  a.calf__hora:hover, a.calf__hora:focus-visible { background: var(--accent); color: var(--accent-ink); }
+  .calf__hora--sin-venta { color: var(--paper-dim); }
+
+  /* El punto y el panel son del móvil, y SOLO cuando el JavaScript ha llegado: sin él las
+     horas se quedan dentro de la casilla, apretadas pero pulsables. */
+  .calf__toca { display: none; }
+  .calf__panel { display: none; }
+  .calf[data-js] .calf__panel { display: block; }
+
+  @media (max-width: 560px) {
+    /* Las horas de las CASILLAS se esconden; las del panel no, que son las que se acaban
+       de pedir. Sin el segundo selector, tocar un día enseñaba la fecha y nada más. */
+    .calf[data-js] .calf__celda .calf__horas { display: none; }
+    .calf[data-js] .calf__panel .calf__horas { display: flex; }
+    /* El botón cubre la casilla ENTERA: así lo que se toca son los 44 píxeles de alto del
+       día, no una tira de seis. */
+    .calf[data-js] .calf__toca {
+      display: block; position: absolute; inset: 0; width: 100%; padding: 0;
+      background: none; border: 0; cursor: pointer;
+    }
+    .calf__punto { position: absolute; left: 50%; bottom: 6px; transform: translateX(-50%); width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+    .calf__celda { padding: 3px 1px; height: 44px; }
+    .calf__num { text-align: center; padding: 0; }
+    .calf[data-js] .calf__celda--elegido { outline: 2px solid var(--accent); outline-offset: -2px; }
+  }
+
+  .calf__panel { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); min-height: 60px; }
+  .calf__panel-fecha { font-family: var(--f-body); font-size: 14px; color: var(--paper); margin: 0 0 8px; }
+  .calf__panel-vacio { font-family: var(--f-body); font-size: 13px; color: var(--paper-faint); margin: 0; }
+  .calf__panel .calf__horas { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+  .calf__panel .calf__hora { padding: 6px 10px; font-size: 13px; border: 1px solid var(--line); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .calf__hora { transition: none; }
+  }
+</style>
+
+<script>
+  // Lo único que hace esto es ENSEÑAR Y ESCONDER lo que ya está escrito en la página: cambiar
+  // de mes y, en el móvil, llevar las horas de un día al panel de abajo. No calcula ninguna
+  // fecha ni arma ningún enlace: todo eso viene hecho del servidor.
+  document.querySelectorAll('[data-calendario-ficha]').forEach((cal) => {
+    const meses = Array.from(cal.querySelectorAll('.calf__mes'));
+    const panel = cal.querySelector('.calf__panel');
+    const vacio = panel ? panel.innerHTML : '';
+
+    const limpiar = () => {
+      cal.querySelectorAll('.calf__celda--elegido').forEach((c) => c.classList.remove('calf__celda--elegido'));
+      if (panel) panel.innerHTML = vacio;
+    };
+
+    meses.forEach((mes, i) => {
+      mes.querySelectorAll('[data-ir]').forEach((boton) => {
+        boton.addEventListener('click', () => {
+          const destino = meses[i + Number(boton.getAttribute('data-ir'))];
+          if (!destino) return;
+          mes.classList.add('calf__mes--otro');
+          destino.classList.remove('calf__mes--otro');
+          limpiar();
+          // Al título, que lleva tabindex="-1": la flecha equivalente puede estar apagada en
+          // el mes al que se llega, y entonces el foco se quedaba en el botón recién tapado.
+          destino.querySelector('.calf__titulo')?.focus();
+        });
+      });
+
+      mes.querySelectorAll('.calf__toca').forEach((boton) => {
+        boton.addEventListener('click', () => {
+          const celda = boton.closest('.calf__celda');
+          if (!celda || !panel) return;
+          const yaEstaba = celda.classList.contains('calf__celda--elegido');
+          limpiar();
+          if (yaEstaba) return;   // volver a tocarlo lo cierra
+          celda.classList.add('calf__celda--elegido');
+          panel.innerHTML = '';
+          const titulo = document.createElement('p');
+          titulo.className = 'calf__panel-fecha';
+          titulo.textContent = celda.getAttribute('data-cuando') || '';
+          panel.append(titulo);
+          const horas = celda.querySelector('.calf__horas');
+          if (horas) panel.append(horas.cloneNode(true));
+        });
+      });
+    });
+
+    /* Y AHORA SÍ: el modo JavaScript se enciende cuando ya está todo conectado, nunca antes.
+       Es lo que hace que un fallo del guion no deje la página peor de lo que estaba: si esto
+       no llega a ejecutarse, se ven todos los meses seguidos con sus horas dentro, que es la
+       versión sin JavaScript y funciona. No hay parpadeo porque el calendario vive dentro de
+       un desplegable que empieza cerrado. (Codex, ronda 18.) */
+    cal.setAttribute('data-js', '');
+  });
+</script>

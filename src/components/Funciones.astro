@@ -25,6 +25,12 @@ interface Props {
   visibles?: number;
   rotulo?: string;
   verTodas?: (n: number) => string;
+  /** Lo que dice el desplegable cuando lo que se abre es el calendario. */
+  verCalendario?: string;
+  /** ¿La ficha trae calendario por la ranura? Tiene que decirlo ella: preguntárselo a
+   *  Astro.slots.has() da que sí aunque el hijo condicional no haya pintado nada, y
+   *  entonces se abría un desplegable vacío. Lo cazó Codex el 29/08/2026. */
+  conCalendario?: boolean;
   etiquetaCompra?: (dia: string, fecha: string, hora: string) => string;
   /** Dirección de compra de UN pase concreto. Si no se pasa, todas las horas llevan al
    *  calendario de venta del espectáculo. */
@@ -38,6 +44,8 @@ const {
   visibles = 6,
   rotulo = 'Próximas funciones',
   verTodas = (n: number) => `Ver las ${n} fechas`,
+  verCalendario = 'Ver el calendario del mes',
+  conCalendario = false,
   etiquetaCompra = (dia: string, fecha: string, hora: string) =>
     `Comprar entradas para el ${dia} ${fecha} a las ${hora}`,
   urlDelPase,
@@ -49,6 +57,14 @@ const resto = dias.slice(visibles);
 // se puede pulsar y su etiqueta acabaría en «a las» y nada más.
 const conHora = (dia: DiaConFuncion) => dia.pases.filter((p) => p.time);
 const enlace = (pase: Pase) => urlDelPase?.(pase) ?? ticketUrl;
+
+/* EL DESPLEGABLE ES UNA COSA O LA OTRA, NUNCA LAS DOS.
+ *
+ * Si el espectáculo es periódico, la ficha le pasa el calendario por la ranura y ahí abajo
+ * se abre el mes. Si no, se abre la lista con el resto de fechas, como hasta ahora. Carlos,
+ * 29/08/2026: el calendario SUSTITUYE a la lista, no convive con ella. Con las dos cosas, la
+ * misma función aparecería dos veces en la misma página. */
+const hayCalendario = conCalendario;
 ---
 
 {dias.length > 0 && (
@@ -74,7 +90,12 @@ const enlace = (pase: Pase) => urlDelPase?.(pase) ?? ticketUrl;
 
     {aviso && <p class="funciones__aviso">{aviso}</p>}
 
-    {resto.length > 0 && (
+    {hayCalendario ? (
+      <details class="funciones__mas">
+        <summary>{verCalendario}</summary>
+        <slot name="calendario" />
+      </details>
+    ) : resto.length > 0 && (
       <details class="funciones__mas">
         <summary>{verTodas(dias.length)}</summary>
         <ul class="funciones__lista">

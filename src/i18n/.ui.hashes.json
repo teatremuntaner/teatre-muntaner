@@ -308,6 +308,8 @@
   "show.galeria": "817e9b1367d667ba",
   "show.idioma": "7ae9d418353b399f",
   "show.lugar": "750d2f83769a4050",
+  "show.mesAnterior": "0dab8963db2eaa77",
+  "show.mesSiguiente": "3d68bdd40ac2cf7b",
   "show.noRellenar": "41520d21b70963a7",
   "show.opina": "f226f5e025d73cb9",
   "show.opinaEn": "4fe097029c513ce9",
@@ -315,9 +317,12 @@
   "show.precio": "2e4385b6057f6d7f",
   "show.proximamente": "70b619ff53602051",
   "show.proximasFunciones": "bfb90893d43a80a9",
+  "show.tocaUnDia": "f4017bf81ee16566",
   "show.tuEmail": "30f2b96f0da26216",
+  "show.verCalendario": "b18d511a81567e5f",
   "show.verEn": "a356b77a5c0b432c",
   "show.verFechas": "322c002c6dbb788a",
+  "show.verHorasDelDia": "ce3678206955af38",
   "show.videoDe": "d1328d4040b07e21",
   "show.volverCartelera": "b72adfce1b7e4fa1"
 }

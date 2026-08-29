@@ -4,7 +4,8 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Reels from '../../components/Reels.astro';
 import Funciones from '../../components/Funciones.astro';
-import { summarize, hoyEnMadrid } from '../../lib/schedule';
+import CalendarioFicha from '../../components/CalendarioFicha.astro';
+import { summarize, hoyEnMadrid, mesesDe } from '../../lib/schedule';
 import { limpiaEspacios } from '../../lib/espacios.mjs';
 import { useT, langFromPath } from '../../i18n';
 
@@ -61,6 +62,10 @@ const today = hoyEnMadrid();
 const sch = d.dates.length ? summarize(d.dates, lang, today) : null;
 // Cuantos dias se ven sin desplegar. Quien entra viene a decidir uno, no a leerlos todos.
 const VISIBLES = 6;
+/* El calendario del mes solo en los espectáculos PERIÓDICOS: tres semanas distintas o más
+   (ver esPeriodico en src/lib/schedule.ts, que explica por qué son semanas y no funciones).
+   Los meses salen de los mismos días que la lista, así que no hay dos sitios contando. */
+const meses = sch?.periodico ? mesesDe(sch.dias, lang) : [];
 const archived = d.dates.length > 0 && !d.dates.some((x) => x.date >= today);
 const genre = d.genres.length ? d.genres.join(' · ') : d.category;
 // Acepta ID o cualquier URL de YouTube (watch, youtu.be, embed, shorts)
@@ -195,7 +200,26 @@ const videoLd = (ytId || d.video) && videoUploadDate
                   rotulo={t('show.proximasFunciones')}
                   verTodas={(n) => t('show.verFechas', { n })}
                   etiquetaCompra={(dia, fecha, hora) => t('show.comprarPara', { dia, fecha, hora })}
-                />
+                  verCalendario={t('show.verCalendario')}
+                  conCalendario={meses.length > 0}
+                >
+                  {meses.length > 0 && (
+                    <CalendarioFicha
+                      slot="calendario"
+                      meses={meses}
+                      hoy={today}
+                      ticketUrl={d.ticketUrl}
+                      etiquetaCompra={(dia, fecha, hora) => t('show.comprarPara', { dia, fecha, hora })}
+                      dows={['cal.diaCorto.lunes', 'cal.diaCorto.martes', 'cal.diaCorto.miercoles', 'cal.diaCorto.jueves', 'cal.diaCorto.viernes', 'cal.diaCorto.sabado', 'cal.diaCorto.domingo'].map((k) => t(k))}
+                      textos={{
+                        anterior: t('show.mesAnterior'),
+                        siguiente: t('show.mesSiguiente'),
+                        toca: t('show.verHorasDelDia'),
+                        vacio: t('show.tocaUnDia'),
+                      }}
+                    />
+                  )}
+                </Funciones>
               )}
             </>
           )}

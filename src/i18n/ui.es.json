@@ -308,6 +308,8 @@
   "show.galeria": "Galería",
   "show.idioma": "Idioma",
   "show.lugar": "Lugar",
+  "show.mesAnterior": "Mes anterior con funciones",
+  "show.mesSiguiente": "Mes siguiente con funciones",
   "show.noRellenar": "No rellenar",
   "show.opina": "Opina",
   "show.opinaEn": "Opina en {plataforma}",
@@ -315,9 +317,12 @@
   "show.precio": "Precio",
   "show.proximamente": "Próximamente · entradas aún no a la venta",
   "show.proximasFunciones": "Próximas funciones",
+  "show.tocaUnDia": "Toca un día señalado para ver sus horas.",
   "show.tuEmail": "Tu email",
+  "show.verCalendario": "Ver el calendario del mes",
   "show.verEn": "Ver en",
   "show.verFechas": "Ver las {n} fechas",
+  "show.verHorasDelDia": "Ver las horas de este día",
   "show.videoDe": "Vídeo de {titulo}",
   "show.volverCartelera": "Volver a cartelera"
 }

@@ -224,13 +224,81 @@ function sinElPrimeroAMedias(dias: DiaConFuncion[], hoy: string): DiaConFuncion[
   return esElFinalDe ? dias.slice(1) : dias;
 }
 
+/* ¿ES UN ESPECTÁCULO PERIÓDICO? SE CUENTAN SEMANAS, NO FUNCIONES.
+ *
+ * Esto decide quién enseña el calendario del mes y quién se queda con la lista de fechas.
+ * Y la cuenta es de SEMANAS DISTINTAS con función, tres o más. No de funciones, no de días.
+ *
+ * POR QUÉ, con los dos casos reales que lo obligan (medidos el 29/08/2026):
+ *   · «Perdido en los 80» tiene TRES funciones: 3 de octubre, 20 de diciembre y 16 de enero.
+ *     Un sábado de vez en cuando durante tres meses y medio. Eso ES periódico, y cualquier
+ *     criterio que cuente funciones o días lo deja fuera por tener solo tres.
+ *   · El «Festival de Teatro de Bolsillo» tiene TAMBIÉN tres funciones: lunes 19, martes 20
+ *     y miércoles 21 de octubre. Tres días seguidos NO son una periodicidad, son un ciclo.
+ * Las dos tienen el mismo número de funciones y son cosas distintas. Lo único que las
+ * separa es en cuántas semanas caen: tres contra una.
+ *
+ * ASÍ QUE NO SE «SIMPLIFIQUE» A CONTAR FUNCIONES. Si alguien llega aquí dentro de seis meses
+ * con esa idea, esos dos espectáculos son la razón de que no se pueda.
+ *
+ * Se cuenta solo lo que queda por delante, como en todo lo demás de este fichero. El efecto
+ * es que un espectáculo pierde el calendario en sus dos últimas semanas, y ahí la lista de
+ * fechas ya lo dice todo. */
+export function esPeriodico(dias: DiaConFuncion[]): boolean {
+  const semanas = new Set(dias.map((d) => isoDe(lunesDe(d.date))));
+  return semanas.size >= 3;
+}
+
+/** Un mes con funciones, listo para pintar la rejilla sin volver a calcular nada. */
+export interface MesConFunciones {
+  clave: string;              // "2026-09"
+  etiqueta: string;           // "septiembre 2026"
+  huecoInicial: number;       // celdas vacías antes del día 1 (la semana empieza en lunes)
+  celdas: { num: number; date: string; dia?: DiaConFuncion }[];
+}
+
+/* LOS MESES QUE TIENEN FUNCIÓN, y solo esos.
+ *
+ * Aquí está la razón de que las flechas del calendario salten los meses vacíos: no es que
+ * el componente los esquive, es que no existen. «Perdido en los 80» juega en octubre,
+ * diciembre y enero; noviembre no aparece, y pasar de una función a la siguiente es una
+ * flecha, no tres.
+ *
+ * Y sale de los MISMOS días que pinta la lista de fechas: aquí no se vuelve a decidir qué
+ * funciones hay ni a qué hora, solo cómo se colocan en una rejilla. */
+export function mesesDe(dias: DiaConFuncion[], lang: Lang = 'es'): MesConFunciones[] {
+  const L = LOCALES[lang];
+  const meses = new Map<string, MesConFunciones>();
+  for (const d of dias) {
+    const clave = d.date.slice(0, 7);
+    if (meses.has(clave)) continue;
+    const [a, m] = clave.split('-').map(Number);
+    const primero = new Date(a, m - 1, 1);
+    meses.set(clave, {
+      clave,
+      etiqueta: `${L.month[m - 1]} ${a}`,
+      huecoInicial: (primero.getDay() + 6) % 7,
+      celdas: Array.from({ length: new Date(a, m, 0).getDate() }, (_, i) => ({
+        num: i + 1,
+        date: `${clave}-${String(i + 1).padStart(2, '0')}`,
+      })),
+    });
+  }
+  for (const d of dias) {
+    const mes = meses.get(d.date.slice(0, 7))!;
+    mes.celdas[Number(d.date.slice(8)) - 1].dia = d;
+  }
+  return [...meses.values()];
+}
+
 export interface ScheduleSummary {
   card: string;              // compacto para la cartelera
   full: string;              // el patrón, SOLO si hay un único horario de aquí al final
   loose: string[];           // fechas sueltas que no encajan en el patrón
   hasPattern: boolean;
   dias: DiaConFuncion[];     // las funciones por venir, por día: lo que enseña la ficha
-  aviso: string;             // "A partir de l'11 de setembre l'horari canvia", o vacío
+  aviso: string;
+  periodico: boolean;        // ¿tres semanas distintas o más? (ver esPeriodico)             // "A partir de l'11 de setembre l'horari canvia", o vacío
 }
 
 /* El día de hoy EN MADRID, que es donde se decide la programación de las dos casas.
@@ -367,7 +435,7 @@ export function summarize(sessions: Session[] = [], lang: Lang = 'es', hoy: stri
 
   const list = (sessions ?? []).filter((s) => s && s.date && s.date >= hoy);
   if (!list.length)
-    return { card: L.consultar, full: '', loose: [], hasPattern: false, dias: [], aviso: '' };
+    return { card: L.consultar, full: '', loose: [], hasPattern: false, dias: [], aviso: '', periodico: false };
 
   const dias = porDia(list);
   // El patrón se decide sin el primer día si viene a medias (ver sinElPrimeroAMedias). La
@@ -515,5 +583,5 @@ export function summarize(sessions: Session[] = [], lang: Lang = 'es', hoy: stri
     card = L.consultar;
   }
 
-  return { card, full, loose, hasPattern: recurring.length > 0, dias, aviso };
+  return { card, full, loose, hasPattern: recurring.length > 0, dias, aviso, periodico: esPeriodico(dias) };
 }
