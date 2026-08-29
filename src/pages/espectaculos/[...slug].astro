@@ -44,6 +44,19 @@ const d = {
     : {}),
 };
 
+// Puntuación con un decimal, con la coma decimal del idioma que toque
+const fmtScore = (n: number) => n.toLocaleString(lang === 'ca' ? 'ca-ES' : 'es-ES', { maximumFractionDigits: 1 });
+// Los miles, SIEMPRE con su punto. Hay que pedirlo: por defecto el castellano deja las
+// cifras de cuatro dígitos sin separador, y en la misma fila quedaba «13.307 opiniones»
+// al lado de «1386 opiniones». Medido en la ficha de Corta el cable rojo.
+const fmtCount = (n: number) =>
+  n.toLocaleString(lang === 'ca' ? 'ca-ES' : 'es-ES', { useGrouping: true });
+
+/* Una pastilla solo se pinta si dice algo: la nota que tiene en esa web, o el sitio
+   donde se puede opinar. Sin ninguna de las dos cosas no hay pastilla que valga.
+   (Codex, 29/08/2026: sin esto salía un óvalo vacío.) */
+const ratings = d.ratings.filter((r) => r.score !== undefined || r.votar);
+
 const today = hoyEnMadrid();
 const sch = d.dates.length ? summarize(d.dates, lang, today) : null;
 // Cuantos dias se ven sin desplegar. Quien entra viene a decidir uno, no a leerlos todos.
@@ -240,6 +253,62 @@ const videoLd = (ytId || d.video) && videoUploadDate
       </aside>
     </section>
 
+    {ratings.length > 0 && (
+      <section class="wrap ratings">
+        <ul class="ratings__row">
+          {ratings.map((r) => {
+            /* CADA PLATAFORMA, UNA PASTILLA, Y PUEDE LLEVAR DOS COSAS: la nota que tiene
+               allí y, si esa web deja escribir reseña, un botón para hacerlo. Cuando van las
+               dos, la pastilla se parte por la mitad con una raya: a la izquierda el dato, a
+               la derecha la acción, en el color de marca.
+
+               Y si no hay nota -- porque no la sabemos o porque el perfil es nuevo -- la
+               pastilla entera es la invitación, con el nombre de la web dentro de la frase.
+               Una pastilla igual que las de al lado pero con el hueco del número vacío se
+               leería como un dato que falta, y no lo es. */
+            const invita = r.score === undefined;
+            const Ficha = r.url ? 'a' : 'div';
+            return (
+              <li class="rating">
+                {!invita && (
+                  <Ficha class="rating__ficha" {...(r.url ? { href: r.url, target: '_blank', rel: 'noopener' } : {})}>
+                    {r.logo ? (
+                      <Image class="rating__logo" src={r.logo} alt={r.source} widths={[120]} />
+                    ) : (
+                      <span class="rating__brand">{r.source}</span>
+                    )}
+                    <span class="rating__score">
+                      <strong>{fmtScore(r.score)}</strong><span class="rating__max">/{fmtScore(r.max)}</span>
+                    </span>
+                    {r.count && <span class="rating__count">{`${fmtCount(r.count)} ${t('show.opiniones')}`}</span>}
+                  </Ficha>
+                )}
+                {r.votar && (
+                  <a
+                    class="rating__votar"
+                    href={r.votar}
+                    target="_blank"
+                    rel="noopener"
+                    aria-label={t('show.opinaEn', { plataforma: r.source })}
+                  >
+                    <svg class="rating__estrella" viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M12 3.5l2.6 5.3 5.9.85-4.25 4.15 1 5.85L12 16.9l-5.25 2.75 1-5.85L3.5 9.65l5.9-.85z"
+                        fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"
+                      />
+                    </svg>
+                    <span class="rating__cta">
+                      {invita ? t('show.opinaEn', { plataforma: r.source }) : t('show.opina')}
+                    </span>
+                  </a>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    )}
+
     {(d.video || ytId) && (
       <section class="wrap">
         <div class="show__video">
@@ -358,6 +427,37 @@ const videoLd = (ytId || d.video) && videoUploadDate
   .show__prose :global(p) { margin: 0 0 14px; }
   .show__prose :global(strong) { color: var(--paper); }
   .show__photo { float: right; width: 300px; max-width: 42%; height: auto; margin: 4px 0 18px 28px; border-radius: 6px; box-shadow: 0 18px 40px rgba(0,0,0,0.45); }
+  /* Las notas de las webs de venta y de Google, en una fila de pastillas.
+     El borde y el fondo son de la pastilla entera; el relleno, de cada mitad. Así las dos
+     mitades -- la nota y el botón de opinar -- caben dentro del mismo óvalo con una raya
+     entre medias, y cada una se ilumina sola al pasar por encima. */
+  .ratings { padding-block: clamp(18px, 3vw, 30px) clamp(4px, 1vw, 10px); }
+  .ratings__row { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 12px; }
+  .rating {
+    display: flex; align-items: stretch;
+    border: 1px solid var(--line); border-radius: 999px; overflow: hidden;
+    background: color-mix(in srgb, var(--accent) 5%, var(--ink));
+    transition: border-color 0.25s ease, transform 0.25s ease;
+  }
+  .rating:has(a):hover { border-color: var(--accent); transform: translateY(-2px); }
+  .rating__ficha { display: flex; align-items: center; gap: 10px; padding: 10px 18px; }
+  /* La mitad de opinar va con un fondo tenue de marca: es lo que la separa de un dato y
+     la convierte en algo que se pulsa. Al pasar por encima se llena más. */
+  .rating__votar {
+    display: flex; align-items: center; gap: 7px; padding: 10px 16px;
+    color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent);
+    transition: background 0.25s ease;
+  }
+  .rating__ficha + .rating__votar { border-left: 1px solid var(--line); }
+  .rating__votar:hover { background: color-mix(in srgb, var(--accent) 20%, transparent); }
+  .rating__brand { font-family: var(--f-display); font-size: 14px; letter-spacing: 0.04em; color: var(--paper-dim); }
+  .rating__logo { height: 20px; width: auto; display: block; }
+  .rating__score { font-family: var(--f-display); font-size: 20px; color: var(--accent); line-height: 1; }
+  .rating__max { font-size: 13px; color: var(--paper-faint); }
+  .rating__count { font-size: 12px; color: var(--paper-faint); }
+  .rating__cta { font-family: var(--f-display); font-size: 14px; letter-spacing: 0.02em; line-height: 1; }
+  .rating__estrella { width: 15px; height: 15px; display: block; flex: none; }
+
   .show__video { position: relative; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); margin-top: 10px; }
   .show__video iframe, .show__video video { position: absolute; inset: 0; width: 100%; height: 100%; background: #000; }
   /* Reparto / artistas (mismo tratamiento que en la web del Sofía) */

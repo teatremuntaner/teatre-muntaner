@@ -78,6 +78,21 @@ collections:
         required: false
         field: { name: "image", label: "Foto", widget: "image" }
 
+      - name: "ratings"
+        label: "Puntuaciones de las webs de venta y Google"
+        widget: "list"
+        required: false
+        summary: "{{fields.source}} — {{fields.score}}"
+        hint: "La fila de notas que sale bajo la sinopsis. Pon solo puntuaciones REALES, tal como aparecen hoy en cada web. Si dejas la nota en blanco, la pastilla invita a opinar en vez de enseñar un número: para eso, rellena el enlace de escribir opinión."
+        fields:
+          - { name: "source", label: "Plataforma (Atrápalo, Google, taquilla.com…)", widget: "string" }
+          - { name: "score", label: "Nota (en blanco = pastilla para invitar a opinar)", widget: "number", value_type: "float", required: false }
+          - { name: "max", label: "Sobre cuánto (5, 10…)", widget: "number", value_type: "float", default: 5 }
+          - { name: "count", label: "Nº de opiniones (opcional)", widget: "number", value_type: "int", required: false }
+          - { name: "url", label: "Enlace a esa ficha (opcional)", widget: "string", required: false }
+          - { name: "votar", label: "Enlace para ESCRIBIR una opinión (opcional)", widget: "string", required: false, hint: "La dirección donde se puntúa. La de Google abre el cuadro de escribir; no es la misma que la de arriba." }
+          - { name: "logo", label: "Logo de la plataforma (opcional)", widget: "image", required: false }
+
       - name: "reels"
         label: "Píldoras de redes (reels de Instagram / TikTok)"
         widget: "list"

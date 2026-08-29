@@ -27,6 +27,30 @@ const espectaculos = defineCollection({
       videoUploadDate: z.string().optional(), // fecha de publicación del vídeo subido (uploadDate del VideoObject; obligatorio para Google)
       gallery: z.array(image()).default([]), // galería de fotos (se optimizan en el build)
 
+      /* Las notas que el espectáculo tiene en las webs de venta y en Google, en una fila.
+         Cada una puede traer dos cosas: la nota, y la dirección donde se escribe una reseña.
+
+         La NOTA es opcional: un perfil recién creado no tiene ninguna, y entonces la
+         pastilla sirve solo para invitar a opinar. Y las notas se escriben a mano, así que
+         envejecen: la de Atrápalo de «Clap» decía 9,4 con 118 opiniones cuando ya iban 146.
+         Conviene repasarlas de vez en cuando, o no ponerlas y dejar solo el enlace. */
+      ratings: z
+        .array(
+          z.object({
+            source: z.string(),   // "Atrápalo", "Google", "taquilla.com"…
+            score: z.number().optional(),
+            max: z.number().default(5),
+            count: z.number().optional(),   // nº de opiniones, si se sabe
+            url: z.string().optional(),     // la ficha de esa web, para ir a leerlas
+            // Y la dirección donde se ESCRIBE la reseña, en las webs que lo permiten. Va
+            // aparte del enlace de arriba porque no siempre coinciden: la de Google abre
+            // directamente el cuadro de puntuar, sin pasar por la ficha.
+            votar: z.string().optional(),
+            logo: image().optional(),
+          }),
+        )
+        .default([]),
+
       // Píldoras de redes (reels de Instagram / TikTok). Se incrustan con
       // fachada: hasta que el visitante pulsa no se carga nada de la red social.
       reels: z

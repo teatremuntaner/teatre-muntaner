@@ -137,6 +137,23 @@ dates:
     time: "17:00"
   - date: "2026-11-01"
     time: "19:00"
+ratings:
+  - source: "Atrápalo"
+    score: 9.6
+    max: 10
+    count: 13307
+    url: "https://www.atrapalo.com/entradas/corta-el-cable-rojo-en-barcelona_e4940514/"
+  - source: "taquilla.com"
+    score: 4.9
+    max: 5
+    count: 1386
+    url: "https://www.taquilla.com/entradas/corta-el-cable-rojo-barcelona"
+  # Este es el perfil de BARCELONA, comprobado el 29/08/2026 abriendo el enlace: «Corta el
+  # Cable Rojo Barcelona», Carrer de Muntaner 4. NO es el de Madrid, que existe aparte y va
+  # en la web de la compañía. Se acaba de crear y todavía no tiene reseñas, así que no lleva
+  # nota: la pastilla entera invita a opinar. Cuando las tenga, se le añade score y count.
+  - source: "Google"
+    votar: "https://g.page/r/CfRr_gnHuHU8EBM/review"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/es/calendario-corta-cable-rojo
 qwanticEventId: "20529"
 priceFrom: 19.8
