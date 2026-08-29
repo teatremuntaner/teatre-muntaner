@@ -11,6 +11,15 @@
   "home.teatro.lead": "Amb les seves tres plantes i 800 m² d'espai, al Teatre Muntaner hem cuidat cada racó perquè cada visita sigui una experiència memorable. Des del logotip al paper de la paret, busquem la renovació pràctica i còmoda d'un teatre amb més d'un segle de vida, en ple centre de Barcelona.",
   "show.descFallback": "{titulo} al Teatre Muntaner",
 
+  "_nota_dias": "Las iniciales de los dias no las traduce Apertium, y en catalan todos empiezan por D: se distinguen con dos letras (dilluns, dimarts, dimecres...). Afecta al calendario de la portada y al de la ficha.",
+  "cal.diaCorto.lunes": "Dl",
+  "cal.diaCorto.martes": "Dt",
+  "cal.diaCorto.miercoles": "Dc",
+  "cal.diaCorto.jueves": "Dj",
+  "cal.diaCorto.viernes": "Dv",
+  "cal.diaCorto.sabado": "Ds",
+  "cal.diaCorto.domingo": "Dg",
+
   "_nota_opina": "En catalan se opina A un sitio, no EN un sitio; Apertium calca el castellano.",
   "show.opinaEn": "Opina a {plataforma}",
 
