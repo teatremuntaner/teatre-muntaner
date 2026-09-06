@@ -7,6 +7,7 @@ genres:
   - "Monólogos"
 lang: "Castellano"
 poster: "./toni-cano-traficante-de-endorfinas.jpg"
+kitClave: "a2fa17cdf92f93666cf9961acfc948e8"
 accent: "#8f60be"
 accentInk: "#ffffff"
 dates:

@@ -21,6 +21,7 @@ dates:
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20531
 qwanticEventId: "20531"
 youtube: https://youtu.be/0MeVPwmADt8?si=wXFIFCUglmm4nNMr
+youtubeUploadDate: "2025-08-20T05:38:15-07:00"
 draft: false
 artist: Joaquín Caserza
 priceFrom: 20
