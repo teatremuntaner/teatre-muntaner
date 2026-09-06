@@ -71,6 +71,7 @@ collections:
         value_type: "int"
         hint: "Mayor = más arriba. A igual prioridad, sale antes el de fecha más próxima."
       - { name: "poster", label: "Cartel", widget: "image" }
+      - { name: "kitClave", label: "Clave del kit de adaptaciones (madteatro)", widget: "string", required: false, pattern: ["^[a-f0-9]{32}$", "Son los 32 caracteres de los enlaces «para la web y las teles» del kit"], hint: "Con ella, el cartel de arriba se sustituye solo por la pieza 2:3 del kit (con el pie de venta compuesto dentro) en la siguiente sincronización con Qwantic. Sin ella, el cartel es el que se suba aquí." }
       - { name: "photo", label: "Foto para la sinopsis (distinta del cartel, opcional)", widget: "image", required: false }
       - name: "gallery"
         label: "Galería de fotos (varias, opcional)"

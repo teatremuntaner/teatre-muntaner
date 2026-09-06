@@ -20,6 +20,10 @@ const espectaculos = defineCollection({
 
       // Cartel del espectáculo (se optimiza solo a WebP/AVIF en el build)
       poster: image(),
+      // Clave del kit de adaptaciones de madteatro: con ella el sync trae el cartel del kit (E57).
+      // Astro no la usa; se declara para dejarla documentada y que NINGUNA variante (vacía → null,
+      // número, texto raro) tumbe la compilación: la valida y la avisa el sync, no el esquema.
+      kitClave: z.unknown().optional(),
       photo: image().optional(), // foto que acompaña a la sinopsis, si existe
       youtube: z.string().optional(), // ID o URL de vídeo de YouTube, si existe
       youtubeUploadDate: z.string().optional(), // fecha de subida del vídeo (la rellena el sync; para el VideoObject)
