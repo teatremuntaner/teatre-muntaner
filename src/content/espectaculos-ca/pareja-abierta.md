@@ -2,12 +2,15 @@
 # ARCHIVO GENERADO — no editar a mano.
 # Lo produce scripts/translate_ca.py a partir de la ficha en castellano.
 # Cualquier cambio manual se pierde en la siguiente sincronizacion.
+promo: Promo limitada 15% descompte
 category: Espectacle
+lang: Castellà
+duration: 75 Minuts
 price: Des de 18 €
 genres:
 - Comèdia
 - Teatre
-sourceHash: 692305d29575e020
+sourceHash: c13b54097ee72f04
 generated: true
 ---
 
