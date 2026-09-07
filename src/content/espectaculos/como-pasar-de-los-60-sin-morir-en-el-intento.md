@@ -23,6 +23,9 @@ price: Desde 15 €
 draft: false
 artist: Albert Boira
 ---
+**Cancelada 11 septiembre 2026**
+
+
 
 ¿Cuándo empieza uno a ser considerado viejo?
 
