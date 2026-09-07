@@ -1,26 +1,27 @@
 ---
-title: "Como pasar de los 60 sin morir en el intento"
-artist: "Albert Boira"
-category: "Comedia"
+title: Como pasar de los 60 sin morir en el intento
+tagline: Cancelada 11 septiembre 2026
+category: Comedia
 genres:
-  - "Comedia"
-  - "Monólogos"
-lang: "Castellano"
-poster: "./como-pasar-de-los-60-sin-morir-en-el-intento.jpg"
+  - Comedia
+  - Monólogos
+lang: Castellano
+poster: ./como-pasar-de-los-60-sin-morir-en-el-intento.jpg
 accent: "#6062be"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-09-11"
-    time: "22:30"
-  - date: "2026-10-16"
-    time: "22:30"
-ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20534"
+  - date: 2026-09-11
+    time: 22:30
+  - date: 2026-10-16
+    time: 22:30
+ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20534
 qwanticEventId: "20534"
-saleStart: "2026-02-23T14:00"
 priceFrom: 15.3
-price: "Desde 15 €"
-venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
+saleStart: 2026-02-23T14:00
+venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
+price: Desde 15 €
 draft: false
+artist: Albert Boira
 ---
 
 ¿Cuándo empieza uno a ser considerado viejo?
