@@ -1,6 +1,6 @@
 ---
 title: Como pasar de los 60 sin morir en el intento
-tagline: Cancelada 11 septiembre 2026
+tagline: "Cancelada sesión: 11 septiembre 2026"
 category: Comedia
 genres:
   - Comedia
@@ -23,7 +23,7 @@ price: Desde 15 €
 draft: false
 artist: Albert Boira
 ---
-**Cancelada 11 septiembre 2026**
+**Cancelada sesión: 11 septiembre 2026**
 
 
 
