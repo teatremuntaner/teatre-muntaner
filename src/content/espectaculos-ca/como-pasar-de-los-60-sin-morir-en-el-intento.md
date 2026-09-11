@@ -9,13 +9,9 @@ price: Des de 15 €
 genres:
 - Comèdia
 - Monòlegs
-sourceHash: e6cf9f31799a6e56
+sourceHash: ea9b343b6560e53e
 generated: true
 ---
-
-**Cancel·lada sessió: 11 setembre 2026**
-
-
 
 Quan comença un a ser considerat vell?
 
