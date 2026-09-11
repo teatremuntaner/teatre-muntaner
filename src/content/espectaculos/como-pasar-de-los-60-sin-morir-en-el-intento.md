@@ -10,19 +10,17 @@ poster: ./como-pasar-de-los-60-sin-morir-en-el-intento.jpg
 accent: "#6062be"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-10-16"
-    time: "22:30"
+  - date: 2026-10-16
+    time: 22:30
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20534
 qwanticEventId: "20534"
 priceFrom: 15.3
-saleStart: "2026-02-23T14:00"
+saleStart: 2026-02-23T14:00
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 15 €
 draft: false
 artist: Albert Boira
 ---
-**Cancelada sesión: 11 septiembre 2026**
-
 
 
 ¿Cuándo empieza uno a ser considerado viejo?
