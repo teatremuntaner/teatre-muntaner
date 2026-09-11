@@ -1,20 +1,32 @@
 ---
-title: "Divina Comedia"
-category: "Espectáculo"
-genres: ["Comedia", "Monólogos"]
-poster: "./divina-comedia.jpg"
+title: Divina Comedia
+promo: Promo 15% descuento
+category: Espectáculo
+genres:
+  - Comedia
+  - Monólogos
+lang: Castellano
+poster: ./divina-comedia.jpg
 accent: "#e990b2"
 accentInk: "#0c0a0f"
 dates:
-  - date: "2026-10-30"
-    time: "22:30"
-ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21917"
+  - date: 2026-10-30
+    time: 22:30
+ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21917
 qwanticEventId: "21917"
 priceFrom: 15.3
-saleStart: "2026-09-11T22:05"
-price: "Desde 15 €"
-venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
-draft: true
+saleStart: 2026-09-11T22:05
+links:
+  - label: Instagram
+    url: https://www.instagram.com/patriciasornosa/
+venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
+duration: 75 minutos
+price: Desde 15 €
+cast:
+  - offstage: false
+    name: Patricia Sornosa
+    photo: patricia-sornosa-teatre-muntaner.png
+draft: false
 ---
 
 Divina Comedia es un viaje hilarante y afilado a través de una larga carrera dedicada, con ironía y lucidez, a la “salvación” de las almas… a golpe de carcajada. Patricia Sornosa, una de las voces más contundentes de la comedia feminista, reúne en este show sus bloques de stand up más celebrados junto a anécdotas reales vividas sobre los escenarios, construyendo un relato tan personal como universal.
