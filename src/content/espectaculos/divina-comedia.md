@@ -12,6 +12,8 @@ accentInk: "#0c0a0f"
 dates:
   - date: "2026-10-30"
     time: "22:30"
+  - date: "2027-01-15"
+    time: "22:30"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21917
 qwanticEventId: "21917"
 priceFrom: 15.3
