@@ -1,7 +1,9 @@
 ---
 title: Gilipollas por el mundo
 category: Comedia
-genres: ["Comedia", "Monólogos"]
+genres:
+  - Humor
+  - Monólogo
 artist: Carolina Noriega
 lang: Castellano
 priority: -18

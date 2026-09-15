@@ -2,8 +2,8 @@
 title: Quemado. Fernando Sanjiao
 category: Espectáculo
 genres:
-  - Comedia
-  - Monólogos
+  - Humor
+  - Monólogo
 lang: Castellano
 poster: ./quemado-fernando-sanjiao.jpg
 accent: "#c57a59"

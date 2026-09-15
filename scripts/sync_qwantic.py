@@ -92,9 +92,9 @@ GENRE_OK = _generos_validos()
 # el PRERRELLENO de las fichas nuevas: si nadie los completa en el CMS, al menos
 # no salen vacíos. Se pueden corregir después; el sync no los vuelve a tocar.
 GENRE_HINTS = [
-    ("Comedia",       r"comedia|com[eè]dia|c[oó]mic|humor|risa|riure|rialles|carcajada"),
+    ("Humor",         r"comedia|com[eè]dia|c[oó]mic|humor|risa|riure|rialles|carcajada"),
     ("Música",        r"concierto|\bconcert\b|musical|m[uú]sica|canciones|can[cç]ons|\bbanda\b|\bcoro\b|flamenco|jazz|piano"),
-    ("Monólogos",     r"mon[oó]log|mon[oò]leg|stand.?up|humorista|monologuista"),
+    ("Monólogo",      r"mon[oó]log|mon[oò]leg|stand.?up|humorista|monologuista"),
     ("Improvisación", r"improvis"),
     ("Magia",         r"\bm[aà]gia\b|\bmago\b|\bmaga\b|ilusionis|il·lusionis|mentalis"),
     ("Familiar",      r"familiar|infantil|para ni[nñ]os|per a nens|t[ií]teres|titelles|tota la fam[ií]lia|toda la familia"),

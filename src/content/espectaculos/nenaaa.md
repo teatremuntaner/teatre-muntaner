@@ -2,8 +2,8 @@
 title: "NENAAA"
 category: "Teatro"
 genres:
-  - "Teatro"
-  - "Comedia"
+  - Teatro
+  - Humor
 lang: "Catalán"
 poster: "./nenaaa.jpg"
 accent: "#cb6ab2"

@@ -3,8 +3,8 @@ title: "Traficante de Endorfinas"
 artist: "Toni Cano"
 category: "Comedia"
 genres:
-  - "Comedia"
-  - "Monólogos"
+  - Humor
+  - Monólogo
 lang: "Castellano"
 poster: "./toni-cano-traficante-de-endorfinas.jpg"
 kitClave: "a2fa17cdf92f93666cf9961acfc948e8"

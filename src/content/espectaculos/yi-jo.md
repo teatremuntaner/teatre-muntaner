@@ -4,8 +4,8 @@ tagline: Yibril y Joel
 promo: No recomendado a menores de 18 años
 category: Espectáculo
 genres:
-  - Comedia
-  - Monólogos
+  - Humor
+  - Monólogo
 lang: Castellano
 priority: 0
 poster: ./yi-jo.jpg

@@ -56,7 +56,7 @@ collections:
           name: "genero"
           label: "Género"
           widget: "select"
-          options: ["Comedia", "Monólogos", "Improvisación", "Magia", "Teatro", "Familiar", "Música", "Flamenco", "Bienestar emocional"]
+          options: ["Humor", "Música", "Monólogo", "Improvisación", "Teatro", "Magia", "Familiar"]
       - name: "lang"
         label: "Idioma de la función"
         widget: "select"

@@ -3,7 +3,7 @@ title: Pareja Abierta
 promo: Promo limitada 15% descuento
 category: Espectáculo
 genres:
-  - Comedia
+  - Humor
   - Teatro
 lang: Castellano
 poster: ./pareja-abierta.jpg

@@ -3,8 +3,8 @@ title: "Riquiña"
 artist: "Jazmín Abuín"
 category: "Comedia"
 genres:
-  - "Comedia"
-  - "Monólogos"
+  - Humor
+  - Monólogo
 lang: "Castellano"
 poster: "./riquina.jpg"
 accent: "#be6460"

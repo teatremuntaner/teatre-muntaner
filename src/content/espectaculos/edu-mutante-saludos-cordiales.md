@@ -3,8 +3,8 @@ title: "Saludos cordiales"
 artist: "Edu Mutante"
 category: "Comedia"
 genres:
-  - "Comedia"
-  - "Monólogos"
+  - Humor
+  - Monólogo
 lang: "Castellano"
 poster: "./edu-mutante-saludos-cordiales.jpg"
 accent: "#be8c60"

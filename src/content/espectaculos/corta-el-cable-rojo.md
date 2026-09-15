@@ -3,7 +3,7 @@ title: Corta el cable rojo
 category: Comedia
 genres:
   - Improvisación
-  - Comedia
+  - Humor
 lang: Castellano
 poster: ./corta-el-cable-rojo.jpg
 accent: "#ef2e31"

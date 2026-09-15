@@ -3,8 +3,8 @@ title: Divina Comedia
 promo: Promo 15% descuento
 category: Espectáculo
 genres:
-  - Comedia
-  - Monólogos
+  - Humor
+  - Monólogo
 lang: Castellano
 poster: ./divina-comedia.jpg
 accent: "#e990b2"

@@ -3,7 +3,6 @@ title: Barcelona Passió
 category: Música
 genres:
   - Música
-  - Flamenco
 lang: Castellano
 poster: ./barcelona-passio.jpg
 accent: "#bf795f"

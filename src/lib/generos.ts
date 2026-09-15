@@ -14,13 +14,11 @@
 // Para añadir un género: se pone aquí Y en config.yml (que es YAML estático y no
 // puede importar esto). `npm run check:generos` avisa si se olvida uno de los dos.
 export const GENRE_ORDER: string[] = [
-  'Comedia',
-  'Monólogos',
-  'Improvisación',
-  'Magia',
-  'Teatro',
-  'Familiar',
+  'Humor',
   'Música',
-  'Flamenco',
-  'Bienestar emocional',
+  'Monólogo',
+  'Improvisación',
+  'Teatro',
+  'Magia',
+  'Familiar',
 ];

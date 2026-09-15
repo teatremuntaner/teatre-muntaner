@@ -3,8 +3,8 @@ title: Como pasar de los 60 sin morir en el intento
 tagline: "Cancelada sesión: 11 septiembre 2026"
 category: Comedia
 genres:
-  - Comedia
-  - Monólogos
+  - Humor
+  - Monólogo
 lang: Castellano
 poster: ./como-pasar-de-los-60-sin-morir-en-el-intento.jpg
 accent: "#6062be"

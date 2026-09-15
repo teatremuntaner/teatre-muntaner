@@ -1,7 +1,8 @@
 ---
 title: Sobria y Serena. El Chou
 category: Comedia
-genres: ["Comedia"]
+genres:
+  - Humor
 artist: Arantxa y Jazmín
 lang: Castellano
 poster: ./sobria-y-serena-el-chou.jpg

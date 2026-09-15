@@ -3,8 +3,8 @@ title: Chisteando
 promo: PROMO LIMITADA 15% DESCUENTO
 category: Espectáculo
 genres:
-  - Comedia
-  - Monólogos
+  - Humor
+  - Monólogo
   - Improvisación
 lang: Castellano
 poster: ./chisteando.jpg

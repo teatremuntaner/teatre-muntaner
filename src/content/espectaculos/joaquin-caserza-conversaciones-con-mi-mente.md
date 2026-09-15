@@ -2,9 +2,8 @@
 title: Conversaciones con mi mente
 category: Comedia
 genres:
-  - Comedia
-  - Monólogos
-  - Bienestar emocional
+  - Humor
+  - Monólogo
 lang: Castellano
 poster: ./joaquin-caserza-conversaciones-con-mi-mente.jpg
 accent: "#608cbe"

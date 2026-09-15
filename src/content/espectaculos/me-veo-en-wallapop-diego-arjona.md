@@ -3,8 +3,8 @@ title: "Me veo en Wallapop"
 artist: "Diego Arjona"
 category: "Comedia"
 genres:
-  - "Comedia"
-  - "Monólogos"
+  - Humor
+  - Monólogo
 lang: "Castellano"
 poster: "./me-veo-en-wallapop-diego-arjona.jpg"
 accent: "#89bbcf"

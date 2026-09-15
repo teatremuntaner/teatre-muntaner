@@ -1,7 +1,9 @@
 ---
 title: JULI BELLESE
 category: Espectáculo
-genres: ["Comedia", "Monólogos"]
+genres:
+  - Humor
+  - Monólogo
 artist: Julián Bellese
 lang: Castellano
 priority: 0
