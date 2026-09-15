@@ -132,7 +132,7 @@ ratings:
     votar: "https://g.page/r/CfRr_gnHuHU8EBM/review"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/es/calendario-corta-cable-rojo
 qwanticEventId: "20529"
-priceFrom: 19.8
+priceFrom: 18.7
 saleStart: "2026-02-26T12:03"
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 20 €
