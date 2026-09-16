@@ -4,7 +4,7 @@ name: Sync Qwantic
 # (lo que dispara el deploy en Netlify). Así no se gastan créditos en vano.
 on:
   schedule:
-    - cron: "23 5 * * *"     # cada día ~05:23 UTC (07:23 España). Minuto impar a propósito: los crons a "en punto" se retrasan horas en GitHub
+    - cron: "23 6-21 * * *"   # cada hora de 08:23 a 23:23 España (06-21 UTC); solo publica si hay cambios. Carlos, 16/09/2026: «una vez al día es poco». Minuto impar a propósito: los crons en punto se retrasan en GitHub.
   workflow_dispatch: {}       # botón de ejecución manual (pestaña Actions)
 
 permissions:

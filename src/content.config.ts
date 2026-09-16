@@ -2,6 +2,26 @@ import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
 /**
+ * El CMS (Decap) a veces guarda fechas/horas SIN comillas. YAML entonces interpreta
+ * `2026-06-23` como un objeto Date, `20:00` como un número sexagesimal (1200) y
+ * `2025-08-20T05:38:15-07:00` como Date, lo que tumbaba el build (el esquema espera
+ * strings). Medido el 16/09/2026: una edición de Nave8 desde el CMS dejó la web tres
+ * despliegues sin publicar. Copiado del Sofía, que ya lo sufría.
+ */
+const toDateString = (v: unknown): unknown =>
+  v instanceof Date ? v.toISOString().slice(0, 10) : v; // YYYY-MM-DD (UTC)
+const toIsoString = (v: unknown): unknown => (v instanceof Date ? v.toISOString() : v);
+const toTimeString = (v: unknown): unknown => {
+  if (typeof v !== 'number') return v;
+  const h = Math.floor(v / 60);
+  const m = v % 60;
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+};
+const dateString = z.preprocess(toDateString, z.string());
+const isoString = z.preprocess(toIsoString, z.string());
+const timeString = z.preprocess(toTimeString, z.string());
+
+/**
  * Colección "espectaculos": cada archivo .md en src/content/espectaculos
  * es una ficha. Estos son los campos que aparecerán en el CMS.
  */
@@ -26,9 +46,9 @@ const espectaculos = defineCollection({
       kitClave: z.unknown().optional(),
       photo: image().optional(), // foto que acompaña a la sinopsis, si existe
       youtube: z.string().optional(), // ID o URL de vídeo de YouTube, si existe
-      youtubeUploadDate: z.string().optional(), // fecha de subida del vídeo (la rellena el sync; para el VideoObject)
+      youtubeUploadDate: isoString.optional(), // fecha de subida del vídeo (la rellena el sync; para el VideoObject)
       video: z.string().optional(), // vídeo subido (ruta /uploads/...), alternativa a YouTube
-      videoUploadDate: z.string().optional(), // fecha de publicación del vídeo subido (uploadDate del VideoObject; obligatorio para Google)
+      videoUploadDate: isoString.optional(), // fecha de publicación del vídeo subido (uploadDate del VideoObject; obligatorio para Google)
       gallery: z.array(image()).default([]), // galería de fotos (se optimizan en el build)
 
       /* Las notas que el espectáculo tiene en las webs de venta y en Google, en una fila.
@@ -77,8 +97,8 @@ const espectaculos = defineCollection({
       dates: z
         .array(
           z.object({
-            date: z.string(), // YYYY-MM-DD
-            time: z.string().optional(), // HH:MM
+            date: dateString, // YYYY-MM-DD
+            time: timeString.optional(), // HH:MM
           }),
         )
         .default([]),
@@ -86,7 +106,7 @@ const espectaculos = defineCollection({
       ticketUrl: z.string().url().optional(),
       qwanticEventId: z.string().optional(),
       priceFrom: z.number().optional(), // precio mínimo numérico (lo rellena el sync; para el Offer del JSON-LD)
-      saleStart: z.string().optional(), // inicio de venta ISO (lo rellena el sync; validFrom del Offer)
+      saleStart: isoString.optional(), // inicio de venta ISO (lo rellena el sync; validFrom del Offer)
 
       // Si está, la tarjeta de la cartelera enlaza aquí (p. ej. la landing del
       // Piano Bar) en vez de a una ficha propia, y no se genera página de ficha.

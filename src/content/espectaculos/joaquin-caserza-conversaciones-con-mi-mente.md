@@ -24,7 +24,7 @@ saleStart: "2026-02-23T13:58"
 youtube: https://youtu.be/0MeVPwmADt8?si=wXFIFCUglmm4nNMr
 draft: false
 artist: Joaquín Caserza
-youtubeUploadDate: 2025-08-20T05:38:15-07:00
+youtubeUploadDate: "2025-08-20T05:38:15-07:00"
 links:
   - label: Instgram
     url: https://www.instagram.com/joaquincaserza_actor/
