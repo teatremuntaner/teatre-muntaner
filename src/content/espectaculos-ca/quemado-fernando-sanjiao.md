@@ -7,9 +7,9 @@ lang: Castellà
 duration: 80 minuts
 price: Des de 20 €
 genres:
-- Comèdia
-- Monòlegs
-sourceHash: c3747bfdd6d941c3
+- Humor
+- Monòleg
+sourceHash: 9eb8c4ad4a25f3cb
 generated: true
 ---
 

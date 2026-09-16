@@ -7,8 +7,8 @@ lang: Català
 price: Des de 18 €
 genres:
 - Teatre
-- Comèdia
-sourceHash: 5d04a2faf30af43a
+- Humor
+sourceHash: 887942a8e771adf5
 generated: true
 ---
 

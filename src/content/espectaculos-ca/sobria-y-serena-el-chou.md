@@ -7,8 +7,8 @@ lang: Castellà
 duration: 90 Minuts
 price: Des de 20 €
 genres:
-- Comèdia
-sourceHash: b7b4d61326ce0082
+- Humor
+sourceHash: e77128f69ec95139
 generated: true
 ---
 

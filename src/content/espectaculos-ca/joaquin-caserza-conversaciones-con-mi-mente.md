@@ -6,10 +6,9 @@ category: Comèdia
 lang: Castellà
 price: Des de 20 €
 genres:
-- Comèdia
-- Monòlegs
-- Benestar emocional
-sourceHash: 4600a6ba39306141
+- Humor
+- Monòleg
+sourceHash: 3fb1c5c27988bfd3
 generated: true
 ---
 

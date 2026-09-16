@@ -6,9 +6,9 @@ category: Comèdia
 lang: Castellà
 price: Des de 18 €
 genres:
-- Comèdia
-- Monòlegs
-sourceHash: e178ab093ad849fb
+- Humor
+- Monòleg
+sourceHash: a404b738b5fbba2b
 generated: true
 ---
 

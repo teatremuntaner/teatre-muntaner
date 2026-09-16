@@ -8,9 +8,9 @@ lang: Castellà
 duration: 75 Minuts
 price: Des de 18 €
 genres:
-- Comèdia
+- Humor
 - Teatre
-sourceHash: c13b54097ee72f04
+sourceHash: c95a8661226aa3e5
 generated: true
 ---
 

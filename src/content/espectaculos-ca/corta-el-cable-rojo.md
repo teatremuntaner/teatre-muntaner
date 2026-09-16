@@ -7,8 +7,8 @@ lang: Castellà
 price: Des de 20 €
 genres:
 - Improvisació
-- Comèdia
-sourceHash: f5f45cec1629263b
+- Humor
+sourceHash: d84c6ad39a5b4a9d
 generated: true
 ---
 

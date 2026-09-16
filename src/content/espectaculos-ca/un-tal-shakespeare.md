@@ -6,9 +6,9 @@ category: Comèdia
 lang: Català
 price: Des de 18 €
 genres:
-- Comèdia
+- Humor
 - Teatre
-sourceHash: 25a587ee4ed8a407
+sourceHash: 20b47802293676e5
 generated: true
 ---
 
