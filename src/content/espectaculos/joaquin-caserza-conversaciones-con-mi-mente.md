@@ -9,18 +9,18 @@ poster: ./joaquin-caserza-conversaciones-con-mi-mente.jpg
 accent: "#608cbe"
 accentInk: "#ffffff"
 dates:
-  - date: 2026-10-24
-    time: 21:00
-  - date: 2026-10-25
-    time: 12:30
-  - date: 2026-11-28
-    time: 21:00
-  - date: 2026-11-29
-    time: 12:30
+  - date: "2026-10-24"
+    time: "21:00"
+  - date: "2026-10-25"
+    time: "12:30"
+  - date: "2026-11-28"
+    time: "21:00"
+  - date: "2026-11-29"
+    time: "12:30"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20531
 qwanticEventId: "20531"
 priceFrom: 20
-saleStart: 2026-02-23T13:58
+saleStart: "2026-02-23T13:58"
 youtube: https://youtu.be/0MeVPwmADt8?si=wXFIFCUglmm4nNMr
 draft: false
 artist: Joaquín Caserza
