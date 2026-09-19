@@ -11,8 +11,6 @@ kitClave: "a2fa17cdf92f93666cf9961acfc948e8"
 accent: "#8f60be"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-09-19"
-    time: "21:00"
   - date: "2026-10-17"
     time: "21:00"
 ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20530"
