@@ -13,7 +13,7 @@ dates:
   - date: "2026-09-26"
     time: "21:00"
   - date: "2027-01-22"
-    time: "21:00"
+    time: "22:30"
   - date: "2027-02-27"
     time: "21:00"
 ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20533"
