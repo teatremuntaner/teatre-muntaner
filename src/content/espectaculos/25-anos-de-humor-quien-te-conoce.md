@@ -25,7 +25,7 @@ cast:
   - offstage: false
     name: Pablo Picotto
     photo: pablo-picotto.webp
-draft: true
+draft: false
 ---
 
 Pablo Picotto llega con su nuevo show 25 AÑOS DE HUMOR ¿Quién te conoce? Un nuevo espectáculo donde después de 25 años de comedia, Pablo Picotto nos cuenta, con el humor que lo caracteriza, como descubrió la comedia, haciendo un repaso de su vida en los escenarios y, pasando, por algunos de sus personajes más queridos y, por qué no, a alguna que otra reflexión sobre la vida. Un espectáculo para  disfrutar y divertirse, para emocionarse con el pasado y pensar para adelante.
