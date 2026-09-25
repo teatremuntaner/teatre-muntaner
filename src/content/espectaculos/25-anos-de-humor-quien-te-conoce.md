@@ -10,6 +10,10 @@ accent: "#be607f"
 accentInk: "#ffffff"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22009
 qwanticEventId: "22009"
+saleStart: "2026-09-25T11:20"
+dates:
+  - date: "2026-11-20"
+    time: "22:30"
 priceFrom: 30
 links:
   - url: https://www.instagram.com/pablopicotto/

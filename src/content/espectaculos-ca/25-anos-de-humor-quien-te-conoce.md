@@ -3,10 +3,13 @@
 # Lo produce scripts/translate_ca.py a partir de la ficha en castellano.
 # Cualquier cambio manual se pierde en la siguiente sincronizacion.
 category: Espectacle
+lang: Castellà
+duration: 90 Minitos
 price: Des de 30 €
 genres:
 - Humor
-sourceHash: cb95e4e0de70d7cd
+- Monòleg
+sourceHash: efb4e9c3e77b98cf
 generated: true
 ---
 
