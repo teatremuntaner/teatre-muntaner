@@ -10,6 +10,8 @@ poster: "./edu-mutante-saludos-cordiales.jpg"
 accent: "#be8c60"
 accentInk: "#ffffff"
 dates:
+  - date: "2026-11-21"
+    time: "21:00"
   - date: "2027-01-22"
     time: "22:30"
   - date: "2027-02-27"
