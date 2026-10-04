@@ -2,13 +2,14 @@
 # ARCHIVO GENERADO — no editar a mano.
 # Lo produce scripts/translate_ca.py a partir de la ficha en castellano.
 # Cualquier cambio manual se pierde en la siguiente sincronizacion.
+tagline: Funció 4 d'octubre cancel·lada
 category: Teatre
 lang: Català
 price: Des de 12 €
 genres:
 - Teatre
 - Familiar
-sourceHash: aa4d68ff4083fd1b
+sourceHash: 6fe562e98b30a1d0
 generated: true
 ---
 

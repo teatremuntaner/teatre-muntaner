@@ -11,14 +11,12 @@ poster: ./el-petit-princep.jpg
 accent: "#4453da"
 accentInk: "#ffffff"
 dates:
-  - date: 2026-10-04
-    time: 12:00
-  - date: 2026-12-06
-    time: 12:00
+  - date: "2026-12-06"
+    time: "12:00"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20722
 qwanticEventId: "20722"
 priceFrom: 12
-saleStart: 2026-03-10T06:28
+saleStart: "2026-03-10T06:28"
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 12 €
 draft: false
