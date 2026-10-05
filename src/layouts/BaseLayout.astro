@@ -273,8 +273,12 @@ const bodyStyle =
           var mkt = CookieConsent.acceptedCategory('marketing');
           document.documentElement.classList.toggle('tm-mkt', mkt);
           if (mkt) {
-            document.querySelectorAll('iframe[data-consent-src]').forEach(function (f) {
-              if (!f.getAttribute('src')) f.setAttribute('src', f.getAttribute('data-consent-src'));
+            // srcdoc: lo deja así plugins/remark-terceros.mjs con un iframe pegado en un texto.
+            document.querySelectorAll('iframe[data-consent-src], iframe[data-consent-srcdoc]').forEach(function (f) {
+              var doc = f.getAttribute('data-consent-srcdoc');
+              if (doc !== null && !f.hasAttribute('srcdoc')) f.setAttribute('srcdoc', doc);
+              var src = f.getAttribute('data-consent-src');
+              if (src !== null && !f.getAttribute('src')) f.setAttribute('src', src);
             });
           }
           document.dispatchEvent(new CustomEvent('tm:consent', { detail: { marketing: mkt } }));

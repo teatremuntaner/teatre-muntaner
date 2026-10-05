@@ -193,7 +193,7 @@ for (const modo of ['sin elegir', 'rechazando todo']) {
     if (e.isDirectory()) return andar(f);
     if (!f.endsWith('.html')) return;
     const html = readFileSync(f, 'utf8');
-    for (const m of html.matchAll(/<iframe\b[^>]*>/gi)) if (/\ssrc\s*=/.test(m[0])) malos.push(`${f.slice(DIST.length)}: ${m[0].slice(0, 90)}`);
+    for (const m of html.matchAll(/<iframe\b[^>]*>/gi)) if (/[\s/]src(doc)?\s*=/i.test(m[0])) malos.push(`${f.slice(DIST.length)}: ${m[0].slice(0, 90)}`);
   });
   andar(DIST);
   check('[dist] ningún <iframe> con src en el HTML generado', malos.length === 0, malos.slice(0, 3).join(' | '));

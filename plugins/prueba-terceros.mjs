@@ -15,6 +15,12 @@ const casos = [
   ['<iframe/src="https://y"></iframe>', '<iframe/data-consent-src="https://y"></iframe>'],
   ['<iframe srcdoc="<p>x</p>"></iframe>', '<iframe data-consent-srcdoc="<p>x</p>"></iframe>'],
   ['<p>a</p><iframe src="1"></iframe><iframe src="2"></iframe>', '<p>a</p><iframe data-consent-src="1"></iframe><iframe data-consent-src="2"></iframe>'],
+  // Ronda 3 de Codex: valor sin comillas con = y ?, que no debe cortar el recorrido.
+  ['<iframe title=YouTube?x=1 src="https://y"></iframe>', '<iframe title=YouTube?x=1 data-consent-src="https://y"></iframe>'],
+  ['<iframe a=b=c src=https://y?v=1&t=2></iframe>', '<iframe a=b=c data-consent-src=https://y?v=1&t=2></iframe>'],
+  ['<iframe x"y=1 src="https://y"></iframe>', '<iframe x"y=1 data-consent-src="https://y"></iframe>'],
+  ['<iframe =a src="https://y"></iframe>', '<iframe =a data-consent-src="https://y"></iframe>'],
+  ['<iframe title = \'a > b\' SRC = "https://y" >', '<iframe title = \'a > b\' data-consent-src = "https://y" >'],
   ['<iframes src="x">', '<iframes src="x">'],
   ['<img src="/foto.jpg">', '<img src="/foto.jpg">'],
   ['<p>sin nada</p>', '<p>sin nada</p>'],
