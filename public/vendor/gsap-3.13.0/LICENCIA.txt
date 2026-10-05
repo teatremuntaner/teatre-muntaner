@@ -1,0 +1,12 @@
+GSAP 3.13.0 y SplitText 3.13.0
+Copyright 2025, GreenSock. All rights reserved.
+https://gsap.com
+
+Estos ficheros se usan sin modificar, tal como se publican en el paquete npm
+gsap@3.13.0 (dist/gsap.min.js y dist/SplitText.min.js), y conservan su
+cabecera de copyright. El paquete declara la licencia así:
+
+  "Standard 'no charge' license: https://gsap.com/standard-license."
+
+Texto completo de la licencia (GSAP Standard "No Charge" License):
+https://gsap.com/standard-license

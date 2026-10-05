@@ -133,7 +133,7 @@ const bodyStyle =
     <link rel="preload" href={`${import.meta.env.BASE_URL}fonts/oswald-latin.woff2`} as="font" type="font/woff2" crossorigin />
     {titleFontHref && <link href={titleFontHref} rel="stylesheet" />}
     <!-- Banner de cookies (vanilla-cookieconsent, gratis/open-source) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3.1.0/dist/cookieconsent.css" />
+    <link rel="stylesheet" href={`${import.meta.env.BASE_URL}vendor/cookieconsent-3.1.0/cookieconsent.css`} />
     <style is:inline>
       #cc-main {
         --cc-font-family: 'Reddit Sans', system-ui, sans-serif;
@@ -162,8 +162,8 @@ const bodyStyle =
     {!bare && <Footer />}
 
     <!-- Animación (gratis): GSAP + SplitText para los títulos. Sin smooth scroll. -->
-    <script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
-    <script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+    <script is:inline src={`${import.meta.env.BASE_URL}vendor/gsap-3.13.0/gsap.min.js`}></script>
+    <script is:inline src={`${import.meta.env.BASE_URL}vendor/gsap-3.13.0/SplitText.min.js`}></script>
 
     <!-- Capa de efectos visuales (no hace nada salvo que tm-fx-on esté activa) -->
     <script>
@@ -192,7 +192,7 @@ const bodyStyle =
     </script>
 
     <!-- Consentimiento de cookies: banner + Consent Mode v2 + Analytics solo con estadística y Meta solo con marketing -->
-    <script is:inline src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3.1.0/dist/cookieconsent.umd.js"></script>
+    <script is:inline src={`${import.meta.env.BASE_URL}vendor/cookieconsent-3.1.0/cookieconsent.umd.js`}></script>
     <script is:inline define:vars={{ CC_LANG: lang, CC_T: {
       titulo: t('cookies.titulo'),
       descripcion: t('cookies.descripcion', { enlace: `<a href="${lang === 'ca' ? '/ca' : ''}/politica-de-cookies/">${t('cookies.enlaceTexto')}</a>` }),
