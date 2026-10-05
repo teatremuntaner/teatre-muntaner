@@ -51,6 +51,8 @@ const BLOQUEO = ['*googletagmanager.com*', '*google-analytics.com*', '*analytics
 const GTM_JS = /googletagmanager\.com\/gtm\.js/;
 const GA = /googletagmanager\.com\/gtag\/js|google-analytics\.com|analytics\.google\.com/;
 const META = /connect\.facebook\.net|facebook\.com\/tr/;
+// Qué se ha mandado a las etiquetas: configuraciones de Analytics y cola del píxel (fbevents bloqueado).
+const ETIQUETAS = `JSON.stringify({config:(window.dataLayer||[]).filter(x=>x&&x[0]==='config').map(x=>x[1]),fbq:window.fbq&&window.fbq.queue?window.fbq.queue.map(a=>Array.from(a).slice(0,2).join(':')):null})`;
 const todas = []; // todas las peticiones de la prueba, para comprobar al final que gtm.js no se pide nunca
 
 const resultados = [];
@@ -156,6 +158,7 @@ for (const modo of ['sin elegir', 'rechazando todo']) {
   await p.ev(aceptar(['analytics']));
   await sleep(1500);
   const t0 = p.terceros();
+  check('[solo estadística] aceptar no recarga la página', (await p.ev(`performance.getEntriesByType('navigation')[0].type`)) === 'navigate', '');
   check('[solo estadística] al aceptar, Analytics (bloqueado) se pide sin recargar; Meta no', t0.some((u) => GA.test(u)) && !t0.some((u) => META.test(u)), [...new Set(t0.map((u) => new URL(u).host))].join(', '));
   const orden = await p.ev(`(()=>{const dl=(window.dataLayer||[]).map(x=>x&&x[0]==='consent'?'consent-'+x[1]+(x[2]&&x[2].analytics_storage?'-'+x[2].analytics_storage:''):(x&&x[0])||'');return dl.join(',')})()`);
   const iU = orden.indexOf('consent-update-granted'), iC = orden.indexOf('config');
@@ -166,7 +169,28 @@ for (const modo of ['sin elegir', 'rechazando todo']) {
     await p.ev(recorrer);
     const t = p.terceros();
     check(`[solo estadística] ${pg} Analytics sí; Meta, gtm.js y terceros de marketing no`, t.some((u) => GA.test(u)) && t.every((u) => GA.test(u)), [...new Set(t.map((u) => new URL(u).host))].join(', '));
+    const e = await p.ev(ETIQUETAS);
+    check(`[solo estadística] ${pg} una sola vista de página a la cuenta correcta y sin píxel`, e === '{"config":["G-3LC1FMXQFM"],"fbq":null}', e);
   }
+  await p.cerrar();
+}
+
+// 4a) De todo a solo estadística: recarga (autoClear) y queda Analytics sin Meta; de todo a
+// solo marketing: queda Meta sin Analytics. Nada de la categoría retirada desde la retirada.
+for (const [deja, quita, re, reNo] of [[['analytics'], 'marketing', GA, META], [['marketing'], 'analytics', META, GA]]) {
+  const p = await nuevaPestana();
+  await p.ir('/');
+  await p.ev(aceptar('all'));
+  await sleep(1500);
+  await p.ir('/', 3000);
+  const antes = p.reqs.length;
+  await p.ev(`CookieConsent.acceptCategory(${JSON.stringify(deja)})`);
+  await sleep(4500);
+  const nav = await p.ev(`performance.getEntriesByType('navigation')[0].type`);
+  const t = p.reqs.slice(antes).filter((u) => PROHIBIDO.test(u));
+  const recargas = p.reqs.slice(antes).filter((u) => u === `${BASE}/`).length;
+  const e = await p.ev(ETIQUETAS);
+  check(`[todo -> sin ${quita}] una recarga; sigue lo aceptado y nada de ${quita} desde la retirada`, nav === 'reload' && recargas === 1 && t.some((u) => re.test(u)) && !t.some((u) => reNo.test(u)), `nav=${nav}; recargas=${recargas}; ${[...new Set(t.map((u) => new URL(u).host))].join(', ')}; ${e}`);
   await p.cerrar();
 }
 
@@ -178,15 +202,15 @@ for (const modo of ['sin elegir', 'rechazando todo']) {
   await sleep(1500);
   await p.ir('/', 3000);
   await p.ev(`(()=>{document.cookie='_ga=GA1.1.1.1; path=/';document.cookie='_ga_3LC1FMXQFM=GS1.1; path=/';document.cookie='_fbp=fb.1.1.1; path=/';return document.cookie})()`);
+  const antes = p.reqs.length;
   await p.ev(`CookieConsent.acceptCategory([])`);
-  await sleep(1000);
-  p.reqs.length = 0; // lo que venga tras la recarga
-  await sleep(3500);
+  await sleep(4500);
   await p.ev(recorrer);
   const ck = await p.ev(`document.cookie`);
-  const t = p.terceros();
+  const t = p.reqs.slice(antes).filter((u) => PROHIBIDO.test(u)); // desde la retirada, también antes de recargar
+  const recargas = p.reqs.slice(antes).filter((u) => u === `${BASE}/`).length;
   const nav = await p.ev(`performance.getEntriesByType('navigation')[0].type`);
-  check('[retirar todo] recarga, sin Analytics ni Meta y sin _ga/_fbp', nav === 'reload' && t.length === 0 && !/(^|; )_(ga|fbp)/.test(ck), `nav=${nav}; cookies=${ck}; ${t.slice(0, 3).join(' | ')}`);
+  check('[retirar todo] una recarga, nada a Analytics ni Meta desde la retirada y sin _ga/_fbp', nav === 'reload' && recargas === 1 && t.length === 0 && !/(^|; )_(ga|fbp)/.test(ck), `nav=${nav}; recargas=${recargas}; cookies=${ck}; ${t.slice(0, 3).join(' | ')}`);
   await p.cerrar();
 }
 
@@ -229,6 +253,8 @@ for (const modo of ['sin elegir', 'rechazando todo']) {
   await sleep(3000);
   await p.ev(recorrer);
   const t = p.terceros();
+  const e = await p.ev(ETIQUETAS);
+  check('[todo] una sola vista de página en cada etiqueta, a la cuenta correcta', e === '{"config":["G-3LC1FMXQFM"],"fbq":["init:1316984187145278","track:PageView"]}', e);
   check('[todo] YouTube, Analytics y Meta (bloqueados) se piden; gtm.js no', t.some((u) => /youtube/.test(u)) && t.some((u) => GA.test(u)) && t.some((u) => META.test(u)) && !t.some((u) => GTM_JS.test(u)), [...new Set(t.map((u) => new URL(u).host))].join(', '));
   await p.cerrar();
 }

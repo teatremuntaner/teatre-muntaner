@@ -276,6 +276,10 @@ const bodyStyle =
               ad_personalization: marketing ? 'granted' : 'denied'
             });
           }
+          // Al retirar, autoClear recarga; mientras, las etiquetas ya cargadas se
+          // apagan para que no manden nada al salir de la página.
+          window['ga-disable-G-3LC1FMXQFM'] = !analytics;
+          if (!marketing && metaCargado && typeof window.fbq === 'function') fbq('consent', 'revoke');
           if (analytics) cargarAnalytics();
           if (marketing) cargarMeta();
           aplicarTerceros();
