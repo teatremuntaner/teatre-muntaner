@@ -4,6 +4,10 @@
  * Son los mismos ficheros que servía Google (fuentes variables, licencia OFL),
  * descargados el 05/10/2026: un fichero por subconjunto cubre del 400 al 700.
  * Solo latin y latin-ext (castellano, catalán y nombres europeos).
+ *
+ * Licencia: SIL Open Font License 1.1. El texto de la licencia y el aviso de copyright de
+ * cada familia se publican junto a los ficheros (E273): /fonts/LICENCIAS/RedditSans-OFL.txt
+ * y /fonts/LICENCIAS/Oswald-OFL.txt (public/fonts/LICENCIAS).
  */
 @font-face {
   font-family: 'Oswald';

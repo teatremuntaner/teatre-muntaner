@@ -43,7 +43,7 @@ ws.addEventListener('message', (e) => {
 const send = (method, params = {}, sessionId) => new Promise((r) => { const i = ++id; pend.set(i, r); ws.send(JSON.stringify({ id: i, method, params, sessionId })); });
 
 // Lo que NO puede salir sin consentimiento.
-const PROHIBIDO = /fonts\.googleapis|fonts\.gstatic|google\.[a-z.]+\/maps|maps\.google|maps\.gstatic|youtube|ytimg|googlevideo|instagram|cdninstagram|facebook|fbcdn|tiktok|googletagmanager|google-analytics|analytics\.google|doubleclick/;
+const PROHIBIDO = /fonts\.googleapis|fonts\.gstatic|google\.[a-z.]+\/maps|maps\.google|maps\.gstatic|youtube|ytimg|googlevideo|instagram|cdninstagram|facebook|fbcdn|tiktok|googletagmanager|google-analytics|analytics\.google|doubleclick|identity\.netlify\.com/;
 // Bloqueados en el navegador de prueba (Analytics y Meta reales; GTM por si acaso).
 const BLOQUEO = ['*googletagmanager.com*', '*google-analytics.com*', '*analytics.google.com*', '*doubleclick.net*', '*connect.facebook.net*', '*facebook.com*', '*facebook.net*'];
 
@@ -279,6 +279,35 @@ for (const [deja, quita, re, reNo] of [[['analytics'], 'marketing', GA, META], [
   await p.ev(aceptar(['marketing'])); await sleep(1200);
   const prop = await p.ev(`(()=>{const r=document.querySelector('.show__video').getBoundingClientRect();return Math.round(r.width/r.height*100)/100})()`);
   check('[375px, marketing] el vídeo vuelve a 16:9', Math.abs(prop - 16 / 9) < 0.03, String(prop));
+  await p.cerrar();
+}
+
+// 6c) Enlaces de los correos del gestor (Netlify Identity, E273): con #invite_token,
+// #recovery_token… se carga el widget, arranca y comprueba el código contra
+// /.netlify/identity/verify; sin ellos, no se pide (lo miran los escenarios 1 y 2).
+// En 127.0.0.1 el widget no llama a la API (pide la dirección del sitio de Netlify), así que
+// aquí el navegador pide https://teatremuntaner.com/… y se le contesta con dist/
+// (Fetch.fulfillRequest; /.netlify/identity/* da 404): nada sale hacia la web publicada.
+const DOMINIO = 'https://teatremuntaner.com';
+for (const token of ['invite_token', 'recovery_token', 'confirmation_token', 'email_change_token']) {
+  const p = await nuevaPestana();
+  const servir = (m) => {
+    if (m.sessionId !== p.s || m.method !== 'Fetch.requestPaused') return;
+    const ruta = new URL(m.params.request.url).pathname;
+    fetch(BASE + ruta).then(async (r) => {
+      const body = Buffer.from(await r.arrayBuffer()).toString('base64');
+      send('Fetch.fulfillRequest', { requestId: m.params.requestId, responseCode: r.status, responseHeaders: [{ name: 'Content-Type', value: r.headers.get('content-type') || 'text/plain' }], body }, p.s);
+    });
+  };
+  listeners.push(servir);
+  await send('Fetch.enable', { patterns: [{ urlPattern: `${DOMINIO}/*`, requestStage: 'Request' }] }, p.s);
+  await send('Page.navigate', { url: `${DOMINIO}/#${token}=prueba-e273` }, p.s);
+  await sleep(6000);
+  const pedido = p.reqs.some((u) => /identity\.netlify\.com/.test(u));
+  const verifica = p.reqs.some((u) => u.startsWith(`${DOMINIO}/.netlify/identity/`));
+  const listo = await p.ev(`!!(window.netlifyIdentity && document.getElementById('netlify-identity-widget'))`);
+  check(`[gestor] /#${token}=… carga el widget y lo pone en marcha`, pedido && listo && verifica, `widget=${pedido} iframe=${listo} verify=${verifica}`);
+  listeners.splice(listeners.indexOf(servir), 1);
   await p.cerrar();
 }
 
