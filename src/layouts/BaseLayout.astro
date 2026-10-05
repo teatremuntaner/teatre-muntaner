@@ -221,12 +221,14 @@ const bodyStyle =
         // Si GTM ya estaba cargado y ahora se acepta el marketing, el píxel de
         // Meta (que salta al cargar el contenedor) no se activaría hasta la
         // página siguiente: se recarga para que lo haga ya. Al retirar una
-        // categoría recarga autoClear (reloadPage), que además borra las cookies.
+        // categoría recarga autoClear (reloadPage), que además borra las cookies;
+        // por eso aquí solo se recarga si la estadística sigue aceptada.
         function alCambiar(p) {
           var yaCargado = gtmCargado;
           syncConsent();
           var cambiadas = (p && p.changedCategories) || [];
-          if (yaCargado && cambiadas.indexOf('marketing') !== -1 && CookieConsent.acceptedCategory('marketing')) {
+          if (yaCargado && cambiadas.indexOf('marketing') !== -1 && CookieConsent.acceptedCategory('marketing') &&
+              CookieConsent.acceptedCategory('analytics')) {
             location.reload();
           }
         }
