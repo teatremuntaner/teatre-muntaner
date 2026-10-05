@@ -7,7 +7,6 @@ const t = useT(lang);
 
 // Nombres propios y de terceros: NO se traducen, entran como variable.
 const TEATRO = 'Teatre Muntaner';
-const GTM = 'Google Tag Manager';
 const ANALYTICS = 'Google Analytics';
 const PROVEEDOR = 'Google LLC';
 const META = 'Meta Platforms Ireland Ltd.';
@@ -44,8 +43,8 @@ const META = 'Meta Platforms Ireland Ltd.';
     <p>{t('legal.cookies.p14', { teatro: TEATRO })}</p>
     <ul>
       <li>{t('legal.cookies.c.necesarias')}</li>
-      <li>{t('legal.cookies.c.analiticas', { gtm: GTM, analytics: ANALYTICS })}</li>
-      <li>{t('legal.cookies.c.marketing', { gtm: GTM })}</li>
+      <li>{t('legal.cookies.c.analiticas', { analytics: ANALYTICS })}</li>
+      <li>{t('legal.cookies.c.marketing')}</li>
       <li>{t('legal.cookies.c.terceros')}</li>
     </ul>
     <p>{t('legal.cookies.c.fuentes')}</p>
