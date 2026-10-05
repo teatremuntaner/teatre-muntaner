@@ -205,7 +205,27 @@ const bodyStyle =
           j.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-TR52LK75';
           document.head.appendChild(j);
         }
+        // Borra las cookies de las categorías NO aceptadas. Hace falta al arrancar:
+        // la versión anterior cargaba GTM siempre y dejó _ga/_fbp a quien había
+        // rechazado, y autoClear solo actúa al cambiar de opinión, no al volver
+        // con un consentimiento ya guardado. Se prueba sin domain (host-only) y
+        // con cada dominio padre (.teatremuntaner.com); no recarga.
+        function limpiarDenegadas() {
+          var partes = location.hostname.split('.'), dominios = [null];
+          for (var i = 0; i < partes.length - 1; i++) dominios.push('.' + partes.slice(i).join('.'));
+          var nombres = document.cookie.split(';').map(function (c) { return c.split('=')[0].trim(); });
+          Object.keys(COOKIES).forEach(function (cat) {
+            if (CookieConsent.acceptedCategory(cat)) return;
+            nombres.forEach(function (n) {
+              if (!COOKIES[cat].some(function (re) { return re.test(n); })) return;
+              dominios.forEach(function (d) {
+                document.cookie = n + '=; path=/' + (d ? '; domain=' + d : '') + '; expires=Thu, 01 Jan 1970 00:00:01 GMT';
+              });
+            });
+          });
+        }
         function syncConsent() {
+          limpiarDenegadas();
           var analytics = CookieConsent.acceptedCategory('analytics');
           var marketing = CookieConsent.acceptedCategory('marketing');
           if (typeof gtag === 'function') {
@@ -235,7 +255,7 @@ const bodyStyle =
         function autoClear(cat) {
           return { reloadPage: true, cookies: COOKIES[cat].map(function (re) { return { name: re }; }) };
         }
-        CookieConsent.run({
+        var arranque = CookieConsent.run({
           guiOptions: {
             consentModal: { layout: 'box wide', position: 'bottom left' },
             preferencesModal: { layout: 'box' }
@@ -275,6 +295,9 @@ const bodyStyle =
             }
           }
         });
+        // Sin consentimiento válido (primera visita o revisión caducada) no salta
+        // onConsent: se limpia igual, con todo lo no aceptado.
+        Promise.resolve(arranque).then(limpiarDenegadas, limpiarDenegadas);
         // Enlace "Configurar cookies" (footer u otros) para reabrir el panel
         document.addEventListener('click', function (e) {
           var t = e.target.closest && e.target.closest('[data-cc="show-preferences"]');
