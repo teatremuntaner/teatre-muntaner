@@ -46,4 +46,10 @@ assert.ok(!aplazaIframes('<iframe srcdoc="<p>x</p>"></iframe>', T).includes('<a 
 assert.ok(!aplazaIframes('<iframe src="javascript:alert(1)"></iframe>', T).includes('<a '));
 // Dos iframes seguidos: dos envoltorios.
 assert.equal(aplazaIframes('<iframe src="1"></iframe><iframe src="2"></iframe>', T).split('consent-embed').length - 1, 2);
+// Cierres raros que el navegador acepta: el segundo iframe también tiene que quedar aplazado.
+for (const cierre of ['</iframe>', '</iframe/>', '</iframe foo>', '</IFRAME >']) {
+  const r = aplazaIframes(`<iframe src="https://a.example/e">${cierre}<iframe src="https://b.example/e"></iframe>`, T);
+  assert.ok(!/<iframe[^>]*\ssrc=/i.test(r), cierre + ' => ' + r);
+  assert.equal(r.split('consent-embed').length - 1, 2, cierre + ' => ' + r);
+}
 console.log(`remark-terceros: ${casos.length} casos + fachada OK`);

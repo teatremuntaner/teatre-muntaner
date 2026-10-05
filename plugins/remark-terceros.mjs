@@ -23,7 +23,10 @@
 import { readFileSync } from 'node:fs';
 
 const ABRE_IFRAME = /<iframe(?=[\s/>]|$)/gi;
-const CIERRA_IFRAME = /<\/iframe\s*>/gi;
+// Cierre tal como lo reconoce el navegador: «</iframe» seguido de espacio, / o >, hasta el
+// primer >. Así valen también «</iframe/>» y «</iframe foo>» (lo encontró Codex: con
+// «\s*>» se saltaba hasta el cierre del iframe siguiente y ese se quedaba con su src).
+const CIERRA_IFRAME = /<\/iframe(?=[\s/>])[^>]*>/gi;
 const APLAZAR = new Set(['src', 'srcdoc']);
 const esEspacio = (c) => c === ' ' || c === '\t' || c === '\n' || c === '\r' || c === '\f';
 const escapa = (t) => String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
