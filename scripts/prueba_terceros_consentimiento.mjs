@@ -154,6 +154,23 @@ for (const modo of ['sin elegir', 'rechazando todo']) {
   await p.cerrar();
 }
 
+// 5b) Reel pendiente con la estadística ya aceptada: al aceptar el marketing el banner
+// recarga la página (para el píxel de Meta) y el reel pulsado tiene que cargarse igual.
+{
+  const p = await nuevaPestana();
+  await p.ir(REELS, 4000);
+  await p.ev(`CookieConsent.acceptCategory(['analytics'])`);
+  await sleep(1500);
+  await p.ev(`document.querySelector('.reel__cover').click()`);
+  await sleep(800);
+  await p.ev(`CookieConsent.acceptCategory(['analytics','marketing'])`);
+  await sleep(6000);
+  const iframe = await p.ev(`!!document.querySelector('.reel__cover iframe')`);
+  const pend = await p.ev(`sessionStorage.getItem('tm-reel-pendiente')`);
+  check('[reel pendiente tras recarga] con estadística previa, el reel pulsado se carga', iframe && p.terceros().some((u) => /instagram|tiktok/.test(u)), `iframe=${iframe} pendiente=${pend}`);
+  await p.cerrar();
+}
+
 // 6) Todo aceptado: además se intenta cargar GTM (bloqueado en este navegador).
 {
   const p = await nuevaPestana();
@@ -165,6 +182,21 @@ for (const modo of ['sin elegir', 'rechazando todo']) {
   const t = p.terceros();
   check('[todo] YouTube y GTM (bloqueado) se piden', t.some((u) => /youtube/.test(u)) && t.some((u) => /googletagmanager/.test(u)), [...new Set(t.map((u) => new URL(u).host))].join(', '));
   await p.cerrar();
+}
+
+// 7) En el HTML generado ningún iframe lleva src: todos esperan al consentimiento.
+{
+  const { readdirSync } = await import('node:fs');
+  const malos = [];
+  const andar = (d) => readdirSync(d, { withFileTypes: true }).forEach((e) => {
+    const f = join(d, e.name);
+    if (e.isDirectory()) return andar(f);
+    if (!f.endsWith('.html')) return;
+    const html = readFileSync(f, 'utf8');
+    for (const m of html.matchAll(/<iframe\b[^>]*>/gi)) if (/\ssrc\s*=/.test(m[0])) malos.push(`${f.slice(DIST.length)}: ${m[0].slice(0, 90)}`);
+  });
+  andar(DIST);
+  check('[dist] ningún <iframe> con src en el HTML generado', malos.length === 0, malos.slice(0, 3).join(' | '));
 }
 
 const fallos = resultados.filter((r) => !r.ok).length;

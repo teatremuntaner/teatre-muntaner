@@ -9,7 +9,9 @@
  * El clic NO basta como consentimiento (E267): Instagram y TikTok dejan cookies
  * propias, así que el reel solo se carga con las cookies de MARKETING aceptadas.
  * Sin ellas, el clic abre el panel de cookies; si ahí se acepta el marketing,
- * el reel pulsado se carga solo. Debajo de cada reel queda el enlace a la red.
+ * el reel pulsado se carga solo (también si el banner recarga la página para
+ * activar el píxel de Meta: el reel pendiente se guarda un minuto en
+ * sessionStorage). Debajo de cada reel queda el enlace a la red.
  * Mismo criterio que la web del Teatro Sofía (04/10/2026).
  *
  * Los textos llegan por props porque la ficha es bilingüe (ver src/i18n).
@@ -139,7 +141,15 @@ const items = reels
   // Al pulsar la portada se sustituye por el iframe de la red social, pero solo
   // con las cookies de marketing aceptadas (ver la cabecera del componente).
   (function () {
+  var CLAVE = 'tm-reel-pendiente';
+  var portadas = Array.prototype.slice.call(document.querySelectorAll('.reel__cover'));
   var pendiente = null;
+  // Reel pulsado justo antes de una recarga del banner (ver la cabecera).
+  try {
+    var g = JSON.parse(sessionStorage.getItem(CLAVE) || 'null');
+    sessionStorage.removeItem(CLAVE);
+    if (g && g.p === location.pathname && Date.now() - g.t < 60000 && portadas[g.i]) pendiente = portadas[g.i];
+  } catch (e) {}
   function marketing() {
     return !!(window.CookieConsent && window.CookieConsent.acceptedCategory('marketing'));
   }
@@ -161,13 +171,14 @@ const items = reels
     btn.style.aspectRatio = 'auto';
     btn.style.height = (btn.getAttribute('data-alto') || 560) + 'px';
   }
-  document.querySelectorAll('.reel__cover').forEach(function (btn) {
+  portadas.forEach(function (btn, i) {
     btn.addEventListener('click', function () {
       if (marketing()) { cargar(btn); return; }
       // Sin consentimiento no se pide nada a la red: se abre el panel de cookies
       // y se recuerda el reel pulsado por si se acepta el marketing.
       // Si el banner no ha cargado, tampoco se carga: queda el enlace de debajo.
       pendiente = btn;
+      try { sessionStorage.setItem(CLAVE, JSON.stringify({ p: location.pathname, i: i, t: Date.now() })); } catch (e) {}
       if (window.CookieConsent) window.CookieConsent.showPreferences();
     });
   });
