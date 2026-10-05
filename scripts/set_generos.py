@@ -22,7 +22,7 @@ DATA = {
     "edu-mutante-saludos-cordiales":                 ("Comedia", ["Comedia", "Monólogos"],                     "Edu Mutante"),
     "el-petit-princep":                              ("Teatro",  ["Teatro", "Familiar"],                       ""),
     "laneguet-lleig":                                ("Teatro",  ["Teatro", "Familiar"],                       "NS Dansa"),
-    "joaquin-caserza-conversaciones-con-mi-mente":   ("Comedia", ["Comedia", "Monólogos", "Bienestar emocional"], "Joaquín Caserza"),
+    "joaquin-caserza-conversaciones-con-mi-mente":   ("Comedia", ["Comedia", "Monólogos", "Bienestar"], "Joaquín Caserza"),
     "me-veo-en-wallapop-diego-arjona":               ("Comedia", ["Comedia", "Monólogos"],                     "Diego Arjona"),
     "nenaaa":                                        ("Teatro",  ["Teatro", "Comedia"],                        ""),
     "riquina":                                       ("Comedia", ["Comedia", "Monólogos"],                     "Jazmín Abuín"),

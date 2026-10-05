@@ -103,7 +103,7 @@ GENRE_HINTS = [
     # es la pista más dudosa y, con el tope de 3, no debe desplazar a las demás.
     # Solo palabras de tema, no de personaje: «un psicólogo asesino» es teatro, y
     # «thriller psicológico» y «premeditación» tampoco son bienestar.
-    ("Bienestar",     r"\bpsicolog[ií]a\b|crecimiento personal|creixement personal|desarrollo personal|desenvolupament personal|autoestima|autoconocimiento|autoconeixement|mindfulness|\bmeditaci[oó]|inteligencia emocional|intel[·.]?lig[eè]ncia emocional|\bbienestar\b|\bbenestar\b"),
+    ("Bienestar",     r"\bpsicolog[ií]a\b|crecimiento personal|creixement personal|desarrollo personal|desenvolupament personal|autoconocimiento|autoconeixement|mindfulness|\bmeditaci[oó]|inteligencia emocional|intel[·.]?lig[eè]ncia emocional|\bbienestar\b|\bbenestar\b"),
 ]
 
 def deduce_genres(title, synopsis):
