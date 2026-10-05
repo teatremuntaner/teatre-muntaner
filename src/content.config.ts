@@ -50,8 +50,11 @@ const espectaculos = defineCollection({
       // vídeo subido (ruta /uploads/...), alternativa a YouTube. Solo vale un archivo de esta
       // misma web: una dirección de otro sitio se pediría al abrir la ficha, sin consentimiento
       // (E267). Si llega una así, se ignora (con aviso en la compilación) en vez de tumbarla.
+      // Ruta que empieza por UNA barra, sin barra invertida, tabulador ni salto de línea en
+      // ningún sitio: el navegador lee «//x», «/\x» o «/<tab>/x» como otro dominio (lo
+      // encontró Codex). Los espacios sí valen (nombres de archivo subidos).
       video: z.string().optional().transform((v) => {
-        if (!v || /^\/(?!\/)/.test(v)) return v || undefined;
+        if (!v || /^\/[^\/\\\t\n\r][^\\\t\n\r]*$/.test(v)) return v || undefined;
         console.warn(`[espectaculos] video externo ignorado (solo archivos subidos a la web): ${v}`);
         return undefined;
       }),
