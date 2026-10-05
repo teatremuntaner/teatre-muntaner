@@ -1,4 +1,5 @@
 ---
+import '../styles/fonts.css';
 import '../styles/global.css';
 import '../styles/fx.css';
 import Header from '../components/Header.astro';
@@ -19,7 +20,7 @@ interface Props {
   accent?: string;        // color predominante del cartel
   accentInk?: string;     // color de texto legible sobre el acento
   titleFont?: string;     // nombre CSS de la tipografía del título (como la del cartel)
-  titleFontUrl?: string;  // <link> de Google Fonts para esa tipografía
+  titleFontUrl?: string;  // <link> a la hoja de esa tipografía (solo si es de esta web)
   image?: string;         // og:image
   bare?: boolean;         // landing de campaña: sin header/footer y siempre noindex
   noindex?: boolean;      // página funcional sin valor para resultados de búsqueda
@@ -53,6 +54,19 @@ const alternates = LANGS.map((l) => ({
 }));
 const xDefault = new URL(stripLocale(Astro.url.pathname), SITE).href;
 
+// La tipografía especial de un título solo se carga si se sirve desde esta
+// misma web (public/fonts). Una hoja de Google Fonts mandaría la IP del
+// visitante a Google antes de que acepte nada (E267): se ignora y el título
+// cae en la tipografía de la casa.
+const titleFontHref = (() => {
+  if (!titleFontUrl) return undefined;
+  try {
+    if (new URL(titleFontUrl, SITE).host === SITE.host) return titleFontUrl;
+  } catch {}
+  console.warn(`[BaseLayout] titleFontUrl de otro dominio ignorado: ${titleFontUrl}`);
+  return undefined;
+})();
+
 const bodyStyle =
   `--accent:${accent};--accent-ink:${accentInk};` +
   (titleFont ? `--f-title:'${titleFont}', var(--f-display);` : '');
@@ -70,6 +84,19 @@ const bodyStyle =
           var s = localStorage.getItem('tm-fx');
           var on = s === null ? !!fxDefault : s === '1';
           if (on) document.documentElement.classList.add('tm-fx-on');
+        } catch (e) {}
+      })();
+    </script>
+    <!-- Contenido de terceros (YouTube, reels, mapa): si el consentimiento guardado
+         ya incluye marketing, se marca antes de pintar para que no asome el aviso
+         de "acepta las cookies" un instante. Es solo visual: lo que carga los
+         iframes es el script del banner, al final del body (E267). -->
+    <script is:inline>
+      (function () {
+        try {
+          var m = document.cookie.match(/(?:^|;\s*)cc_cookie=([^;]*)/);
+          var c = m && JSON.parse(decodeURIComponent(m[1]));
+          if (c && c.categories && c.categories.indexOf('marketing') !== -1) document.documentElement.classList.add('tm-mkt');
         } catch (e) {}
       })();
     </script>
@@ -99,13 +126,10 @@ const bodyStyle =
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
     <link rel="icon" type="image/png" sizes="64x64" href={`${import.meta.env.BASE_URL}favicon-64.png`} />
     <link rel="apple-touch-icon" href={`${import.meta.env.BASE_URL}favicon-180.png`} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Reddit+Sans:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    {titleFontUrl && <link href={titleFontUrl} rel="stylesheet" />}
+    <!-- Tipografías autoalojadas (src/styles/fonts.css): nada sale hacia Google Fonts -->
+    <link rel="preload" href={`${import.meta.env.BASE_URL}fonts/reddit-sans-latin.woff2`} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={`${import.meta.env.BASE_URL}fonts/oswald-latin.woff2`} as="font" type="font/woff2" crossorigin />
+    {titleFontHref && <link href={titleFontHref} rel="stylesheet" />}
     <!-- Banner de cookies (vanilla-cookieconsent, gratis/open-source) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3.1.0/dist/cookieconsent.css" />
     <style is:inline>
@@ -237,6 +261,23 @@ const bodyStyle =
             });
           }
           if (analytics) cargarGTM();
+          aplicarTerceros();
+        }
+        // Contenido de terceros incrustado (vídeos de YouTube, mapa de Google,
+        // reels de Instagram/TikTok): deja cookies y avisa a esas empresas de la
+        // visita, así que va con el MARKETING (E267). Sin él, los iframes se
+        // quedan sin src (data-consent-src) y se ve el aviso .consent-gate con el
+        // botón "Configurar cookies". Al aceptarlo, se cargan sin recargar; al
+        // retirarlo, autoClear recarga la página y vuelven a quedarse sin cargar.
+        function aplicarTerceros() {
+          var mkt = CookieConsent.acceptedCategory('marketing');
+          document.documentElement.classList.toggle('tm-mkt', mkt);
+          if (mkt) {
+            document.querySelectorAll('iframe[data-consent-src]').forEach(function (f) {
+              if (!f.getAttribute('src')) f.setAttribute('src', f.getAttribute('data-consent-src'));
+            });
+          }
+          document.dispatchEvent(new CustomEvent('tm:consent', { detail: { marketing: mkt } }));
         }
         // Si GTM ya estaba cargado y ahora se acepta el marketing, el píxel de
         // Meta (que salta al cargar el contenedor) no se activaría hasta la
@@ -297,7 +338,8 @@ const bodyStyle =
         });
         // Sin consentimiento válido (primera visita o revisión caducada) no salta
         // onConsent: se limpia igual, con todo lo no aceptado.
-        Promise.resolve(arranque).then(limpiarDenegadas, limpiarDenegadas);
+        function alArrancar() { limpiarDenegadas(); aplicarTerceros(); }
+        Promise.resolve(arranque).then(alArrancar, alArrancar);
         // Enlace "Configurar cookies" (footer u otros) para reabrir el panel
         document.addEventListener('click', function (e) {
           var t = e.target.closest && e.target.closest('[data-cc="show-preferences"]');

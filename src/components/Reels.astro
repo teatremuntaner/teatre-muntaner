@@ -4,12 +4,18 @@
  *
  * Se cargan con FACHADA: hasta que el visitante pulsa no se pide nada a la red
  * social. Así la ficha no arrastra el peso ni las cookies de terceros de un
- * puñado de iframes que casi nadie va a mirar, y el consentimiento de cookies
- * lo da el propio clic.
+ * puñado de iframes que casi nadie va a mirar.
+ *
+ * El clic NO basta como consentimiento (E267): Instagram y TikTok dejan cookies
+ * propias, así que el reel solo se carga con las cookies de MARKETING aceptadas.
+ * Sin ellas, el clic abre el panel de cookies; si ahí se acepta el marketing,
+ * el reel pulsado se carga solo. Debajo de cada reel queda el enlace a la red.
+ * Mismo criterio que la web del Teatro Sofía (04/10/2026).
  *
  * Los textos llegan por props porque la ficha es bilingüe (ver src/i18n).
  */
 import { Image } from 'astro:assets';
+import { useT, langFromPath } from '../i18n';
 
 interface Props {
   reels: { url: string; caption?: string; poster?: ImageMetadata }[];
@@ -17,6 +23,7 @@ interface Props {
   verEn: string; // "Ver en" / "Veure a"
 }
 const { reels, title, verEn } = Astro.props;
+const t = useT(langFromPath(Astro.url.pathname));
 
 /** De la URL pública al embed de cada red. Si no se reconoce, se descarta. */
 function toEmbed(url: string): { embed: string; red: string } | null {
@@ -38,6 +45,10 @@ const items = reels
 {items.length > 0 && (
   <section class="wrap reels">
     <h2 class="reels__title">{title}</h2>
+    <p class="reels__aviso">
+      {t('terceros.reels')}
+      <button type="button" class="reels__aviso-btn" data-cc="show-preferences">{t('terceros.configurar')}</button>
+    </p>
     <div class="reels__grid">
       {items.map((r) => (
         <figure class="reel">
@@ -73,6 +84,13 @@ const items = reels
      del .wrap y la sección se desalinearía del resto de la ficha. */
   .reels { padding-block: clamp(20px, 4vw, 40px) clamp(10px, 2vw, 20px); }
   .reels__title { font-family: var(--f-display); font-size: clamp(22px, 3vw, 32px); margin: 0 0 22px; }
+  /* Aviso de consentimiento: desaparece cuando <html> lleva tm-mkt (marketing aceptado). */
+  .reels__aviso { margin: -10px 0 20px; font-size: 14px; line-height: 1.5; color: var(--paper-dim); max-width: 70ch; }
+  :global(.tm-mkt) .reels__aviso { display: none; }
+  .reels__aviso-btn {
+    font: inherit; color: var(--accent); background: none; border: 0; padding: 0; margin-left: 4px;
+    text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+  }
   .reels__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
   .reel { margin: 0; display: flex; flex-direction: column; gap: 10px; }
   .reel__cover {
@@ -118,25 +136,44 @@ const items = reels
 </style>
 
 <script is:inline>
-  // Al pulsar la portada se sustituye por el iframe de la red social.
+  // Al pulsar la portada se sustituye por el iframe de la red social, pero solo
+  // con las cookies de marketing aceptadas (ver la cabecera del componente).
+  (function () {
+  var pendiente = null;
+  function marketing() {
+    return !!(window.CookieConsent && window.CookieConsent.acceptedCategory('marketing'));
+  }
+  function cargar(btn) {
+    var src = btn.getAttribute('data-embed');
+    if (!src || btn.querySelector('iframe')) return;
+    var f = document.createElement('iframe');
+    f.src = src;
+    f.loading = 'lazy';
+    f.title = btn.getAttribute('aria-label') || 'Video';
+    f.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;background:#000';
+    f.setAttribute('allow', 'autoplay; clipboard-write; encrypted-media; picture-in-picture');
+    f.setAttribute('allowfullscreen', '');
+    btn.innerHTML = '';
+    btn.appendChild(f);
+    btn.style.cursor = 'default';
+    // El recuadro de la red social es más alto que la portada 9:16: se le
+    // deja su sitio para que no salga con scroll interno.
+    btn.style.aspectRatio = 'auto';
+    btn.style.height = (btn.getAttribute('data-alto') || 560) + 'px';
+  }
   document.querySelectorAll('.reel__cover').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      var src = btn.getAttribute('data-embed');
-      if (!src || btn.querySelector('iframe')) return;
-      var f = document.createElement('iframe');
-      f.src = src;
-      f.loading = 'lazy';
-      f.title = btn.getAttribute('aria-label') || 'Video';
-      f.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;background:#000';
-      f.setAttribute('allow', 'autoplay; clipboard-write; encrypted-media; picture-in-picture');
-      f.setAttribute('allowfullscreen', '');
-      btn.innerHTML = '';
-      btn.appendChild(f);
-      btn.style.cursor = 'default';
-      // El recuadro de la red social es más alto que la portada 9:16: se le
-      // deja su sitio para que no salga con scroll interno.
-      btn.style.aspectRatio = 'auto';
-      btn.style.height = (btn.getAttribute('data-alto') || 560) + 'px';
+      if (marketing()) { cargar(btn); return; }
+      // Sin consentimiento no se pide nada a la red: se abre el panel de cookies
+      // y se recuerda el reel pulsado por si se acepta el marketing.
+      // Si el banner no ha cargado, tampoco se carga: queda el enlace de debajo.
+      pendiente = btn;
+      if (window.CookieConsent) window.CookieConsent.showPreferences();
     });
   });
+  // El banner avisa (BaseLayout) cada vez que se resuelve el consentimiento.
+  document.addEventListener('tm:consent', function (e) {
+    if (e.detail && e.detail.marketing && pendiente) { var b = pendiente; pendiente = null; cargar(b); }
+  });
+  })();
 </script>

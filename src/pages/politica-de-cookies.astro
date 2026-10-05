@@ -7,9 +7,10 @@ const t = useT(lang);
 
 // Nombres propios y de terceros: NO se traducen, entran como variable.
 const TEATRO = 'Teatre Muntaner';
-const GTM = 'GTM';
+const GTM = 'Google Tag Manager';
 const ANALYTICS = 'Google Analytics';
-const PROVEEDOR = 'Google LCC';
+const PROVEEDOR = 'Google LLC';
+const META = 'Meta Platforms Ireland Ltd.';
 ---
 <BaseLayout title={t('legal.cookies.meta.titulo')} description={t('legal.cookies.meta.descripcion', { teatro: TEATRO })}>
   <article class="legal">
@@ -40,9 +41,16 @@ const PROVEEDOR = 'Google LCC';
     <p>{t('legal.cookies.p12')}</p>
     <p>{t('legal.cookies.p13')}</p>
     <p>{t('legal.cookies.h.concreto')}</p>
-    <p>{t('legal.cookies.p14', { gtm: GTM })}</p>
+    <p>{t('legal.cookies.p14', { teatro: TEATRO })}</p>
+    <ul>
+      <li>{t('legal.cookies.c.necesarias')}</li>
+      <li>{t('legal.cookies.c.analiticas', { gtm: GTM, analytics: ANALYTICS })}</li>
+      <li>{t('legal.cookies.c.marketing', { gtm: GTM })}</li>
+      <li>{t('legal.cookies.c.terceros')}</li>
+    </ul>
+    <p>{t('legal.cookies.c.fuentes')}</p>
     <p>{t('legal.cookies.p15')}</p>
-    <p>{t('legal.cookies.p16', { gtm: GTM, analytics: ANALYTICS, proveedor: PROVEEDOR })}</p>
+    <p>{t('legal.cookies.p16', { proveedor: PROVEEDOR, meta: META })}</p>
     <p>{t('legal.cookies.p17')}</p>
     <p>{t('legal.cookies.h.desactivar')}</p>
     <p>{t('legal.cookies.p18')}</p>

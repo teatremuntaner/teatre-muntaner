@@ -249,3 +249,30 @@ h1, h2, h3 { font-family: var(--f-title); font-weight: 600; line-height: 1.05; m
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .starburst { animation: none; } }
+
+/* ============================================================
+   Contenido de terceros a la espera del consentimiento (E267)
+   Vídeos de YouTube, mapa de Google y reels: el iframe no lleva
+   src hasta que se aceptan las cookies de marketing (ver el script
+   del banner en BaseLayout). Mientras tanto se ve este aviso, que
+   desaparece en cuanto <html> lleva la clase tm-mkt.
+   ============================================================ */
+.consent-gate {
+  position: absolute; inset: 0; z-index: 1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 14px; padding: 24px; text-align: center;
+  background: #14100e; color: #f9f6e0;
+  font-size: 15px; line-height: 1.5;
+}
+.consent-gate p { margin: 0; max-width: 40ch; }
+.consent-gate__acciones { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.consent-gate__btn {
+  font: inherit; font-family: var(--f-display); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 9px 18px; border-radius: 999px; cursor: pointer; text-decoration: none;
+  border: 1px solid currentColor; background: transparent; color: inherit;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.consent-gate__btn:hover { border-color: var(--c-gold); color: var(--c-gold); }
+.consent-gate__btn--main { background: var(--c-red); border-color: var(--c-red); color: #fff; }
+.consent-gate__btn--main:hover { background: #9e1c19; border-color: #9e1c19; color: #fff; }
+.tm-mkt .consent-gate { display: none; }

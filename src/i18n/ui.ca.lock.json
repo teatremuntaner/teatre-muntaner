@@ -25,5 +25,13 @@
 
   "_nota_xarxes": "Apertium calca la preposicion: 'En xarxes' / 'Veure en Instagram'. En catalan es 'A les xarxes' y 'Veure a'.",
   "show.enRedes": "A les xarxes",
-  "show.verEn": "Veure a"
+  "show.verEn": "Veure a",
+
+  "_nota_e267": "Avisos de contenido de terceros (E267): Apertium calca 'Ver en' y 'reels de Instagram'; en catalan es 'Veure a' y 'd'Instagram'.",
+  "terceros.verEnMaps": "Veure a Google Maps",
+  "terceros.verEnYoutube": "Veure a YouTube",
+  "terceros.reels": "Per veure els vídeos aquí, accepta les cookies de màrqueting (Instagram i TikTok). També pots obrir-los a la xarxa, a sota de cadascun.",
+  "terceros.video": "Per veure el vídeo aquí, accepta les cookies de màrqueting (YouTube).",
+  "cookies.marketingDesc": "Per mesurar campanyes (Meta i Google) i per veure aquí contingut d'altres webs que deixa les seves pròpies cookies: vídeos de YouTube, reels d'Instagram i TikTok i el mapa de Google Maps.",
+  "legal.cookies.c.terceros": "Contingut d'altres webs (dins de Màrqueting): els vídeos de YouTube de les fitxes dels espectacles, els reels d'Instagram i TikTok i el mapa de Google Maps de la pàgina d'inici. En carregar-se, aquestes plataformes reben dades de la teva visita i posen les seves pròpies cookies, així que només es carreguen si acceptes les de màrqueting. Mentrestant veuràs un avís amb un enllaç per veure'ls directament al seu web."
 }
