@@ -83,9 +83,9 @@ const bodyStyle =
         wait_for_update: 500
       });
     </script>
-    <!-- Google Tag Manager -->
-    <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-TR52LK75');</script>
-    <!-- End Google Tag Manager -->
+    <!-- Google Tag Manager: NO se carga aquí. Lo carga el script del banner de
+         cookies (al final del body) solo cuando el visitante acepta la estadística.
+         Sin elegir o rechazando, no sale nada hacia Google ni Meta (E265). -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#14100e" />
     <title>{title} · Teatre Muntaner</title>
@@ -129,8 +129,6 @@ const bodyStyle =
     <meta name="twitter:image" content={ogImage} />
   </head>
   <body style={bodyStyle}>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TR52LK75" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     {!bare && <Header />}
     <main>
       <slot />
@@ -160,7 +158,7 @@ const bodyStyle =
       }
     </script>
 
-    <!-- Consentimiento de cookies: banner + Consent Mode v2 (actualiza GTM al aceptar) -->
+    <!-- Consentimiento de cookies: banner + Consent Mode v2 + carga de GTM solo con estadística aceptada -->
     <script is:inline src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3.1.0/dist/cookieconsent.umd.js"></script>
     <script is:inline define:vars={{ CC_LANG: lang, CC_T: {
       titulo: t('cookies.titulo'),
@@ -184,6 +182,29 @@ const bodyStyle =
     } }}>
       (function () {
         if (!window.CookieConsent) return;
+        // Cookies que dejan las etiquetas del contenedor, por categoría. Se borran
+        // al retirar el consentimiento (autoClear) y la página se recarga para
+        // que lo ya cargado deje de ejecutarse.
+        var COOKIES = {
+          analytics: [/^_ga($|_)/, /^_gid$/, /^_gat/],
+          marketing: [/^_fbp$/, /^_fbc$/, /^_gcl_/]
+        };
+        // Google Tag Manager (GTM-TR52LK75) se inyecta SOLO con la estadística
+        // aceptada y DESPUÉS de actualizar el consent mode, para que las etiquetas
+        // del contenedor vean ya el consentimiento real. No basta el marketing:
+        // la etiqueta de Google del contenedor mandaría la visita a Google sin
+        // cookies (modo avanzado) y el píxel de Meta exige las dos categorías.
+        var gtmCargado = false;
+        function cargarGTM() {
+          if (gtmCargado) return;
+          gtmCargado = true;
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+          var j = document.createElement('script');
+          j.async = true;
+          j.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-TR52LK75';
+          document.head.appendChild(j);
+        }
         function syncConsent() {
           var analytics = CookieConsent.acceptedCategory('analytics');
           var marketing = CookieConsent.acceptedCategory('marketing');
@@ -195,15 +216,39 @@ const bodyStyle =
               ad_personalization: marketing ? 'granted' : 'denied'
             });
           }
+          if (analytics) cargarGTM();
+        }
+        // autoClear borra con atributo domain; esto cubre además las cookies
+        // sin domain (host-only), que de otro modo sobrevivirían.
+        function borrarSinDominio(cat) {
+          document.cookie.split(';').forEach(function (c) {
+            var n = c.split('=')[0].trim();
+            if (COOKIES[cat].some(function (re) { return re.test(n); })) {
+              document.cookie = n + '=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
+            }
+          });
+        }
+        function alCambiar(p) {
+          syncConsent();
+          (p && p.changedCategories || []).forEach(function (cat) {
+            if (COOKIES[cat] && !CookieConsent.acceptedCategory(cat)) borrarSinDominio(cat);
+          });
+        }
+        function autoClear(cat) {
+          return { reloadPage: true, cookies: COOKIES[cat].map(function (re) { return { name: re }; }) };
         }
         CookieConsent.run({
           guiOptions: {
             consentModal: { layout: 'box wide', position: 'bottom left' },
             preferencesModal: { layout: 'box' }
           },
-          categories: { necessary: { enabled: true, readOnly: true }, analytics: {}, marketing: {} },
+          categories: {
+            necessary: { enabled: true, readOnly: true },
+            analytics: { autoClear: autoClear('analytics') },
+            marketing: { autoClear: autoClear('marketing') }
+          },
           onConsent: syncConsent,
-          onChange: syncConsent,
+          onChange: alCambiar,
           language: {
             default: CC_LANG,
             translations: {
