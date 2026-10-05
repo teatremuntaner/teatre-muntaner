@@ -26,7 +26,7 @@ draft: false
 artist: Joaquín Caserza
 youtubeUploadDate: "2025-08-20T05:38:15-07:00"
 links:
-  - label: Instgram
+  - label: Instagram
     url: https://www.instagram.com/joaquincaserza_actor/
   - label: TikTok
     url: https://www.tiktok.com/@joaquincaserza_actor

@@ -249,3 +249,49 @@ h1, h2, h3 { font-family: var(--f-title); font-weight: 600; line-height: 1.05; m
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .starburst { animation: none; } }
+
+/* ============================================================
+   Contenido de terceros a la espera del consentimiento (E267)
+   Vídeos de YouTube, mapa de Google y reels: el iframe no lleva
+   src hasta que se aceptan las cookies de marketing (ver el script
+   del banner en BaseLayout). Mientras tanto se ve este aviso, que
+   desaparece en cuanto <html> lleva la clase tm-mkt.
+
+   El aviso va EN FLUJO (no superpuesto): ocupa al menos un 16:9,
+   pero crece con su contenido. Así, a 320 px, el texto y los botones
+   no se salen del recuadro. Mientras no hay consentimiento, el
+   recuadro que lo contiene pierde su 16:9 fijo y el iframe vacío se
+   oculta; con marketing aceptado todo vuelve a ser como antes.
+   ============================================================ */
+html:not(.tm-mkt) iframe[data-consent-src],
+html:not(.tm-mkt) iframe[data-consent-srcdoc] { display: none !important; }
+html:not(.tm-mkt) :has(> .consent-gate) { aspect-ratio: auto; height: auto; }
+/* Iframe pegado en el texto de una ficha (plugins/remark-terceros.mjs) */
+.consent-embed { position: relative; margin: 1.2em 0; max-width: 100%; }
+.consent-embed iframe { max-width: 100%; border: 0; }
+.consent-embed .consent-gate { border-radius: 10px; }
+.consent-gate {
+  position: relative; z-index: 1; box-sizing: border-box; width: 100%; min-width: 0;
+  aspect-ratio: 16 / 9;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 14px; padding: 24px clamp(14px, 4vw, 24px); text-align: center;
+  background: #14100e; color: #f9f6e0;
+  font-size: 15px; line-height: 1.5; overflow-wrap: anywhere;
+}
+.consent-gate p { margin: 0; max-width: 40ch; }
+.consent-gate__acciones { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 100%; }
+.consent-gate__btn {
+  font: inherit; font-family: var(--f-display); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 9px 18px; border-radius: 999px; cursor: pointer; text-decoration: none;
+  border: 1px solid currentColor; background: transparent; color: inherit;
+  max-width: 100%; white-space: normal; line-height: 1.3;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+@media (max-width: 400px) {
+  .consent-gate { font-size: 14px; gap: 12px; }
+  .consent-gate__btn { letter-spacing: 0.06em; padding: 9px 14px; }
+}
+.consent-gate__btn:hover { border-color: var(--c-gold); color: var(--c-gold); }
+.consent-gate__btn--main { background: var(--c-red); border-color: var(--c-red); color: #fff; }
+.consent-gate__btn--main:hover { background: #9e1c19; border-color: #9e1c19; color: #fff; }
+.tm-mkt .consent-gate { display: none; }

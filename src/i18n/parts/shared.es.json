@@ -25,7 +25,7 @@
   "footer.siguenos": "Síguenos",
 
   "cookies.titulo": "Usamos cookies",
-  "cookies.descripcion": "Utilizamos cookies propias y de terceros para analítica y para mejorar tu experiencia. Puedes aceptarlas, rechazarlas o configurarlas. Más información en nuestra {enlace}.",
+  "cookies.descripcion": "Utilizamos cookies propias y de terceros para analítica, para medir campañas y para mostrar contenido de otras webs (vídeos de YouTube, reels y el mapa de Google). Puedes aceptarlas, rechazarlas o configurarlas. Más información en nuestra {enlace}.",
   "cookies.enlaceTexto": "Política de cookies",
   "cookies.aceptar": "Aceptar todo",
   "cookies.rechazar": "Rechazar",
@@ -40,7 +40,15 @@
   "cookies.analiticasTitulo": "Analíticas",
   "cookies.analiticasDesc": "Nos ayudan a entender cómo se usa la web (Google Analytics vía Tag Manager).",
   "cookies.marketingTitulo": "Marketing",
-  "cookies.marketingDesc": "Para medir campañas y mostrar contenido relevante.",
+  "cookies.marketingDesc": "Para medir campañas (Meta y Google) y para ver aquí contenido de otras webs que deja sus propias cookies: vídeos de YouTube, reels de Instagram y TikTok y el mapa de Google Maps.",
   "cookies.masInfoTitulo": "Más información",
-  "cookies.masInfoDesc": "Consulta nuestra {enlace}."
+  "cookies.masInfoDesc": "Consulta nuestra {enlace}.",
+  "terceros.configurar": "Configurar cookies",
+  "terceros.video": "Para ver el vídeo aquí, acepta las cookies de marketing (YouTube).",
+  "terceros.verEnYoutube": "Ver en YouTube",
+  "terceros.reels": "Para ver los vídeos aquí, acepta las cookies de marketing (Instagram y TikTok). También puedes abrirlos en la red, debajo de cada uno.",
+  "terceros.mapa": "El mapa interactivo es de Google y deja sus propias cookies: aparece aquí si aceptas las de marketing.",
+  "terceros.verEnMaps": "Ver en Google Maps",
+  "terceros.contenido": "Para ver este contenido aquí, acepta las cookies de marketing.",
+  "terceros.abrir": "Abrir en su web"
 }

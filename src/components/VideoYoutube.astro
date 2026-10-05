@@ -1,0 +1,42 @@
+---
+/**
+ * Vídeo de YouTube incrustado, a la espera del consentimiento (E267).
+ *
+ * YouTube deja cookies y se entera de la visita aunque se use el dominio
+ * youtube-nocookie, así que el iframe NO lleva src hasta que se aceptan las
+ * cookies de marketing: lo pone el script del banner (BaseLayout) desde
+ * data-consent-src. Mientras tanto se ve el aviso con "Configurar cookies"
+ * (abre el panel del banner) y un enlace para verlo en YouTube.
+ * Mismo criterio que la web del Teatro Sofía (04/10/2026).
+ *
+ * Va dentro de un contenedor con position: relative (.show__video, .lp__video).
+ */
+import { useT, langFromPath } from '../i18n';
+
+interface Props {
+  ytId: string;
+  title: string; // título accesible del iframe ("Vídeo de …")
+}
+const { ytId, title } = Astro.props;
+const t = useT(langFromPath(Astro.url.pathname));
+---
+<iframe
+  data-consent-src={`https://www.youtube-nocookie.com/embed/${ytId}`}
+  title={title}
+  loading="lazy"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen
+></iframe>
+<div class="consent-gate">
+  <p>{t('terceros.video')}</p>
+  <div class="consent-gate__acciones">
+    <button type="button" class="consent-gate__btn consent-gate__btn--main" data-cc="show-preferences">{t('terceros.configurar')}</button>
+    <a class="consent-gate__btn" href={`https://www.youtube.com/watch?v=${ytId}`} target="_blank" rel="noopener">{t('terceros.verEnYoutube')} ↗</a>
+  </div>
+</div>
+
+<style>
+  /* Los estilos con ámbito de la página (.show__video iframe) no llegan a este
+     componente: el iframe se coloca aquí. */
+  iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #000; }
+</style>

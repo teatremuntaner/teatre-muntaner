@@ -47,7 +47,17 @@ const espectaculos = defineCollection({
       photo: image().optional(), // foto que acompaña a la sinopsis, si existe
       youtube: z.string().optional(), // ID o URL de vídeo de YouTube, si existe
       youtubeUploadDate: isoString.optional(), // fecha de subida del vídeo (la rellena el sync; para el VideoObject)
-      video: z.string().optional(), // vídeo subido (ruta /uploads/...), alternativa a YouTube
+      // vídeo subido (ruta /uploads/...), alternativa a YouTube. Solo vale un archivo de esta
+      // misma web: una dirección de otro sitio se pediría al abrir la ficha, sin consentimiento
+      // (E267). Si llega una así, se ignora (con aviso en la compilación) en vez de tumbarla.
+      // Ruta que empieza por UNA barra, sin barra invertida, tabulador ni salto de línea en
+      // ningún sitio: el navegador lee «//x», «/\x» o «/<tab>/x» como otro dominio (lo
+      // encontró Codex). Los espacios sí valen (nombres de archivo subidos).
+      video: z.string().optional().transform((v) => {
+        if (!v || /^\/[^\/\\\t\n\r][^\\\t\n\r]*$/.test(v)) return v || undefined;
+        console.warn(`[espectaculos] video externo ignorado (solo archivos subidos a la web): ${v}`);
+        return undefined;
+      }),
       videoUploadDate: isoString.optional(), // fecha de publicación del vídeo subido (uploadDate del VideoObject; obligatorio para Google)
       gallery: z.array(image()).default([]), // galería de fotos (se optimizan en el build)
 

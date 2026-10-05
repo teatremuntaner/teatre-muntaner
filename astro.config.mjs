@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import remarkEspacios from './plugins/remark-espacios.mjs';
+import remarkTerceros from './plugins/remark-terceros.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -17,7 +18,8 @@ export default defineConfig({
   // y espacios delante de coma o punto. Se limpian al publicar, no en el archivo, y así
   // vale igual para la colección en catalán, que se genera sola.
   // El porqué está en plugins/remark-espacios.mjs.
+  // remark-terceros: un <iframe> pegado en una sinopsis no se carga sin consentimiento (E267).
   markdown: {
-    remarkPlugins: [remarkEspacios],
+    remarkPlugins: [remarkEspacios, remarkTerceros],
   },
 });

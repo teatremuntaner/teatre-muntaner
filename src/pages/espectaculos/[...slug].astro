@@ -3,6 +3,7 @@ import { getCollection, getEntry, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Reels from '../../components/Reels.astro';
+import VideoYoutube from '../../components/VideoYoutube.astro';
 import Funciones from '../../components/Funciones.astro';
 import CalendarioFicha from '../../components/CalendarioFicha.astro';
 import { summarize, hoyEnMadrid, mesesDe } from '../../lib/schedule';
@@ -344,13 +345,7 @@ const videoLd = (ytId || d.video) && videoUploadDate
           {d.video ? (
             <video controls preload="metadata" src={d.video} aria-label={t('show.videoDe', { titulo: d.title })}></video>
           ) : (
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${ytId}`}
-              title={t('show.videoDe', { titulo: d.title })}
-              loading="lazy"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
+            <VideoYoutube ytId={ytId} title={t('show.videoDe', { titulo: d.title })} />
           )}
         </div>
       </section>
