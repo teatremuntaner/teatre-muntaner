@@ -170,18 +170,25 @@ const bodyStyle =
       import '../scripts/fx';
     </script>
 
-    <!-- Login del CMS para el personal (Netlify Identity; invisible si no está en Netlify) -->
-    <script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <script define:vars={{ adminUrl: import.meta.env.BASE_URL + 'admin/' }}>
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on('init', (user) => {
-          if (!user) {
-            window.netlifyIdentity.on('login', () => {
-              document.location.href = adminUrl;
-            });
-          }
-        });
-      }
+    <!-- Login del CMS para el personal (Netlify Identity). El widget es de identity.netlify.com,
+         así que no se carga en todas las páginas (E273): solo cuando la dirección trae uno de
+         los enlaces de los correos del gestor (invitación, confirmación, recuperar contraseña,
+         cambio de correo o vuelta de un acceso externo). Son los que el propio widget lee de
+         la dirección (#invite_token=…, #recovery_token=…). /admin/ y /actualizar/ cargan el
+         suyo por su cuenta. Al entrar, se va al gestor como antes. -->
+    <script is:inline define:vars={{ adminUrl: import.meta.env.BASE_URL + 'admin/' }}>
+      (function () {
+        var hash = (location.hash || '').replace(/^#\/?/, '');
+        if (!/(confirmation|invite|recovery|email_change)_token=|access_token=|error=access_denied/.test(hash)) return;
+        var s = document.createElement('script');
+        s.src = 'https://identity.netlify.com/v1/netlify-identity-widget.js';
+        s.onload = function () {
+          var ni = window.netlifyIdentity;
+          if (!ni) return;
+          if (!ni.currentUser()) ni.on('login', function () { document.location.href = adminUrl; });
+        };
+        document.head.appendChild(s);
+      })();
     </script>
 
     <!-- Consentimiento de cookies: banner + Consent Mode v2 + Analytics solo con estadística y Meta solo con marketing -->
