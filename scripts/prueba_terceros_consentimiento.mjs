@@ -184,6 +184,29 @@ for (const modo of ['sin elegir', 'rechazando todo']) {
   await p.cerrar();
 }
 
+// 6b) Pantallas estrechas (320 y 375 px) sin marketing: el aviso no se sale por ningún lado
+// (ni sus botones), y la página no se desplaza en horizontal. Con marketing, el vídeo
+// recupera su 16:9.
+{
+  const p = await nuevaPestana();
+  const midos = `JSON.stringify([...document.querySelectorAll('.consent-gate')].filter(g=>getComputedStyle(g).display!=='none').map(g=>{const c=g.parentElement.getBoundingClientRect();const fuera=[g,...g.querySelectorAll('*')].map(e=>e.getBoundingClientRect()).filter(r=>r.width&&(r.left<c.left-0.5||r.right>c.right+0.5||r.top<c.top-0.5||r.bottom>c.bottom+0.5)).length;return {fuera,ancho:Math.round(c.width),alto:Math.round(c.height)}}).concat([{scroll:document.documentElement.scrollWidth-innerWidth}]))`;
+  for (const w of [320, 375]) {
+    await send('Emulation.setDeviceMetricsOverride', { width: w, height: 740, deviceScaleFactor: 1, mobile: true }, p.s);
+    for (const pg of [FICHA_CA, FICHA, LANDING, '/', '/ca/']) {
+      await p.ir(pg, 3000);
+      await p.ev(aceptar([])); await sleep(500);
+      const r = JSON.parse(await p.ev(midos));
+      const scroll = r.pop().scroll;
+      check(`[${w}px] ${pg} aviso dentro de su recuadro y sin scroll horizontal`, r.length > 0 && r.every((x) => x.fuera === 0) && scroll <= 0, JSON.stringify(r) + ` scroll=${scroll}`);
+    }
+  }
+  await p.ir(FICHA, 3000);
+  await p.ev(aceptar(['marketing'])); await sleep(1200);
+  const prop = await p.ev(`(()=>{const r=document.querySelector('.show__video').getBoundingClientRect();return Math.round(r.width/r.height*100)/100})()`);
+  check('[375px, marketing] el vídeo vuelve a 16:9', Math.abs(prop - 16 / 9) < 0.03, String(prop));
+  await p.cerrar();
+}
+
 // 7) En el HTML generado ningún iframe lleva src: todos esperan al consentimiento.
 {
   const { readdirSync } = await import('node:fs');

@@ -534,6 +534,8 @@ const gallery = [
   /* Tarjeta en lugar del mapa mientras no hay consentimiento: la cuadrícula
      girada evoca el Eixample; no se pide ninguna tesela a nadie. */
   .mapa-gate {
+    /* Mismo alto que el mapa (no el 16:9 del aviso de vídeo); crece si hace falta. */
+    aspect-ratio: auto; min-height: 380px;
     color: var(--paper);
     background-color: var(--ink);
     background-image:
