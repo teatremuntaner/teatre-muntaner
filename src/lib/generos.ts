@@ -21,4 +21,5 @@ export const GENRE_ORDER: string[] = [
   'Teatro',
   'Magia',
   'Familiar',
+  'Bienestar',
 ];

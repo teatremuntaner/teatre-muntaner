@@ -99,6 +99,11 @@ GENRE_HINTS = [
     ("Magia",         r"\bm[aà]gia\b|\bmago\b|\bmaga\b|ilusionis|il·lusionis|mentalis"),
     ("Familiar",      r"familiar|infantil|para ni[nñ]os|per a nens|t[ií]teres|titelles|tota la fam[ií]lia|toda la familia"),
     ("Teatro",        r"\bobra\b|\bdrama\b|tragicom[eè]dia"),
+    # Psicología, crecimiento personal y similares (Lucas, 05/10/2026). Va la última:
+    # es la pista más dudosa y, con el tope de 3, no debe desplazar a las demás.
+    # Solo palabras de tema, no de personaje: «un psicólogo asesino» es teatro, y
+    # «thriller psicológico» y «premeditación» tampoco son bienestar.
+    ("Bienestar",     r"\bpsicolog[ií]a\b|crecimiento personal|creixement personal|desarrollo personal|desenvolupament personal|autoestima|autoconocimiento|autoconeixement|mindfulness|\bmeditaci[oó]|inteligencia emocional|intel[·.]?lig[eè]ncia emocional|\bbienestar\b|\bbenestar\b"),
 ]
 
 def deduce_genres(title, synopsis):
