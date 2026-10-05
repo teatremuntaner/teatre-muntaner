@@ -218,21 +218,17 @@ const bodyStyle =
           }
           if (analytics) cargarGTM();
         }
-        // autoClear borra con atributo domain; esto cubre además las cookies
-        // sin domain (host-only), que de otro modo sobrevivirían.
-        function borrarSinDominio(cat) {
-          document.cookie.split(';').forEach(function (c) {
-            var n = c.split('=')[0].trim();
-            if (COOKIES[cat].some(function (re) { return re.test(n); })) {
-              document.cookie = n + '=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
-            }
-          });
-        }
+        // Si GTM ya estaba cargado y ahora se acepta el marketing, el píxel de
+        // Meta (que salta al cargar el contenedor) no se activaría hasta la
+        // página siguiente: se recarga para que lo haga ya. Al retirar una
+        // categoría recarga autoClear (reloadPage), que además borra las cookies.
         function alCambiar(p) {
+          var yaCargado = gtmCargado;
           syncConsent();
-          (p && p.changedCategories || []).forEach(function (cat) {
-            if (COOKIES[cat] && !CookieConsent.acceptedCategory(cat)) borrarSinDominio(cat);
-          });
+          var cambiadas = (p && p.changedCategories) || [];
+          if (yaCargado && cambiadas.indexOf('marketing') !== -1 && CookieConsent.acceptedCategory('marketing')) {
+            location.reload();
+          }
         }
         function autoClear(cat) {
           return { reloadPage: true, cookies: COOKIES[cat].map(function (re) { return { name: re }; }) };
