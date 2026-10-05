@@ -44,8 +44,14 @@ const send = (method, params = {}, sessionId) => new Promise((r) => { const i = 
 
 // Lo que NO puede salir sin consentimiento.
 const PROHIBIDO = /fonts\.googleapis|fonts\.gstatic|google\.[a-z.]+\/maps|maps\.google|maps\.gstatic|youtube|ytimg|googlevideo|instagram|cdninstagram|facebook|fbcdn|tiktok|googletagmanager|google-analytics|analytics\.google|doubleclick/;
-// Bloqueados en el navegador de prueba (Analytics, GTM y Meta reales).
+// Bloqueados en el navegador de prueba (Analytics y Meta reales; GTM por si acaso).
 const BLOQUEO = ['*googletagmanager.com*', '*google-analytics.com*', '*analytics.google.com*', '*doubleclick.net*', '*connect.facebook.net*', '*facebook.com*', '*facebook.net*'];
+
+// E271: sin Tag Manager. Analytics (gtag.js) solo con estadística; píxel de Meta (fbevents.js) solo con marketing.
+const GTM_JS = /googletagmanager\.com\/gtm\.js/;
+const GA = /googletagmanager\.com\/gtag\/js|google-analytics\.com|analytics\.google\.com/;
+const META = /connect\.facebook\.net|facebook\.com\/tr/;
+const todas = []; // todas las peticiones de la prueba, para comprobar al final que gtm.js no se pide nunca
 
 const resultados = [];
 function check(nombre, ok, detalle) { resultados.push({ nombre, ok, detalle }); console.log(`${ok ? 'OK  ' : 'FALLO'} ${nombre}${detalle ? ' — ' + detalle : ''}`); }
@@ -56,7 +62,7 @@ async function nuevaPestana() {
   const { result: att } = await send('Target.attachToTarget', { targetId: t.targetId, flatten: true });
   const s = att.sessionId;
   const reqs = [];
-  const f = (m) => { if (m.sessionId === s && m.method === 'Network.requestWillBeSent') reqs.push(m.params.request.url); };
+  const f = (m) => { if (m.sessionId === s && m.method === 'Network.requestWillBeSent') { reqs.push(m.params.request.url); todas.push(m.params.request.url); } };
   listeners.push(f);
   await send('Network.enable', {}, s);
   await send('Network.setBlockedURLs', { urls: BLOQUEO }, s);
@@ -108,7 +114,7 @@ for (const modo of ['sin elegir', 'rechazando todo']) {
   await p.cerrar();
 }
 
-// 3) Solo marketing: cargan YouTube (ficha y landing), mapa y reel al pulsar; GTM no (exige estadística).
+// 3) Solo marketing: cargan YouTube (ficha y landing), mapa, reel al pulsar y el píxel de Meta; Analytics no.
 {
   const p = await nuevaPestana();
   await p.ir('/');
@@ -126,7 +132,7 @@ for (const modo of ['sin elegir', 'rechazando todo']) {
     const quiere = pg === '/' ? /google\.[a-z.]+\/maps|maps\.google/ : pg === REELS ? /instagram|tiktok/ : /youtube/;
     const gate = await p.ev(`(()=>{const g=document.querySelector('.consent-gate, .reels__aviso');return g?getComputedStyle(g).display:'no hay'})()`);
     check(`[solo marketing] ${pg} carga el tercero y oculta el aviso`, t.some((u) => quiere.test(u)) && gate === 'none', `aviso=${gate}; ${[...new Set(t.map((u) => new URL(u).host))].join(', ')}`);
-    check(`[solo marketing] ${pg} sin GTM/Analytics/Meta`, !t.some((u) => /googletagmanager|google-analytics|facebook/.test(u)), '');
+    check(`[solo marketing] ${pg} píxel de Meta (bloqueado) sí, Analytics no`, t.some((u) => META.test(u)) && !t.some((u) => GA.test(u) || GTM_JS.test(u)), [...new Set(t.map((u) => new URL(u).host))].join(', '));
   }
   // 4) Retirar el marketing: la página se recarga y el vídeo vuelve a quedar sin cargar.
   await p.ir(FICHA, 4000);
@@ -138,6 +144,49 @@ for (const modo of ['sin elegir', 'rechazando todo']) {
   await p.ev(recorrer);
   const src = await p.ev(`(()=>{const f=document.querySelector('iframe[data-consent-src]');return f?(f.getAttribute('src')||'(sin src)'):'no hay'})()`);
   check('[retirar marketing] tras recargar, YouTube sin src y sin peticiones', src === '(sin src)' && p.terceros().length === 0, `src=${src}; ${p.terceros().slice(0, 3).join(' | ')}`);
+  await p.cerrar();
+}
+
+// 3b) Solo estadística: se pide gtag.js (bloqueado) y la actualización del consent mode va
+// antes que la configuración de Analytics; ni Meta ni contenido de terceros.
+{
+  const p = await nuevaPestana();
+  await p.ir('/');
+  p.reqs.length = 0;
+  await p.ev(aceptar(['analytics']));
+  await sleep(1500);
+  const t0 = p.terceros();
+  check('[solo estadística] al aceptar, Analytics (bloqueado) se pide sin recargar; Meta no', t0.some((u) => GA.test(u)) && !t0.some((u) => META.test(u)), [...new Set(t0.map((u) => new URL(u).host))].join(', '));
+  const orden = await p.ev(`(()=>{const dl=(window.dataLayer||[]).map(x=>x&&x[0]==='consent'?'consent-'+x[1]+(x[2]&&x[2].analytics_storage?'-'+x[2].analytics_storage:''):(x&&x[0])||'');return dl.join(',')})()`);
+  const iU = orden.indexOf('consent-update-granted'), iC = orden.indexOf('config');
+  check('[solo estadística] consent mode actualizado antes de configurar Analytics', iU !== -1 && iC !== -1 && iU < iC, orden);
+  for (const pg of ['/', FICHA]) {
+    p.reqs.length = 0;
+    await p.ir(pg, 4000);
+    await p.ev(recorrer);
+    const t = p.terceros();
+    check(`[solo estadística] ${pg} Analytics sí; Meta, gtm.js y terceros de marketing no`, t.some((u) => GA.test(u)) && t.every((u) => GA.test(u)), [...new Set(t.map((u) => new URL(u).host))].join(', '));
+  }
+  await p.cerrar();
+}
+
+// 4b) Retirar todo después de aceptarlo: recarga, borra _ga/_fbp y no vuelve a pedir Analytics ni Meta.
+{
+  const p = await nuevaPestana();
+  await p.ir('/');
+  await p.ev(aceptar('all'));
+  await sleep(1500);
+  await p.ir('/', 3000);
+  await p.ev(`(()=>{document.cookie='_ga=GA1.1.1.1; path=/';document.cookie='_ga_3LC1FMXQFM=GS1.1; path=/';document.cookie='_fbp=fb.1.1.1; path=/';return document.cookie})()`);
+  await p.ev(`CookieConsent.acceptCategory([])`);
+  await sleep(1000);
+  p.reqs.length = 0; // lo que venga tras la recarga
+  await sleep(3500);
+  await p.ev(recorrer);
+  const ck = await p.ev(`document.cookie`);
+  const t = p.terceros();
+  const nav = await p.ev(`performance.getEntriesByType('navigation')[0].type`);
+  check('[retirar todo] recarga, sin Analytics ni Meta y sin _ga/_fbp', nav === 'reload' && t.length === 0 && !/(^|; )_(ga|fbp)/.test(ck), `nav=${nav}; cookies=${ck}; ${t.slice(0, 3).join(' | ')}`);
   await p.cerrar();
 }
 
@@ -154,8 +203,8 @@ for (const modo of ['sin elegir', 'rechazando todo']) {
   await p.cerrar();
 }
 
-// 5b) Reel pendiente con la estadística ya aceptada: al aceptar el marketing el banner
-// recarga la página (para el píxel de Meta) y el reel pulsado tiene que cargarse igual.
+// 5b) Reel pendiente con la estadística ya aceptada: al aceptar también el marketing el
+// reel pulsado se carga (y el píxel de Meta salta sin recargar, E271).
 {
   const p = await nuevaPestana();
   await p.ir(REELS, 4000);
@@ -166,12 +215,12 @@ for (const modo of ['sin elegir', 'rechazando todo']) {
   await p.ev(`CookieConsent.acceptCategory(['analytics','marketing'])`);
   await sleep(6000);
   const iframe = await p.ev(`!!document.querySelector('.reel__cover iframe')`);
-  const pend = await p.ev(`sessionStorage.getItem('tm-reel-pendiente')`);
-  check('[reel pendiente tras recarga] con estadística previa, el reel pulsado se carga', iframe && p.terceros().some((u) => /instagram|tiktok/.test(u)), `iframe=${iframe} pendiente=${pend}`);
+  const nav = await p.ev(`performance.getEntriesByType('navigation')[0].type`);
+  check('[reel pendiente con estadística previa] el reel pulsado se carga sin recargar y Meta (bloqueado) se pide', iframe && p.terceros().some((u) => /instagram|tiktok/.test(u)) && p.terceros().some((u) => META.test(u)) && nav !== 'reload', `iframe=${iframe} nav=${nav}`);
   await p.cerrar();
 }
 
-// 6) Todo aceptado: además se intenta cargar GTM (bloqueado en este navegador).
+// 6) Todo aceptado: además se piden Analytics y Meta (bloqueados en este navegador); gtm.js no.
 {
   const p = await nuevaPestana();
   await p.ir(FICHA);
@@ -180,7 +229,7 @@ for (const modo of ['sin elegir', 'rechazando todo']) {
   await sleep(3000);
   await p.ev(recorrer);
   const t = p.terceros();
-  check('[todo] YouTube y GTM (bloqueado) se piden', t.some((u) => /youtube/.test(u)) && t.some((u) => /googletagmanager/.test(u)), [...new Set(t.map((u) => new URL(u).host))].join(', '));
+  check('[todo] YouTube, Analytics y Meta (bloqueados) se piden; gtm.js no', t.some((u) => /youtube/.test(u)) && t.some((u) => GA.test(u)) && t.some((u) => META.test(u)) && !t.some((u) => GTM_JS.test(u)), [...new Set(t.map((u) => new URL(u).host))].join(', '));
   await p.cerrar();
 }
 
@@ -221,6 +270,8 @@ for (const modo of ['sin elegir', 'rechazando todo']) {
   andar(DIST);
   check('[dist] ningún <iframe> con src en el HTML generado', malos.length === 0, malos.slice(0, 3).join(' | '));
 }
+
+check('[toda la prueba] Google Tag Manager (gtm.js) no se pide nunca', !todas.some((u) => GTM_JS.test(u)), todas.filter((u) => GTM_JS.test(u)).slice(0, 2).join(' | '));
 
 const fallos = resultados.filter((r) => !r.ok).length;
 console.log(`\n${resultados.length - fallos}/${resultados.length} comprobaciones OK`);

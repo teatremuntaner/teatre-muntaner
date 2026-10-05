@@ -109,10 +109,12 @@ const bodyStyle =
         analytics_storage:'denied', functionality_storage:'granted', security_storage:'granted',
         wait_for_update: 500
       });
+      gtag('set', 'ads_data_redaction', true);
     </script>
-    <!-- Google Tag Manager: NO se carga aquí. Lo carga el script del banner de
-         cookies (al final del body) solo cuando el visitante acepta la estadística.
-         Sin elegir o rechazando, no sale nada hacia Google ni Meta (E265). -->
+    <!-- Sin Google Tag Manager (E271). Google Analytics y el píxel de Meta los carga
+         el script del banner de cookies (al final del body), cada uno con su casilla:
+         Analytics solo con la estadística y Meta solo con el marketing. Sin elegir o
+         rechazando, no sale nada hacia Google ni Meta (E265). -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#14100e" />
     <title>{title} · Teatre Muntaner</title>
@@ -182,7 +184,7 @@ const bodyStyle =
       }
     </script>
 
-    <!-- Consentimiento de cookies: banner + Consent Mode v2 + carga de GTM solo con estadística aceptada -->
+    <!-- Consentimiento de cookies: banner + Consent Mode v2 + Analytics solo con estadística y Meta solo con marketing -->
     <script is:inline src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3.1.0/dist/cookieconsent.umd.js"></script>
     <script is:inline define:vars={{ CC_LANG: lang, CC_T: {
       titulo: t('cookies.titulo'),
@@ -206,31 +208,45 @@ const bodyStyle =
     } }}>
       (function () {
         if (!window.CookieConsent) return;
-        // Cookies que dejan las etiquetas del contenedor, por categoría. Se borran
-        // al retirar el consentimiento (autoClear) y la página se recarga para
-        // que lo ya cargado deje de ejecutarse.
+        // Cookies que dejan Analytics y Meta, por categoría. Se borran al retirar
+        // el consentimiento (autoClear) y la página se recarga para que lo ya
+        // cargado deje de ejecutarse. «_gcl_*» ya no la pone nadie (no hay Google
+        // Ads), pero se sigue borrando por si quedó de cuando había Tag Manager.
         var COOKIES = {
           analytics: [/^_ga($|_)/, /^_gid$/, /^_gat/],
           marketing: [/^_fbp$/, /^_fbc$/, /^_gcl_/]
         };
-        // Google Tag Manager (GTM-TR52LK75) se inyecta SOLO con la estadística
-        // aceptada y DESPUÉS de actualizar el consent mode, para que las etiquetas
-        // del contenedor vean ya el consentimiento real. No basta el marketing:
-        // la etiqueta de Google del contenedor mandaría la visita a Google sin
-        // cookies (modo avanzado) y el píxel de Meta exige las dos categorías.
-        var gtmCargado = false;
-        function cargarGTM() {
-          if (gtmCargado) return;
-          gtmCargado = true;
-          window.dataLayer = window.dataLayer || [];
-          window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        // Sin Google Tag Manager (E271): las dos etiquetas que tenía el contenedor
+        // de Nave8 van aquí, cada una atada a su casilla.
+        // - Google Analytics 4 (G-3LC1FMXQFM): SOLO con la estadística aceptada y
+        //   DESPUÉS de actualizar el consent mode, así la vista de página ya sale
+        //   con el consentimiento real. Sin estadística no se carga (modo básico:
+        //   ni siquiera pings sin cookies).
+        // - Píxel de Meta (1316984187145278): SOLO con el marketing aceptado, sin
+        //   depender de la estadística. Meta no obedece el consent mode de Google:
+        //   lo que lo frena es no cargarlo.
+        // Las dos mandan la vista de página al cargarse: si se aceptan a mitad de
+        // visita, la página en curso cuenta sin tener que recargar.
+        var gaCargado = false, metaCargado = false;
+        function cargarAnalytics() {
+          if (gaCargado) return;
+          gaCargado = true;
           var j = document.createElement('script');
           j.async = true;
-          j.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-TR52LK75';
+          j.src = 'https://www.googletagmanager.com/gtag/js?id=G-3LC1FMXQFM';
           document.head.appendChild(j);
+          gtag('js', new Date());
+          gtag('config', 'G-3LC1FMXQFM');
+        }
+        function cargarMeta() {
+          if (metaCargado) return;
+          metaCargado = true;
+          !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+          fbq('init', '1316984187145278');
+          fbq('track', 'PageView');
         }
         // Borra las cookies de las categorías NO aceptadas. Hace falta al arrancar:
-        // la versión anterior cargaba GTM siempre y dejó _ga/_fbp a quien había
+        // una versión anterior cargaba GTM siempre y dejó _ga/_fbp a quien había
         // rechazado, y autoClear solo actúa al cambiar de opinión, no al volver
         // con un consentimiento ya guardado. Se prueba sin domain (host-only) y
         // con cada dominio padre (.teatremuntaner.com); no recarga.
@@ -260,7 +276,8 @@ const bodyStyle =
               ad_personalization: marketing ? 'granted' : 'denied'
             });
           }
-          if (analytics) cargarGTM();
+          if (analytics) cargarAnalytics();
+          if (marketing) cargarMeta();
           aplicarTerceros();
         }
         // Contenido de terceros incrustado (vídeos de YouTube, mapa de Google,
@@ -283,20 +300,9 @@ const bodyStyle =
           }
           document.dispatchEvent(new CustomEvent('tm:consent', { detail: { marketing: mkt } }));
         }
-        // Si GTM ya estaba cargado y ahora se acepta el marketing, el píxel de
-        // Meta (que salta al cargar el contenedor) no se activaría hasta la
-        // página siguiente: se recarga para que lo haga ya. Al retirar una
-        // categoría recarga autoClear (reloadPage), que además borra las cookies;
-        // por eso aquí solo se recarga si la estadística sigue aceptada.
-        function alCambiar(p) {
-          var yaCargado = gtmCargado;
-          syncConsent();
-          var cambiadas = (p && p.changedCategories) || [];
-          if (yaCargado && cambiadas.indexOf('marketing') !== -1 && CookieConsent.acceptedCategory('marketing') &&
-              CookieConsent.acceptedCategory('analytics')) {
-            location.reload();
-          }
-        }
+        // Al aceptar una categoría más a mitad de visita, syncConsent carga lo que
+        // falte. Al retirar una, recarga autoClear (reloadPage), que además borra
+        // sus cookies: lo ya cargado deja de ejecutarse y no se vuelve a cargar.
         function autoClear(cat) {
           return { reloadPage: true, cookies: COOKIES[cat].map(function (re) { return { name: re }; }) };
         }
@@ -311,7 +317,7 @@ const bodyStyle =
             marketing: { autoClear: autoClear('marketing') }
           },
           onConsent: syncConsent,
-          onChange: alCambiar,
+          onChange: syncConsent,
           language: {
             default: CC_LANG,
             translations: {
