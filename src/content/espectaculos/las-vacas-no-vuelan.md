@@ -28,6 +28,7 @@ links:
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 duration: 80 minutos
 price: Desde 17 €
+cast: []
 draft: false
 ---
 
