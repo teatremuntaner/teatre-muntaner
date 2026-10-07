@@ -2,12 +2,15 @@
 # ARCHIVO GENERADO — no editar a mano.
 # Lo produce scripts/translate_ca.py a partir de la ficha en castellano.
 # Cualquier cambio manual se pierde en la siguiente sincronizacion.
+tagline: Ser diferents en temps de l’EGB
+promo: Promo 15% descompte
 category: Espectacle
+lang: Castellà
+duration: 80 minuts
 price: Des de 17 €
 genres:
 - Humor
-- Música
-sourceHash: 46ae9ccb46d16276
+sourceHash: f4915c41279a1b82
 generated: true
 ---
 
