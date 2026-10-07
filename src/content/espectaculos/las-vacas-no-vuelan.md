@@ -1,6 +1,6 @@
 ---
 title: Las vacas no vuelan
-tagline: ""
+tagline: Ser diferents en temps de l’EGB
 promo: Promo 15% descuento
 category: Espectáculo
 genres:
