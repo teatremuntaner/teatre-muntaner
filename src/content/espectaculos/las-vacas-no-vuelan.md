@@ -1,22 +1,34 @@
 ---
-title: "Las vacas no vuelan"
-category: "Espectáculo"
-genres: ["Humor", "Música"]
-poster: "./las-vacas-no-vuelan.jpg"
+title: Las vacas no vuelan
+tagline: ""
+promo: Promo 15% descuento
+category: Espectáculo
+genres:
+  - Humor
+lang: Castellano
+poster: ./las-vacas-no-vuelan.jpg
+ratings: []
 accent: "#c4b05a"
 accentInk: "#0c0a0f"
 dates:
-  - date: "2026-11-07"
-    time: "23:00"
-  - date: "2026-11-21"
-    time: "23:00"
-ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22138"
+  - date: 2026-11-07
+    time: 23:00
+  - date: 2026-11-21
+    time: 23:00
+ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22138
 qwanticEventId: "22138"
 priceFrom: 17
-saleStart: "2026-10-07T22:11"
-price: "Desde 17 €"
-venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
-draft: true
+saleStart: 2026-10-07T22:11
+youtube: https://youtu.be/RbaQOk7WAmg?is=1AwpNlYl_Fxi7Kim
+links:
+  - label: Inatagram
+    url: https://www.instagram.com/comiconteatre?stkn=MWM3ZHg0OTE0eHh6Zg%3D%3D
+  - label: Web Compañia
+    url: https://www.lavozahogada.com/es
+venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
+duration: 80 minutos
+price: Desde 17 €
+draft: false
 ---
 
 Barcelona, años 80. Tres jóvenes que no encajan. Una época empeñada en que encajen. Y muchas razones para reírse.
