@@ -32,6 +32,12 @@ const espectaculos = defineCollection({
       title: z.string(),
       tagline: z.string().optional(),
       promo: z.string().optional(), // promo/descuento destacado (ej. "20% de descuento")
+      // Aviso al público junto al botón de compra (cambios de reparto, avisos de sala…).
+      // avisoCa es su texto en catalán (si falta, sale el castellano). Con avisoHasta (AAAA-MM-DD)
+      // el aviso deja de pintarse a partir del día siguiente, en la siguiente compilación.
+      aviso: z.string().optional(),
+      avisoCa: z.string().optional(),
+      avisoHasta: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
       artist: z.string().optional(), // intérprete/compañía
       category: z.string().default('Espectáculo'),
       genres: z.array(z.string()).default([]), // géneros (varios); si vacío, se usa category
