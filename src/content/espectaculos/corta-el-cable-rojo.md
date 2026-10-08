@@ -233,6 +233,9 @@ saleStart: "2026-02-26T12:03"
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 20 €
 draft: false
+aviso: "Aviso de reparto: del 19 al 22 y del 26 al 29 de noviembre, Mai Boncompte no estará en el reparto."
+avisoCa: "Avís de repartiment: del 19 al 22 i del 26 al 29 de novembre, la Mai Boncompte no serà al repartiment."
+avisoHasta: "2026-11-29"
 ---
 
 "CORTA EL CABLE ROJO" SIGUE ARRASANDO EN BARCELONA!

@@ -59,6 +59,13 @@ const fmtCount = (n: number) =>
    (Codex, 29/08/2026: sin esto salía un óvalo vacío.) */
 const ratings = d.ratings.filter((r) => r.score !== undefined || r.votar);
 
+// Aviso al público (cambios de reparto…). Se deja de pintar pasado avisoHasta; la fecha se
+// mira en hora de Madrid al compilar, y la web se recompila a diario con la sincronización.
+const hoyMadrid = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date());
+const avisoTexto = (!show.data.avisoHasta || show.data.avisoHasta >= hoyMadrid)
+  ? (lang === 'ca' ? (show.data.avisoCa ?? show.data.aviso) : show.data.aviso)
+  : undefined;
+
 const today = hoyEnMadrid();
 const sch = d.dates.length ? summarize(d.dates, lang, today) : null;
 // Cuantos dias se ven sin desplegar. Quien entra viene a decidir uno, no a leerlos todos.
@@ -226,6 +233,7 @@ const videoLd = (ytId || d.video) && videoUploadDate
           )}
 
           {d.promo && <p class="show__promo">🎟 {d.promo}</p>}
+          {avisoTexto && <p class="show__aviso" role="note">{avisoTexto}</p>}
 
           {d.ticketAlarm ? (
             <form class="ticketalarm" name="ticketalarm" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/aviso-recibido/">
@@ -436,6 +444,7 @@ const videoLd = (ytId || d.video) && videoUploadDate
   .show__loose { font-family: var(--f-body); font-size: 15px; margin: 8px 0 0; color: var(--paper-dim); }
 
   .show__cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 32px; }
+  .show__aviso { margin: 18px 0 0; padding: 12px 16px; border-left: 3px solid var(--accent, #b3122a); background: rgba(255, 255, 255, 0.06); border-radius: 8px; font-size: 15px; line-height: 1.45; max-width: 52ch; }
   .show__promo { display: inline-block; background: var(--c-gold, #d5a846); color: #14100e; font-weight: 800; font-family: var(--f-display); letter-spacing: 0.02em; padding: 9px 16px; border-radius: 999px; margin: 22px 0 0; font-size: 16px; }
   .ticketalarm { margin-top: 30px; max-width: 460px; }
   .ticketalarm__lead { font-family: var(--f-body); font-size: 15px; color: var(--paper-dim); margin: 0 0 12px; }
