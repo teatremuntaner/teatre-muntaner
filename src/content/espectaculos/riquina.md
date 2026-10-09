@@ -11,12 +11,12 @@ poster: ./riquina.jpg
 accent: "#be6460"
 accentInk: "#ffffff"
 dates:
-  - date: 2027-01-08
-    time: 22:30
+  - date: "2027-01-08"
+    time: "22:30"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20645
 qwanticEventId: "20645"
 priceFrom: 18
-saleStart: 2026-02-23T16:14
+saleStart: "2026-02-23T16:14"
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 18 €
 draft: false
