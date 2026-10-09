@@ -2,6 +2,7 @@
 # ARCHIVO GENERADO — no editar a mano.
 # Lo produce scripts/translate_ca.py a partir de la ficha en castellano.
 # Cualquier cambio manual se pierde en la siguiente sincronizacion.
+tagline: Funció 09/10/2026 Cancel·lada
 promo: Funció 09/10/2026 Cancel·lada
 category: Comèdia
 lang: Castellà
@@ -9,7 +10,7 @@ price: Des de 18 €
 genres:
 - Humor
 - Monòleg
-sourceHash: 9ee51add0659dc1f
+sourceHash: cb13dea58faf165b
 generated: true
 ---
 
