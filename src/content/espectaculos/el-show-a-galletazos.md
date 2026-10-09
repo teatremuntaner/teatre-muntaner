@@ -1,15 +1,45 @@
 ---
-title: "El show a galletazos"
-category: "Espectáculo"
-genres: ["Humor", "Improvisación"]
-poster: "./el-show-a-galletazos.jpg"
+title: El show a galletazos
+tagline: Una comedia improvisada donde el público es el ingrediente principal.
+promo: Promoción 15% descuento
+category: Espectáculo
+genres:
+  - Humor
+  - Monólogo
+lang: Castellano
+priority: 0
+poster: ./el-show-a-galletazos.jpg
+gallery:
+  - ismael-galletero-teatre-muntaner.jpg
+  - ismael-galletero-teatre-muntaner3.jpg
+  - ismael-galletero-teatre-muntaner5.jpg
+  - ismael-galletero-teatre-muntaner4.jpg
+  - ismael-galletero-teatre-muntaner5.jpg
 accent: "#be6e60"
 accentInk: "#ffffff"
-ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22183"
+dates: []
+ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22183
 qwanticEventId: "22183"
 priceFrom: 15.3
-price: "Desde 15 €"
-venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
+youtube: https://www.youtube.com/watch?v=48oWDXUtIyo&t=34s
+links:
+  - url: https://www.instagram.com/ismaelgalletero/
+    label: Instagram
+  - url: https://www.facebook.com/ismaelgalleterocomico
+    label: Facebook
+  - label: Web
+    url: https://galleterocomico.com/
+  - label: TikTok
+    url: https://www.tiktok.com/@ismaelgalletero
+  - label: YouTube
+    url: https://www.youtube.com/channel/UCcal0M7nQ23Mo5K4CM1-TmQ
+venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
+duration: 75 minutos
+price: Desde 15 €
+cast:
+  - offstage: false
+    name: Ismael Galletero
+    photo: ismael-galletero-teatre-muntaner1.jpg
 draft: true
 ---
 
