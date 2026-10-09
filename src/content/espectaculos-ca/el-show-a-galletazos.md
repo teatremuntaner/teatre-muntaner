@@ -2,12 +2,16 @@
 # ARCHIVO GENERADO — no editar a mano.
 # Lo produce scripts/translate_ca.py a partir de la ficha en castellano.
 # Cualquier cambio manual se pierde en la siguiente sincronizacion.
+tagline: Una comèdia improvisada on el públic és l'ingredient principal.
+promo: Promoció 15% descompte
 category: Espectacle
+lang: Castellà
+duration: 75 minuts
 price: Des de 15 €
 genres:
 - Humor
-- Improvisació
-sourceHash: 0588e893f14696f7
+- Monòleg
+sourceHash: 5a32a0b6a484a77b
 generated: true
 ---
 
