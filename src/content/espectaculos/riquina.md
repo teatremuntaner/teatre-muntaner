@@ -1,6 +1,6 @@
 ---
 title: Riquiña
-tagline: Función 9 de octubre cancelada
+tagline: Función 2026-10-09 Cancelada
 promo: ""
 category: Comedia
 genres:
