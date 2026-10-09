@@ -37,7 +37,9 @@ const espectaculos = defineCollection({
       // el aviso deja de pintarse a partir del día siguiente, en la siguiente compilación.
       aviso: z.string().optional(),
       avisoCa: z.string().optional(),
-      avisoHasta: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+      // El CMS la guarda a veces sin comillas y YAML la lee como Date: se pasa a AAAA-MM-DD antes
+      // de validar (09/10/2026: una edición del aviso de Mai paró ocho despliegues seguidos).
+      avisoHasta: z.preprocess(toDateString, z.string().regex(/^\d{4}-\d{2}-\d{2}$/)).optional(),
       artist: z.string().optional(), // intérprete/compañía
       category: z.string().default('Espectáculo'),
       genres: z.array(z.string()).default([]), // géneros (varios); si vacío, se usa category
