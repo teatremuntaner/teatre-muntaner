@@ -6,234 +6,229 @@ genres:
   - Humor
 lang: Castellano
 poster: ./corta-el-cable-rojo.jpg
-accent: "#ef2e31"
-accentInk: "#ffffff"
-dates:
-  - date: "2026-10-09"
-    time: "18:30"
-  - date: "2026-10-09"
-    time: "20:30"
-  - date: "2026-10-10"
-    time: "17:00"
-  - date: "2026-10-10"
-    time: "19:00"
-  - date: "2026-10-11"
-    time: "17:00"
-  - date: "2026-10-11"
-    time: "19:00"
-  - date: "2026-10-14"
-    time: "20:00"
-  - date: "2026-10-16"
-    time: "18:30"
-  - date: "2026-10-16"
-    time: "20:30"
-  - date: "2026-10-17"
-    time: "17:00"
-  - date: "2026-10-17"
-    time: "19:00"
-  - date: "2026-10-18"
-    time: "17:00"
-  - date: "2026-10-18"
-    time: "19:00"
-  - date: "2026-10-22"
-    time: "20:00"
-  - date: "2026-10-23"
-    time: "18:30"
-  - date: "2026-10-23"
-    time: "20:30"
-  - date: "2026-10-24"
-    time: "17:00"
-  - date: "2026-10-24"
-    time: "19:00"
-  - date: "2026-10-25"
-    time: "17:00"
-  - date: "2026-10-25"
-    time: "19:00"
-  - date: "2026-10-29"
-    time: "20:00"
-  - date: "2026-10-30"
-    time: "18:30"
-  - date: "2026-10-30"
-    time: "20:30"
-  - date: "2026-10-31"
-    time: "17:00"
-  - date: "2026-10-31"
-    time: "19:00"
-  - date: "2026-11-01"
-    time: "17:00"
-  - date: "2026-11-01"
-    time: "19:00"
-  - date: "2026-11-05"
-    time: "20:00"
-  - date: "2026-11-06"
-    time: "18:30"
-  - date: "2026-11-06"
-    time: "20:30"
-  - date: "2026-11-07"
-    time: "17:00"
-  - date: "2026-11-07"
-    time: "19:00"
-  - date: "2026-11-08"
-    time: "17:00"
-  - date: "2026-11-08"
-    time: "19:00"
-  - date: "2026-11-12"
-    time: "20:00"
-  - date: "2026-11-13"
-    time: "18:30"
-  - date: "2026-11-13"
-    time: "20:30"
-  - date: "2026-11-14"
-    time: "17:00"
-  - date: "2026-11-14"
-    time: "19:00"
-  - date: "2026-11-15"
-    time: "17:00"
-  - date: "2026-11-15"
-    time: "19:00"
-  - date: "2026-11-19"
-    time: "20:00"
-  - date: "2026-11-20"
-    time: "18:30"
-  - date: "2026-11-20"
-    time: "20:30"
-  - date: "2026-11-21"
-    time: "17:00"
-  - date: "2026-11-21"
-    time: "19:00"
-  - date: "2026-11-22"
-    time: "17:00"
-  - date: "2026-11-22"
-    time: "19:00"
-  - date: "2026-11-26"
-    time: "20:00"
-  - date: "2026-11-27"
-    time: "18:30"
-  - date: "2026-11-27"
-    time: "20:30"
-  - date: "2026-11-28"
-    time: "17:00"
-  - date: "2026-11-28"
-    time: "19:00"
-  - date: "2026-11-29"
-    time: "17:00"
-  - date: "2026-11-29"
-    time: "19:00"
-  - date: "2026-12-03"
-    time: "20:00"
-  - date: "2026-12-04"
-    time: "18:30"
-  - date: "2026-12-04"
-    time: "20:30"
-  - date: "2026-12-05"
-    time: "17:00"
-  - date: "2026-12-05"
-    time: "19:00"
-  - date: "2026-12-06"
-    time: "17:00"
-  - date: "2026-12-06"
-    time: "19:00"
-  - date: "2026-12-09"
-    time: "20:00"
-  - date: "2026-12-10"
-    time: "20:00"
-  - date: "2026-12-11"
-    time: "18:30"
-  - date: "2026-12-11"
-    time: "20:30"
-  - date: "2026-12-12"
-    time: "17:00"
-  - date: "2026-12-12"
-    time: "19:00"
-  - date: "2026-12-13"
-    time: "17:00"
-  - date: "2026-12-13"
-    time: "19:00"
-  - date: "2026-12-17"
-    time: "20:00"
-  - date: "2026-12-18"
-    time: "18:30"
-  - date: "2026-12-18"
-    time: "20:30"
-  - date: "2026-12-19"
-    time: "17:00"
-  - date: "2026-12-19"
-    time: "19:00"
-  - date: "2026-12-20"
-    time: "17:00"
-  - date: "2026-12-20"
-    time: "19:00"
-  - date: "2026-12-22"
-    time: "20:00"
-  - date: "2026-12-26"
-    time: "17:00"
-  - date: "2026-12-26"
-    time: "19:00"
-  - date: "2026-12-27"
-    time: "17:00"
-  - date: "2026-12-27"
-    time: "19:00"
-  - date: "2026-12-28"
-    time: "20:00"
-  - date: "2026-12-29"
-    time: "20:00"
-  - date: "2027-01-02"
-    time: "17:00"
-  - date: "2027-01-02"
-    time: "19:00"
-  - date: "2027-01-03"
-    time: "17:00"
-  - date: "2027-01-03"
-    time: "19:00"
-  - date: "2027-01-04"
-    time: "20:00"
-  - date: "2027-01-07"
-    time: "20:00"
-  - date: "2027-01-08"
-    time: "18:30"
-  - date: "2027-01-08"
-    time: "20:30"
-  - date: "2027-01-09"
-    time: "17:00"
-  - date: "2027-01-09"
-    time: "19:00"
-  - date: "2027-01-10"
-    time: "17:00"
-  - date: "2027-01-10"
-    time: "19:00"
-links:
-  # La web oficial del espectáculo. Su botón de comprar de Barcelona lleva a
-  # lamuntaner.entradas.plus, la taquilla de esta casa, así que no se va la venta a otro
-  # sitio. Mismo trato que le da la web del Sofía a clapshow.es.
-  - label: "Web oficial"
-    url: "https://www.cortaelcablerojo.com/CCRBarna.html"
 ratings:
-  - source: "Atrápalo"
+  - source: Atrápalo
     score: 9.6
     max: 10
     count: 13307
-    url: "https://www.atrapalo.com/entradas/corta-el-cable-rojo-en-barcelona_e4940514/"
-  - source: "taquilla.com"
+    url: https://www.atrapalo.com/entradas/corta-el-cable-rojo-en-barcelona_e4940514/
+  - source: taquilla.com
     score: 4.9
     max: 5
     count: 1386
-    url: "https://www.taquilla.com/entradas/corta-el-cable-rojo-barcelona"
-  # Este es el perfil de BARCELONA, comprobado el 29/08/2026 abriendo el enlace: «Corta el
-  # Cable Rojo Barcelona», Carrer de Muntaner 4. NO es el de Madrid, que existe aparte y va
-  # en la web de la compañía. Se acaba de crear y todavía no tiene reseñas, así que no lleva
-  # nota: la pastilla entera invita a opinar. Cuando las tenga, se le añade score y count.
-  - source: "Google"
-    votar: "https://g.page/r/CfRr_gnHuHU8EBM/review"
+    url: https://www.taquilla.com/entradas/corta-el-cable-rojo-barcelona
+accent: "#ef2e31"
+accentInk: "#ffffff"
+dates:
+  - date: 2026-10-09
+    time: 18:30
+  - date: 2026-10-09
+    time: 20:30
+  - date: 2026-10-10
+    time: 17:00
+  - date: 2026-10-10
+    time: 19:00
+  - date: 2026-10-11
+    time: 17:00
+  - date: 2026-10-11
+    time: 19:00
+  - date: 2026-10-14
+    time: 20:00
+  - date: 2026-10-16
+    time: 18:30
+  - date: 2026-10-16
+    time: 20:30
+  - date: 2026-10-17
+    time: 17:00
+  - date: 2026-10-17
+    time: 19:00
+  - date: 2026-10-18
+    time: 17:00
+  - date: 2026-10-18
+    time: 19:00
+  - date: 2026-10-22
+    time: 20:00
+  - date: 2026-10-23
+    time: 18:30
+  - date: 2026-10-23
+    time: 20:30
+  - date: 2026-10-24
+    time: 17:00
+  - date: 2026-10-24
+    time: 19:00
+  - date: 2026-10-25
+    time: 17:00
+  - date: 2026-10-25
+    time: 19:00
+  - date: 2026-10-29
+    time: 20:00
+  - date: 2026-10-30
+    time: 18:30
+  - date: 2026-10-30
+    time: 20:30
+  - date: 2026-10-31
+    time: 17:00
+  - date: 2026-10-31
+    time: 19:00
+  - date: 2026-11-01
+    time: 17:00
+  - date: 2026-11-01
+    time: 19:00
+  - date: 2026-11-05
+    time: 20:00
+  - date: 2026-11-06
+    time: 18:30
+  - date: 2026-11-06
+    time: 20:30
+  - date: 2026-11-07
+    time: 17:00
+  - date: 2026-11-07
+    time: 19:00
+  - date: 2026-11-08
+    time: 17:00
+  - date: 2026-11-08
+    time: 19:00
+  - date: 2026-11-12
+    time: 20:00
+  - date: 2026-11-13
+    time: 18:30
+  - date: 2026-11-13
+    time: 20:30
+  - date: 2026-11-14
+    time: 17:00
+  - date: 2026-11-14
+    time: 19:00
+  - date: 2026-11-15
+    time: 17:00
+  - date: 2026-11-15
+    time: 19:00
+  - date: 2026-11-19
+    time: 20:00
+  - date: 2026-11-20
+    time: 18:30
+  - date: 2026-11-20
+    time: 20:30
+  - date: 2026-11-21
+    time: 17:00
+  - date: 2026-11-21
+    time: 19:00
+  - date: 2026-11-22
+    time: 17:00
+  - date: 2026-11-22
+    time: 19:00
+  - date: 2026-11-26
+    time: 20:00
+  - date: 2026-11-27
+    time: 18:30
+  - date: 2026-11-27
+    time: 20:30
+  - date: 2026-11-28
+    time: 17:00
+  - date: 2026-11-28
+    time: 19:00
+  - date: 2026-11-29
+    time: 17:00
+  - date: 2026-11-29
+    time: 19:00
+  - date: 2026-12-03
+    time: 20:00
+  - date: 2026-12-04
+    time: 18:30
+  - date: 2026-12-04
+    time: 20:30
+  - date: 2026-12-05
+    time: 17:00
+  - date: 2026-12-05
+    time: 19:00
+  - date: 2026-12-06
+    time: 17:00
+  - date: 2026-12-06
+    time: 19:00
+  - date: 2026-12-09
+    time: 20:00
+  - date: 2026-12-10
+    time: 20:00
+  - date: 2026-12-11
+    time: 18:30
+  - date: 2026-12-11
+    time: 20:30
+  - date: 2026-12-12
+    time: 17:00
+  - date: 2026-12-12
+    time: 19:00
+  - date: 2026-12-13
+    time: 17:00
+  - date: 2026-12-13
+    time: 19:00
+  - date: 2026-12-17
+    time: 20:00
+  - date: 2026-12-18
+    time: 18:30
+  - date: 2026-12-18
+    time: 20:30
+  - date: 2026-12-19
+    time: 17:00
+  - date: 2026-12-19
+    time: 19:00
+  - date: 2026-12-20
+    time: 17:00
+  - date: 2026-12-20
+    time: 19:00
+  - date: 2026-12-22
+    time: 20:00
+  - date: 2026-12-26
+    time: 17:00
+  - date: 2026-12-26
+    time: 19:00
+  - date: 2026-12-27
+    time: 17:00
+  - date: 2026-12-27
+    time: 19:00
+  - date: 2026-12-28
+    time: 20:00
+  - date: 2026-12-29
+    time: 20:00
+  - date: 2027-01-02
+    time: 17:00
+  - date: 2027-01-02
+    time: 19:00
+  - date: 2027-01-03
+    time: 17:00
+  - date: 2027-01-03
+    time: 19:00
+  - date: 2027-01-04
+    time: 20:00
+  - date: 2027-01-07
+    time: 20:00
+  - date: 2027-01-08
+    time: 18:30
+  - date: 2027-01-08
+    time: 20:30
+  - date: 2027-01-09
+    time: 17:00
+  - date: 2027-01-09
+    time: 19:00
+  - date: 2027-01-10
+    time: 17:00
+  - date: 2027-01-10
+    time: 19:00
 ticketUrl: https://lamuntaner.entradas.plus/entradas/es/calendario-corta-cable-rojo
 qwanticEventId: "20529"
 priceFrom: 18.7
-saleStart: "2026-02-26T12:03"
+saleStart: 2026-02-26T12:03
+links:
+  - label: Web oficial
+    url: https://www.cortaelcablerojo.com/CCRBarna.html
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 20 €
+castNote: «Del 19 al 22 y del 26 al 29 de noviembre, Mai Boncompte no estará en
+  el reparto.
 draft: false
-aviso: "Aviso de reparto: del 19 al 22 y del 26 al 29 de noviembre, Mai Boncompte no estará en el reparto."
-avisoCa: "Avís de repartiment: del 19 al 22 i del 26 al 29 de novembre, la Mai Boncompte no serà al repartiment."
-avisoHasta: "2026-11-29"
+avisoCa: "Avís de repartiment: del 19 al 22 i del 26 al 29 de novembre, la Mai
+  Boncompte no serà al repartiment."
+aviso: "Aviso de reparto: del 19 al 22 y del 26 al 29 de noviembre, Mai
+  Boncompte no estará en el reparto."
+avisoHasta: 2026-11-29
 ---
 
 "CORTA EL CABLE ROJO" SIGUE ARRASANDO EN BARCELONA!
