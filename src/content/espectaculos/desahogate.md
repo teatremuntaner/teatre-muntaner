@@ -14,6 +14,10 @@ accent: "#e74337"
 accentInk: "#ffffff"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22185
 qwanticEventId: "22185"
+saleStart: "2026-10-10T08:50"
+dates:
+  - date: "2027-02-26"
+    time: "22:30"
 priceFrom: 13.6
 links:
   - label: Instagram

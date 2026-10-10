@@ -2,13 +2,17 @@
 # ARCHIVO GENERADO — no editar a mano.
 # Lo produce scripts/translate_ca.py a partir de la ficha en castellano.
 # Cualquier cambio manual se pierde en la siguiente sincronizacion.
+tagline: Espectacle per a majors de 18 anys
+promo: Promo 15% descompte
 category: Espectacle
+lang: Castellà
+duration: 85 minuts
 price: Des de 14 €
 genres:
 - Humor
-- Música
+- Improvisació
 - Monòleg
-sourceHash: 6088e9b36e27fbd7
+sourceHash: fc53b5e217c1b733
 generated: true
 ---
 
