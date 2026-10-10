@@ -1,16 +1,31 @@
 ---
-title: "Desahógate"
-category: "Espectáculo"
-genres: ["Humor", "Música", "Monólogo"]
-poster: "./desahogate.jpg"
+title: Desahógate
+tagline: Espectáculo para mayores de 18 años
+promo: Promo 15% descuento
+category: Espectáculo
+genres:
+  - Humor
+  - Improvisación
+  - Monólogo
+lang: Castellano
+priority: 0
+poster: muntaner_desahogate_ventas_qwantic_400x600.jpg
 accent: "#e74337"
 accentInk: "#ffffff"
-ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22185"
+ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22185
 qwanticEventId: "22185"
 priceFrom: 13.6
-price: "Desde 14 €"
-venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
-draft: true
+links:
+  - label: Instagram
+    url: https://www.instagram.com/alexvegalaxy/
+venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
+duration: 85 minutos
+price: Desde 14 €
+cast:
+  - offstage: false
+    name: Alex Vega
+    photo: alex-vega-teatre-muntaner.avif
+draft: false
 ---
 
 Tras 5 Temporadas de éxito absoluto por toda España.  ALEX VEGA  aterriza con su nueva, increíble y maravillosa creación:  ¡DESAHÓGATE!
