@@ -2,13 +2,15 @@
 # ARCHIVO GENERADO — no editar a mano.
 # Lo produce scripts/translate_ca.py a partir de la ficha en castellano.
 # Cualquier cambio manual se pierde en la siguiente sincronizacion.
+promo: Promo 15% Descompte
 category: Espectacle
-price: Des de 10 €
+lang: Català
+duration: 75 Minuts
+price: Des de 12 €
 genres:
-- Humor
 - Màgia
 - Familiar
-sourceHash: 0cfc1c6bda3810c6
+sourceHash: 186dc1b083a1dfa8
 generated: true
 ---
 
