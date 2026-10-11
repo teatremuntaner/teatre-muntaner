@@ -9,12 +9,12 @@ poster: ./mi-hija-astronauta.jpg
 accent: "#be8160"
 accentInk: "#ffffff"
 dates:
-  - date: 2026-12-02
-    time: 20:00
+  - date: "2026-12-02"
+    time: "20:00"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22187
 qwanticEventId: "22187"
 priceFrom: 26
-saleStart: 2026-10-11T09:34
+saleStart: "2026-10-11T09:34"
 links:
   - label: Instagram
     url: https://www.instagram.com/claudiavaldesoficial/
