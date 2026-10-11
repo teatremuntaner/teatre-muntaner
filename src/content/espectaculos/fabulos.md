@@ -1,20 +1,36 @@
 ---
-title: "Fabulos"
-category: "Espectáculo"
-genres: ["Humor", "Magia", "Familiar"]
-poster: "./fabulos.jpg"
+title: Fabulos
+promo: Promo 15% Descuento
+category: Espectáculo
+genres:
+  - Magia
+  - Familiar
+lang: Catalán
+poster: ./fabulos.jpg
 accent: "#cc5154"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-11-22"
-    time: "12:00"
-ticketUrl: "https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22188"
+  - date: 2026-11-22
+    time: 12:00
+ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22188
 qwanticEventId: "22188"
 priceFrom: 9.6
-saleStart: "2026-10-11T10:41"
-price: "Desde 10 €"
-venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
-draft: true
+saleStart: 2026-10-11T10:41
+links:
+  - label: Web
+    url: https://www.magstigman.com/es/
+  - label: "Instagram "
+    url: https://www.instagram.com/magstigman/
+  - url: https://www.youtube.com/@magstigman
+    label: YouTube
+venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
+duration: 75 Minutos
+price: Desde 12 €
+cast:
+  - offstage: false
+    name: Mag Stigman
+    photo: mag-stigman-teatre-muntaner.avif
+draft: false
 ---
 
 El  Mag Stigman , ganador del  Premio Teatro Barcelona 2022  al  mejor espectáculo de magia , llega ahora al  Muntaner Teatre  con una fiesta para  toda la familia . Un espectáculo completo: con mucho  ritmo , entretenimiento y,  sobre todo , muy  buen rollo .
