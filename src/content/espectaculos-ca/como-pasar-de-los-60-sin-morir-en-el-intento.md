@@ -2,14 +2,13 @@
 # ARCHIVO GENERADO — no editar a mano.
 # Lo produce scripts/translate_ca.py a partir de la ficha en castellano.
 # Cualquier cambio manual se pierde en la siguiente sincronizacion.
-tagline: 'Cancel·lada sessió: 11 setembre 2026'
 category: Comèdia
 lang: Castellà
 price: Des de 15 €
 genres:
 - Humor
 - Monòleg
-sourceHash: 61288db20c38b02a
+sourceHash: 161fa3a297b6aeba
 generated: true
 ---
 
