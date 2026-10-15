@@ -3,7 +3,7 @@
 # Lo produce scripts/translate_ca.py a partir de la ficha en castellano.
 # Cualquier cambio manual se pierde en la siguiente sincronizacion.
 category: Espectacle
-lang: Català
+lang: Castellà
 duration: 75 Minuts
 price: Des de 26 €
 genres:
