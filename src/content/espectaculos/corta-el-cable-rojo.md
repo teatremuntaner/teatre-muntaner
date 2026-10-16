@@ -20,8 +20,6 @@ ratings:
 accent: "#ef2e31"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-10-16"
-    time: "20:30"
   - date: "2026-10-17"
     time: "17:00"
   - date: "2026-10-17"
