@@ -10,8 +10,6 @@ poster: ./como-pasar-de-los-60-sin-morir-en-el-intento.jpg
 accent: "#6062be"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-10-16"
-    time: "22:30"
   - date: "2026-11-14"
     time: "23:00"
   - date: "2026-12-26"
