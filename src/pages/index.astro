@@ -81,7 +81,7 @@ const presentGenres = new Set(shows.flatMap((s) => s.data.genres));
 const genreFilters = GENRE_ORDER.filter((g) => presentGenres.has(g));
 
 // Filtro por idioma de la función
-const LANG_ORDER = ['Castellano', 'Catalán', 'Bilingüe'];
+const LANG_ORDER = ['Castellano', 'Catalán', 'Bilingüe', 'Inglés'];
 const langFilters = LANG_ORDER.filter((l) => shows.some((s) => s.data.lang === l));
 
 // Filtro "Esta semana": shows con función en los próximos 7 días.
@@ -201,8 +201,8 @@ const gallery = [
             <span class="genre-filter__langlabel">{t('home.cartelera.filtro.idioma')}</span>
             {langFilters.map((l) => (
               <button class="genre-chip genre-chip--lang" data-genre={`__lang:${l}`} aria-pressed="false" type="button">
-                <Flag lang={l === 'Catalán' ? 'ca' : 'es'} class="genre-chip__flag" />
-                {l === 'Catalán' ? t('home.idioma.ca') : l === 'Bilingüe' ? t('home.idioma.bi') : t('home.idioma.es')}
+                {l !== 'Inglés' && <Flag lang={l === 'Catalán' ? 'ca' : 'es'} class="genre-chip__flag" />}
+                {l === 'Catalán' ? t('home.idioma.ca') : l === 'Bilingüe' ? t('home.idioma.bi') : l === 'Inglés' ? t('home.idioma.en') : t('home.idioma.es')}
               </button>
             ))}
           </>
@@ -225,8 +225,8 @@ const gallery = [
               <div class="show-card__img">
                 <Image src={d.poster} alt={t('home.alt.cartel', { titulo: d.title })} widths={[300, 500]} sizes="(max-width: 600px) 50vw, 280px" />
                 {d.lang && (
-                  <span class={`show-card__lang ${d.lang === 'Catalán' ? 'is-ca' : d.lang === 'Bilingüe' ? 'is-bi' : 'is-es'}`}>
-                    {d.lang === 'Catalán' ? t('home.idioma.ca') : d.lang === 'Bilingüe' ? t('home.idioma.bi') : t('home.idioma.es')}
+                  <span class={`show-card__lang ${d.lang === 'Catalán' ? 'is-ca' : d.lang === 'Bilingüe' ? 'is-bi' : d.lang === 'Inglés' ? 'is-en' : 'is-es'}`}>
+                    {d.lang === 'Catalán' ? t('home.idioma.ca') : d.lang === 'Bilingüe' ? t('home.idioma.bi') : d.lang === 'Inglés' ? t('home.idioma.en') : t('home.idioma.es')}
                   </span>
                 )}
               </div>
