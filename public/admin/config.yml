@@ -61,7 +61,7 @@ collections:
         label: "Idioma de la función"
         widget: "select"
         required: false
-        options: ["Castellano", "Catalán", "Bilingüe"]
+        options: ["Castellano", "Catalán", "Bilingüe", "Inglés"]
         hint: "Idioma en el que se representa el espectáculo (se muestra en la cartelera)."
       - name: "priority"
         label: "Prioridad en cartelera"
