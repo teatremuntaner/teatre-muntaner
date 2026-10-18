@@ -18,12 +18,12 @@ gallery:
 accent: "#be6e60"
 accentInk: "#ffffff"
 dates:
-  - date: 2026-11-27
-    time: 22:30
+  - date: "2026-11-27"
+    time: "22:30"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22183
 qwanticEventId: "22183"
 priceFrom: 15.3
-saleStart: 2026-10-09T17:32
+saleStart: "2026-10-09T17:32"
 youtube: https://www.youtube.com/watch?v=JbklFslQgag
 links:
   - url: https://www.instagram.com/ismaelgalletero/
