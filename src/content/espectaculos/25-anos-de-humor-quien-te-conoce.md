@@ -1,5 +1,5 @@
 ---
-title: 25 años de humor. ¿Quién te conoce?
+title: PABLO PICOTTO - 25 AÑOS DE HUMOR.
 category: Espectáculo
 genres:
   - Humor
@@ -8,13 +8,13 @@ lang: Castellano
 poster: ./25-anos-de-humor-quien-te-conoce.jpg
 accent: "#be607f"
 accentInk: "#ffffff"
+dates:
+  - date: 2026-11-20
+    time: 22:30
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22009
 qwanticEventId: "22009"
-saleStart: "2026-09-25T11:20"
-dates:
-  - date: "2026-11-20"
-    time: "22:30"
 priceFrom: 30
+saleStart: 2026-09-25T11:20
 links:
   - url: https://www.instagram.com/pablopicotto/
     label: Instagram
@@ -31,7 +31,8 @@ cast:
     photo: pablo-picotto.webp
 draft: false
 ---
+Pablo Picotto llega con su nuevo show "25 AÑOS DE HUMOR ¿Quién te conoce?".
 
-Pablo Picotto llega con su nuevo show 25 AÑOS DE HUMOR ¿Quién te conoce? Un nuevo espectáculo donde después de 25 años de comedia, Pablo Picotto nos cuenta, con el humor que lo caracteriza, como descubrió la comedia, haciendo un repaso de su vida en los escenarios y, pasando, por algunos de sus personajes más queridos y, por qué no, a alguna que otra reflexión sobre la vida. Un espectáculo para  disfrutar y divertirse, para emocionarse con el pasado y pensar para adelante.
+Un nuevo espectáculo donde, después de 25 años de comedia, Pablo Picotto nos cuenta, con el humor que lo caracteriza, como descubrió la comedia, haciendo un repaso de su vida en los escenarios y, pasando, por algunos de sus personajes más queridos y, por qué no, a alguna que otra reflexión sobre la vida. Un espectáculo para disfrutar y divertirse, para emocionarse con el pasado y pensar para adelante.
 
-Espectáculo recomendado para mayores de 13 años.
+Espectáculo recomendado para mayores de 16 años.
