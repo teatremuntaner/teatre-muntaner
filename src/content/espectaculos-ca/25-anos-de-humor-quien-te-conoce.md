@@ -9,10 +9,12 @@ price: Des de 30 €
 genres:
 - Humor
 - Monòleg
-sourceHash: efb4e9c3e77b98cf
+sourceHash: 4844ea7f09f5b81c
 generated: true
 ---
 
-Pablo Picotto arriba amb el seu nou xou 25 ANYS D'HUMOR Qui et coneix? Un nou espectacle on després de 25 anys de comèdia, Pablo Picotto ens compta, amb l'humor que el caracteritza, com va descobrir la comèdia, fent un repàs de la seva vida en els escenaris i, passant, per alguns dels seus personatges més estimats i, per què no, a alguna reflexió sobre la vida. Un espectacle per a  gaudir i divertir, per a emocionar amb el passat i pensar cap endavant.
+Pablo Picotto arriba amb el seu nou xou "25 ANYS D'HUMOR Qui et coneix?".
 
-Espectacle recomanat per a majors de 13 anys.
+Un nou espectacle on, després de 25 anys de comèdia, Pablo Picotto ens compta, amb l'humor que el caracteritza, com va descobrir la comèdia, fent un repàs de la seva vida en els escenaris i, passant, per alguns dels seus personatges més estimats i, per què no, a alguna reflexió sobre la vida. Un espectacle per a gaudir i divertir, per a emocionar amb el passat i pensar cap endavant.
+
+Espectacle recomanat per a majors de 16 anys.

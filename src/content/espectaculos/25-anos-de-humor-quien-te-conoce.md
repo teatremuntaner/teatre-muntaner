@@ -9,12 +9,12 @@ poster: ./25-anos-de-humor-quien-te-conoce.jpg
 accent: "#be607f"
 accentInk: "#ffffff"
 dates:
-  - date: 2026-11-20
-    time: 22:30
+  - date: "2026-11-20"
+    time: "22:30"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22009
 qwanticEventId: "22009"
 priceFrom: 30
-saleStart: 2026-09-25T11:20
+saleStart: "2026-09-25T11:20"
 links:
   - url: https://www.instagram.com/pablopicotto/
     label: Instagram
