@@ -12,6 +12,16 @@ accentInk: "#ffffff"
 dates:
   - date: "2026-11-22"
     time: "12:00"
+  - date: "2026-12-28"
+    time: "17:00"
+  - date: "2026-12-29"
+    time: "17:00"
+  - date: "2027-01-03"
+    time: "12:00"
+  - date: "2027-01-04"
+    time: "17:00"
+  - date: "2027-01-10"
+    time: "12:00"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22188
 qwanticEventId: "22188"
 priceFrom: 9.6
