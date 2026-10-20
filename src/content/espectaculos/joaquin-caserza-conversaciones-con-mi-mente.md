@@ -17,6 +17,10 @@ dates:
     time: "21:00"
   - date: "2026-11-29"
     time: "12:30"
+  - date: "2026-12-19"
+    time: "21:00"
+  - date: "2026-12-20"
+    time: "12:30"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20531
 qwanticEventId: "20531"
 priceFrom: 20
