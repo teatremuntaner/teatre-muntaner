@@ -5,12 +5,12 @@
 promo: Promo 15% Descompte
 category: Espectacle
 lang: Català
-duration: 75 Minuts
+duration: 60 Minuts
 price: Des de 12 €
 genres:
 - Màgia
 - Familiar
-sourceHash: 186dc1b083a1dfa8
+sourceHash: 8d6e4d03c585b81d
 generated: true
 ---
 

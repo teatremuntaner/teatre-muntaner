@@ -1,5 +1,5 @@
 ---
-title: Fabulos
+title: Fabulós
 promo: Promo 15% Descuento
 category: Espectáculo
 genres:
@@ -34,7 +34,7 @@ links:
   - url: https://www.youtube.com/@magstigman
     label: YouTube
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
-duration: 75 Minutos
+duration: 60 Minutos
 price: Desde 12 €
 cast:
   - offstage: false
