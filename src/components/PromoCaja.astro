@@ -1,0 +1,51 @@
+---
+/**
+ * La promo de campaña dentro de la caja informativa de la ficha (Duración · Precio · Lugar).
+ * Va DENTRO del <dl>: un <div> con su <dt>/<dd>, que el HTML permite. Se enseña y se oculta
+ * con las mismas reglas que la etiqueta del cartel (src/lib/promo.ts); el script que la
+ * caduca en el navegador es el de PromoEtiqueta, que va siempre en la misma página.
+ */
+import PromoIcono from './PromoIcono.astro';
+import { estadoPromo, fechaCorta, CLAVE_CAMPANA, type PromoCampana } from '../lib/promo';
+import { useT, type Lang } from '../i18n';
+
+interface Props {
+  promo?: PromoCampana;
+  hoy: string;
+  lang: Lang;
+}
+const { promo, hoy, lang } = Astro.props;
+const t = useT(lang);
+const estado = estadoPromo(promo, hoy);
+// En catalán, el texto catalán si lo hay; si no, el castellano (como avisoCa).
+const texto = lang === 'ca' ? (promo?.textoCa ?? promo?.texto) : promo?.texto;
+const funciones = lang === 'ca' ? (promo?.funcionesCa ?? promo?.funciones) : promo?.funciones;
+---
+{promo && estado && (
+  <div class="promo-caja" data-promo-desde={promo.desde} data-promo-hasta={promo.hasta} hidden={estado === 'futura'}>
+    <dt class="promo-caja__campana"><PromoIcono /><span>{t(CLAVE_CAMPANA[promo.campana])}</span></dt>
+    <dd class="promo-caja__detalle">
+      {texto && <strong class="promo-caja__texto">{texto}</strong>}
+      {funciones && <span class="promo-caja__linea">{t('promo.validaPara', { funciones })}</span>}
+      <span class="promo-caja__linea promo-caja__plazo">{t('promo.comprandoHasta', { fecha: fechaCorta(promo.hasta, hoy, lang) })}</span>
+    </dd>
+  </div>
+)}
+
+<style>
+  .promo-caja[hidden] { display: none; }
+  .promo-caja {
+    margin: 0 0 6px; padding: 14px 16px; border-radius: 8px;
+    border: 1px solid var(--c-gold); background: color-mix(in srgb, var(--c-gold) 12%, var(--ink-soft));
+  }
+  .promo-caja__campana {
+    display: flex; align-items: center; gap: 8px; margin: 0;
+    font-family: var(--f-display); font-size: 13px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-wine);
+  }
+  .promo-caja__campana :global(.promo-icono) { width: 17px; height: 17px; flex: none; }
+  .promo-caja__detalle { margin: 8px 0 0; display: flex; flex-direction: column; gap: 3px; }
+  .promo-caja__texto { font-family: var(--f-display); font-size: 22px; font-weight: 700; color: var(--paper); line-height: 1.15; }
+  .promo-caja__linea { font-size: 15px; color: var(--paper); line-height: 1.4; }
+  .promo-caja__plazo { color: var(--paper-dim); font-size: 14px; }
+</style>

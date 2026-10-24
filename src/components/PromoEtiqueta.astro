@@ -1,0 +1,80 @@
+---
+/**
+ * Etiqueta de campaña (Black Friday, «Regala por Navidad», San Valentín) sobre el cartel.
+ * Va dentro de un contenedor con `position: relative` (el hueco del cartel). Texto real,
+ * no solo icono: el nombre de la campaña se lee y lo lee un lector de pantalla.
+ * Qué es una promo y cuándo caduca: src/lib/promo.ts.
+ */
+import PromoIcono from './PromoIcono.astro';
+import { estadoPromo, CLAVE_CAMPANA, type PromoCampana } from '../lib/promo';
+import { useT, type Lang } from '../i18n';
+
+interface Props {
+  promo?: PromoCampana;
+  hoy: string;
+  grande?: boolean; // la de la ficha, un punto mayor que la de la cartelera
+  lang: Lang;
+}
+const { promo, hoy, grande = false, lang } = Astro.props;
+const t = useT(lang);
+const estado = estadoPromo(promo, hoy);
+---
+{promo && estado && (
+  <span
+    class:list={['promo-etiqueta', { 'promo-etiqueta--grande': grande }]}
+    data-promo-desde={promo.desde}
+    data-promo-hasta={promo.hasta}
+    hidden={estado === 'futura'}
+  >
+    <PromoIcono />
+    <span>{t(CLAVE_CAMPANA[promo.campana])}</span>
+  </span>
+)}
+
+<script>
+  // Que la promo empiece y caduque sola aunque la web no se recompile: cada elemento con
+  // data-promo-desde/hasta se enseña o se oculta con la fecha de hoy en Madrid. Se vuelve a
+  // mirar cada minuto y al volver a la pestaña: una ficha abierta el último día no puede
+  // seguir anunciando la promo pasada la medianoche (Codex, 24/10/2026).
+  const revisa = () => {
+    const hoy = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date());
+    document.querySelectorAll<HTMLElement>('[data-promo-hasta]').forEach((el) => {
+      const desde = el.dataset.promoDesde ?? '';
+      const hasta = el.dataset.promoHasta ?? '';
+      el.hidden = !(desde <= hoy && hoy <= hasta);
+    });
+  };
+  revisa();
+  if (document.querySelector('[data-promo-hasta]')) {
+    setInterval(revisa, 60_000);
+    window.addEventListener('pageshow', revisa);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') revisa();
+    });
+  }
+</script>
+
+<style is:global>
+  .promo-etiqueta {
+    position: absolute; top: 10px; left: 10px; z-index: 3;
+    display: inline-flex; align-items: center; gap: 6px;
+    max-width: calc(100% - 20px);
+    padding: 5px 10px 5px 8px; border-radius: 999px;
+    /* Pastilla oscura con letra y borde de oro: se distingue sobre cualquier cartel (también
+       los claros y los dorados) y no se confunde con la de idioma, que va a la derecha. */
+    background: var(--paper); color: var(--c-gold); border: 1px solid var(--c-gold);
+    font-family: var(--f-display); font-weight: 700; font-size: 11px; line-height: 1.1;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+    pointer-events: none;
+  }
+  .promo-etiqueta[hidden] { display: none; }
+  .promo-etiqueta .promo-icono { width: 14px; height: 14px; flex: none; }
+  .promo-etiqueta span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* En la cartelera, a la derecha va la pastilla de idioma: si la tarjeta es estrecha, el
+     nombre de la campaña pasa a dos líneas antes que montarse encima. */
+  .show-card__img .promo-etiqueta { max-width: calc(100% - 104px); border-radius: 14px; }
+  .show-card__img .promo-etiqueta span { white-space: normal; overflow: visible; }
+  .promo-etiqueta--grande { top: 14px; left: 14px; font-size: 13px; padding: 7px 14px 7px 10px; gap: 8px; }
+  .promo-etiqueta--grande .promo-icono { width: 17px; height: 17px; }
+</style>

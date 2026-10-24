@@ -45,5 +45,12 @@
   "cookies.analiticasDesc": "Ens ajuden a entendre com s'usa la web (Google Analytics).",
   "cookies.marketingDesc": "Per mesurar campanyes (píxel de Meta) i per veure aquí contingut d'altres webs que deixa les seves pròpies cookies: vídeos de YouTube, reels d'Instagram i TikTok i el mapa de Google Maps.",
   "legal.cookies.c.analiticas": "Analítiques (de tercers, només si les acceptes): {analytics} deixa les cookies «_ga» i «_ga_*» (fins a dos anys) per a comptar les visites i saber quines pàgines es consulten. Sense el teu consentiment, {analytics} ni tan sols es carrega.",
-  "legal.cookies.c.marketing": "Màrqueting (de tercers, només si les acceptes): el píxel de Meta («_fbp» i «_fbc», fins a tres mesos), per a mesurar el resultat de les nostres campanyes. Sense el teu consentiment el píxel ni tan sols es carrega, i no depèn que acceptis les analítiques."
+  "legal.cookies.c.marketing": "Màrqueting (de tercers, només si les acceptes): el píxel de Meta («_fbp» i «_fbc», fins a tres mesos), per a mesurar el resultat de les nostres campanyes. Sense el teu consentiment el píxel ni tan sols es carrega, i no depèn que acceptis les analítiques.",
+
+  "_notaPromo": "Campañas de promoción (24/10/2026): nombres de campaña y textos de la caja, fijados a mano.",
+  "promo.campana.blackFriday": "Black Friday",
+  "promo.campana.navidad": "Regala per Nadal",
+  "promo.campana.sanValentin": "Sant Valentí",
+  "promo.validaPara": "Vàlida per a: {funciones}",
+  "promo.comprandoHasta": "Comprant fins al {fecha}"
 }
