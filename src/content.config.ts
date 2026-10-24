@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { limpiaPromo, CAMPANAS } from './lib/promo';
 
 /**
  * El CMS (Decap) a veces guarda fechas/horas SIN comillas. YAML entonces interpreta
@@ -32,6 +33,24 @@ const espectaculos = defineCollection({
       title: z.string(),
       tagline: z.string().optional(),
       promo: z.string().optional(), // promo/descuento destacado (ej. "20% de descuento")
+      // Campaña de promoción (Black Friday, «Regala por Navidad», San Valentín): etiqueta sobre
+      // el cartel y la promo en la ficha, solo entre `desde` y `hasta`. Todo en src/lib/promo.ts.
+      // textoCa/funcionesCa: su versión catalana a mano (si faltan, sale el castellano).
+      // Una promo a medias se ignora con aviso; nunca tumba la compilación.
+      promoCampana: z.preprocess(
+        limpiaPromo,
+        z
+          .object({
+            campana: z.enum(CAMPANAS),
+            texto: z.string().optional(),
+            desde: z.string(),
+            hasta: z.string(),
+            funciones: z.string().optional(),
+            textoCa: z.string().optional(),
+            funcionesCa: z.string().optional(),
+          })
+          .optional(),
+      ),
       // Aviso al público junto al botón de compra (cambios de reparto, avisos de sala…).
       // avisoCa es su texto en catalán (si falta, sale el castellano). Con avisoHasta (AAAA-MM-DD)
       // el aviso deja de pintarse a partir del día siguiente, en la siguiente compilación.

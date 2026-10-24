@@ -6,6 +6,8 @@ import Reels from '../../components/Reels.astro';
 import VideoYoutube from '../../components/VideoYoutube.astro';
 import Funciones from '../../components/Funciones.astro';
 import CalendarioFicha from '../../components/CalendarioFicha.astro';
+import PromoEtiqueta from '../../components/PromoEtiqueta.astro';
+import PromoCaja from '../../components/PromoCaja.astro';
 import { summarize, hoyEnMadrid, mesesDe } from '../../lib/schedule';
 import { limpiaEspacios } from '../../lib/espacios.mjs';
 import { useT, langFromPath } from '../../i18n';
@@ -185,6 +187,7 @@ const videoLd = (ytId || d.video) && videoUploadDate
         <div class="show__poster" data-tilt>
           <Image src={d.poster} alt={t('show.cartelDe', { titulo: d.title })} widths={[400, 700]} sizes="(max-width: 760px) 70vw, 360px" />
           <span class="show__poster-sheen" aria-hidden="true"></span>
+          <PromoEtiqueta promo={d.promoCampana} hoy={today} lang={lang} grande />
         </div>
         <div class="show__head">
           <p class="eyebrow">{genre}</p>
@@ -329,6 +332,7 @@ const videoLd = (ytId || d.video) && videoUploadDate
       </div>
       <aside class="show__meta">
         <dl>
+          <PromoCaja promo={d.promoCampana} hoy={today} lang={lang} />
           {d.duration && (<><dt>{t('show.duracion')}</dt><dd>{d.duration}</dd></>)}
           {d.lang && (<><dt>{t('show.idioma')}</dt><dd>{d.lang}</dd></>)}
           {d.price && (<><dt>{t('show.precio')}</dt><dd>{d.price}</dd></>)}

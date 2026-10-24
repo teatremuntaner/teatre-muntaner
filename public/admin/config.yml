@@ -41,6 +41,21 @@ collections:
       - { name: "title", label: "Título", widget: "string" }
       - { name: "tagline", label: "Subtítulo / gancho", widget: "string", required: false }
       - { name: "promo", label: "Promoción / descuento (se muestra destacado)", widget: "string", required: false, hint: "Ej: 20% de descuento" }
+      # Campañas de promoción (Lucas y Sandra, 24/10/2026). Ver src/lib/promo.ts.
+      - name: "promoCampana"
+        label: "Campaña de promoción (Black Friday, Navidad, San Valentín)"
+        widget: "object"
+        required: false
+        collapsed: true
+        hint: "Pone una etiqueta con el nombre de la campaña sobre el cartel (cartelera y ficha, en castellano y en catalán) y la promo en la caja de datos de la ficha. Solo sale entre «Se puede comprar desde» y «hasta», y se quita sola al acabar. Hacen falta la campaña y las dos fechas; si falta algo, no sale nada."
+        fields:
+          - { name: "campana", label: "Campaña", widget: "select", required: false, options: ["Black Friday", "Regala por Navidad", "San Valentín"] }
+          - { name: "texto", label: "Qué ofrece", widget: "string", required: false, hint: "Corto. Ej: «-30 %» o «2x1»." }
+          - { name: "desde", label: "Se puede comprar desde (incluido)", widget: "datetime", required: false, date_format: "YYYY-MM-DD", time_format: false, picker_utc: true }
+          - { name: "hasta", label: "Se puede comprar hasta (incluido)", widget: "datetime", required: false, date_format: "YYYY-MM-DD", time_format: false, picker_utc: true }
+          - { name: "funciones", label: "Para qué funciones vale (opcional)", widget: "string", required: false, hint: "Ej: «Funciones de diciembre a febrero». Las fechas de arriba son de COMPRA; aquí, las de las funciones." }
+          - { name: "textoCa", label: "Qué ofrece, en catalán (opcional)", widget: "string", required: false, hint: "Si se deja vacío, la web en catalán enseña el texto en castellano." }
+          - { name: "funcionesCa", label: "Para qué funciones vale, en catalán (opcional)", widget: "string", required: false, hint: "Ej: «Funcions de desembre a febrer». Si se deja vacío, sale el castellano." }
       - name: "category"
         label: "Categoría"
         widget: "select"
