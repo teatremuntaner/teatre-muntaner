@@ -86,14 +86,20 @@ const ytId = d.youtube
 // Descripción SEO: tagline si existe; si no, un extracto de la sinopsis
 // (en el idioma de la página).
 const plain = limpiaEspacios((fuente.body ?? '')
+  .replace(/<[^>]+>/g, ' ')
   .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
   .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
   .replace(/[#*_>`~]/g, '')
   .replace(/\s+/g, ' ')
   .trim());
-const desc =
-  d.tagline ??
-  (plain ? (plain.length > 155 ? plain.slice(0, 152).replace(/\s+\S*$/, '') + '…' : plain) : t('show.descFallback', { titulo: d.title }));
+// Ojo: la sincronización de Qwantic deja `tagline: ""` en las altas sin lema, y con `??`
+// esa cadena vacía pasaba tal cual. Search Console lo marcó el 25/10/2026 («Falta el campo
+// description» en los eventos de Riquiña y de Cómo pasar de los 60). Por eso se mira si
+// el lema dice algo, no si existe.
+const recorta = (s: string, max: number) =>
+  s.length > max ? s.slice(0, max - 3).replace(/\s+\S*$/, '') + '…' : s;
+const lema = limpiaEspacios(d.tagline ?? '').trim();
+const desc = lema || (plain ? recorta(plain, 155) : t('show.descFallback', { titulo: d.title }));
 
 // Datos estructurados: un TheaterEvent por función.
 const SITE = Astro.site ?? new URL('https://teatremuntaner.com');
@@ -121,6 +127,16 @@ const offer = d.ticketUrl
     }
   : null;
 
+// La descripción del evento: la sinopsis (más larga que la de buscadores, que se corta a
+// 155); si no hay sinopsis, el lema; y si tampoco, título, teatro y fecha de esa función.
+// Nunca vacía: Google la pide en cada TheaterEvent.
+const fechaLarga = (iso: string) =>
+  new Date(`${iso}T12:00:00Z`).toLocaleDateString(lang === 'ca' ? 'ca-ES' : 'es-ES', {
+    day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
+  });
+const descEvento = (dt: { date: string }) =>
+  (plain ? recorta(plain, 300) : '') || lema || `${t('show.descFallback', { titulo: d.title })}, ${fechaLarga(dt.date)}`;
+
 const mkEvent = (dt: { date: string; time?: string }) => ({
   '@context': 'https://schema.org',
   '@type': 'TheaterEvent',
@@ -131,7 +147,7 @@ const mkEvent = (dt: { date: string; time?: string }) => ({
   eventStatus: 'https://schema.org/EventScheduled',
   eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
   image: posterUrl,
-  description: desc,
+  description: descEvento(dt),
   location: {
     '@type': 'Place',
     name: 'Teatre Muntaner',
