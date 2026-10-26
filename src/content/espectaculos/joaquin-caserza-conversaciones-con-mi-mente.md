@@ -19,7 +19,7 @@ dates:
     time: "12:30"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20531
 qwanticEventId: "20531"
-priceFrom: 20
+priceFrom: 22
 saleStart: "2026-02-23T13:58"
 youtube: https://youtu.be/0MeVPwmADt8?si=wXFIFCUglmm4nNMr
 draft: false
