@@ -2,15 +2,21 @@
 # ARCHIVO GENERADO — no editar a mano.
 # Lo produce scripts/translate_ca.py a partir de la ficha en castellano.
 # Cualquier cambio manual se pierde en la siguiente sincronizacion.
+promo: Funcions des de 12 de novembre desactivada venda, durant el matí d'avui les
+  tornarem a obrir. Disculpin les molèsties.
 category: Comèdia
 lang: Castellà
 price: Des de 20 €
 genres:
 - Improvisació
 - Humor
-sourceHash: d84c6ad39a5b4a9d
+sourceHash: 5cdc01d0ce06b80a
 generated: true
 ---
+
+Funcions des de 12 de novembre desactivada venda, durant el matí d'avui les tornarem a obrir. Disculpin les molèsties.
+
+
 
 "TALA EL CABLE ROJO" CONTINUA ARRASANT A BARCELONA!
 
