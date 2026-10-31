@@ -23,8 +23,6 @@ accent: "#ef2e31"
 accentInk: "#ffffff"
 dates:
   - date: "2026-10-31"
-    time: "17:00"
-  - date: "2026-10-31"
     time: "19:00"
   - date: "2026-11-01"
     time: "17:00"
