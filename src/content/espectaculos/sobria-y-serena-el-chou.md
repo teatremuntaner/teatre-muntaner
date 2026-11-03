@@ -11,6 +11,10 @@ accentInk: "#ffffff"
 dates:
   - date: "2026-11-06"
     time: "22:30"
+  - date: "2027-02-18"
+    time: "20:00"
+  - date: "2027-02-19"
+    time: "22:30"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21707
 qwanticEventId: "21707"
 priceFrom: 20
