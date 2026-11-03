@@ -2,15 +2,13 @@
 # ARCHIVO GENERADO — no editar a mano.
 # Lo produce scripts/translate_ca.py a partir de la ficha en castellano.
 # Cualquier cambio manual se pierde en la siguiente sincronizacion.
-promo: Funcions des de 12 de novembre desactivada venda, durant el matí d'avui les
-  tornarem a obrir. Disculpin les molèsties.
 category: Comèdia
 lang: Castellà
 price: Des de 20 €
 genres:
 - Improvisació
 - Humor
-sourceHash: 5cdc01d0ce06b80a
+sourceHash: 1eed1ecf11d62047
 generated: true
 ---
 
