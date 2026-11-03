@@ -11,12 +11,12 @@ reels:
 accent: "#bf795f"
 accentInk: "#ffffff"
 dates:
-  - date: 2026-11-27
-    time: 16:30
+  - date: "2026-11-27"
+    time: "16:30"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20644
 qwanticEventId: "20644"
 priceFrom: 14
-saleStart: 2026-07-24T06:36
+saleStart: "2026-11-03T12:48"
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 duration: 90 Minutos
 price: Desde 14 €
