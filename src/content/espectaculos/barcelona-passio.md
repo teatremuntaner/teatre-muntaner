@@ -5,29 +5,29 @@ genres:
   - Música
 lang: Castellano
 poster: ./barcelona-passio.jpg
+reels:
+  - url: https://www.instagram.com/reels/DV87tx6gpg7/
+    poster: ./barcelona-passio-reel.jpg
 accent: "#bf795f"
 accentInk: "#ffffff"
+dates:
+  - date: 2026-11-27
+    time: 16:30
+ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20644
+qwanticEventId: "20644"
+priceFrom: 14
+saleStart: 2026-07-24T06:36
+venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
+duration: 90 Minutos
+price: Desde 14 €
 cast:
   - name: Jaume Francès
   - name: Cristina Colominas
   - name: Laura Mateo
   - name: Abraham Lojo
+draft: false
 groups:
   enabled: false
-reels:
-  - url: https://www.instagram.com/reels/DV87tx6gpg7/
-    poster: ./barcelona-passio-reel.jpg
-dates:
-  - date: "2026-08-07"
-    time: "17:00"
-ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20644
-qwanticEventId: "20644"
-priceFrom: 14
-saleStart: "2026-07-24T06:36"
-venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
-duration: 90 Minutos
-price: Desde 14 €
-draft: false
 ---
 
 Flamenco y rumba con alma de ciudad
