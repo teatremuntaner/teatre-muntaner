@@ -5,7 +5,7 @@ category: Espectáculo
 genres:
   - Teatro
 lang: Catalán
-poster: ./la-resta-be.jpg
+poster: muntaner_la-resta-bé-bo_instagram_-1080x1920.jpg
 gallery:
   - muntaner_la-resta-bé_foto-artista-actuant_7.jpg
   - muntaner_la-resta-bé_foto-artista-actuant_14.jpg
@@ -14,12 +14,12 @@ gallery:
 accent: "#b5be60"
 accentInk: "#0c0a0f"
 dates:
-  - date: "2026-11-18"
-    time: "20:00"
+  - date: 2026-11-18
+    time: 20:00
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22141
 qwanticEventId: "22141"
 priceFrom: 13.6
-saleStart: "2026-10-08T11:14"
+saleStart: 2026-10-08T11:14
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 duration: "75"
 price: Desde 14 €
