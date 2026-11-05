@@ -6,14 +6,16 @@
  * los carteles llevan los créditos y no el título, para que no tape lo que se tiene que leer
  * ni se pise con la etiqueta de campaña ni con la del idioma (que van arriba).
  *
- * Tres casos, del más fuerte al más suave (solo se pinta uno):
+ * El sello resume todas las funciones por venir, no la primera (Carlos, 05/11/2026: el cartel
+ * está para vender). Solo se pinta uno:
  *  - Todas las funciones por venir agotadas: sello grande en el centro, «Agotado».
- *  - Alguna agotada y otras a la venta: sello rojo con su fecha («Agotada · sáb 16 ene ·
- *    17:00»). El resto se sigue vendiendo.
- *  - Ninguna agotada y alguna en últimas entradas: sello oro «Últimas entradas».
- * Qué dice cada función lo decide src/lib/disponibilidad.ts (Qwantic y lo puesto a mano).
+ *  - Alguna en últimas entradas, aunque otra esté agotada: sello oro «Últimas entradas» con
+ *    sus fechas.
+ *  - Una agotada y el resto sin aviso, o ninguna con aviso: sin sello. Lo agotado ya se ve en
+ *    la hora tachada de la ficha y en el calendario.
+ * La regla está en selloCartel (src/lib/disponibilidad.ts), con Qwantic y lo puesto a mano.
  */
-import { avisosPorVenir, todoAgotado, fechaCorta, type ConVenta } from '../lib/disponibilidad';
+import { selloCartel, fechaCorta, type ConVenta } from '../lib/disponibilidad';
 import type { Session } from '../lib/schedule';
 import { useT, type Lang } from '../i18n';
 
@@ -25,26 +27,20 @@ interface Props {
 }
 const { show, hoy, lang = 'es', grande = false } = Astro.props;
 const t = useT(lang);
-const { agotadas, ultimas } = avisosPorVenir(show, hoy);
-const todo = todoAgotado(show, hoy);
+const { estado, funciones } = selloCartel(show, hoy);
 // En el sello caben dos fechas; con más, se dice cuántas.
 const fechas = (l: Session[]) =>
   l.length <= 2 ? l.map((s) => fechaCorta(s, lang)) : [t('venta.nFunciones', { n: l.length })];
 ---
-{todo ? (
+{estado === 'agotada' ? (
   <span class:list={['sello-venta', 'sello-venta--todo', { 'sello-venta--grande': grande }]}>
     <span class="sello-venta__rotulo">{t('venta.agotado')}</span>
     <span class="sello-venta__fecha">{t('venta.noQuedan')}</span>
   </span>
-) : agotadas.length > 0 ? (
-  <span class:list={['sello-venta', { 'sello-venta--grande': grande }]}>
-    <span class="sello-venta__rotulo">{agotadas.length === 1 ? t('venta.agotada') : t('venta.agotadas')}</span>
-    {fechas(agotadas).map((f) => <span class="sello-venta__fecha">{f}</span>)}
-  </span>
-) : ultimas.length > 0 ? (
+) : estado === 'ultimas' ? (
   <span class:list={['sello-venta', 'sello-venta--ultimas', { 'sello-venta--grande': grande }]}>
     <span class="sello-venta__rotulo">{t('venta.ultimasEntradas')}</span>
-    {fechas(ultimas).map((f) => <span class="sello-venta__fecha">{f}</span>)}
+    {fechas(funciones).map((f) => <span class="sello-venta__fecha">{f}</span>)}
   </span>
 ) : null}
 

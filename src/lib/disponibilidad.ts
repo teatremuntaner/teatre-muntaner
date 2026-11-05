@@ -71,6 +71,22 @@ export function todoAgotado(d: ConVenta, hoy: string): boolean {
   return f.length > 0 && f.every((s) => ventaDe(d, s.date, s.time) === 'agotada');
 }
 
+/**
+ * Lo que dice el sello del CARTEL, que resume todas las funciones por venir (Carlos, 05/11/2026:
+ * el cartel está para vender, y una función agotada entre otras con entradas no puede hacer
+ * creer que no queda nada):
+ *  - todas agotadas: 'agotada';
+ *  - si no, alguna en últimas entradas: 'ultimas' (aunque otra esté agotada), con esas funciones;
+ *  - si no (una agotada y el resto sin aviso, o ninguna con aviso): sin sello.
+ * Las marcas de cada función (horas de la ficha, calendarios) no cambian: eso es `ventaDe`.
+ */
+export function selloCartel(d: ConVenta, hoy: string): { estado: Venta; funciones: Session[] } {
+  const { agotadas, ultimas } = avisosPorVenir(d, hoy);
+  if (todoAgotado(d, hoy)) return { estado: 'agotada', funciones: agotadas };
+  if (ultimas.length > 0) return { estado: 'ultimas', funciones: ultimas };
+  return { estado: null, funciones: [] };
+}
+
 const DOW: Record<Lang, string[]> = {
   es: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],
   ca: ['dg', 'dl', 'dt', 'dc', 'dj', 'dv', 'ds'],
