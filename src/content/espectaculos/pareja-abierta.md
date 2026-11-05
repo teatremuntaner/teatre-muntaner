@@ -31,6 +31,7 @@ cast:
     role: Actor
     photo: rafa-alarcón-teatro-sofia.zmu9przz_1lcc48.webp
 draft: false
+ventaQwantic: []
 ---
 
 Con Rafa Alarcón y Marta Chiner

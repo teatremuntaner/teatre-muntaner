@@ -23,6 +23,7 @@ venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 duration: 60´
 price: Desde 18 €
 draft: false
+ventaQwantic: []
 ---
 
 No te pierdas Gilipollas por el Mundo- Noche inolvidable de Risas con Carolina Noriega en el Teatre Muntaner.

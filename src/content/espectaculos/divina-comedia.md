@@ -27,6 +27,7 @@ cast:
     name: Patricia Sornosa
     photo: patricia-sornosa-teatre-muntaner.png
 draft: false
+ventaQwantic: []
 ---
 
 Divina Comedia es un viaje hilarante y afilado a través de una larga carrera dedicada, con ironía y lucidez, a la “salvación” de las almas… a golpe de carcajada. Patricia Sornosa, una de las voces más contundentes de la comedia feminista, reúne en este show sus bloques de stand up más celebrados junto a anécdotas reales vividas sobre los escenarios, construyendo un relato tan personal como universal.

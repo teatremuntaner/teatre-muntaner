@@ -22,6 +22,7 @@ venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 draft: false
 artist: Jazmín Abuín
 price: Desde 18 €
+ventaQwantic: []
 ---
 Galeguiña y de madre canadiense. A mí nunca me han pegado con la zapatilla, a mí me ponían POST-ITS. Mis amigos me dicen que soy un ser de luz. Pero eso es porque soy de Vigo. Yo desde luego, lo que no quiero es molestar. O sí. Depende. Porque todos llevamos un hater dentro, y de vez en cuando, hay que sacarlo a pasear… Pero, hasta entonces, keep calm and be riquiños
 

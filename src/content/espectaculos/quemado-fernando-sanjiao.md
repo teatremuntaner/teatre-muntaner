@@ -27,6 +27,7 @@ cast:
     photo: fernando-sinjao-muntaner.jpeg
     name: Fernando Sanjiao
 draft: false
+ventaQwantic: []
 ---
 FERNANDO SANJIAO, EL #1 DEL STAND UP PRESENTARÁ SU UNIPERSONAL QUEMADO EN ESPAÑA.
 

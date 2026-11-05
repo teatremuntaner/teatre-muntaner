@@ -28,6 +28,7 @@ cast:
     name: Claudia Valdés
     photo: claudia-valdes-teatre-muntaner.jpeg
 draft: false
+ventaQwantic: []
 ---
 La obra de teatro "Mi Hija es Astronauta" es un monólogo escrito y protagonizado por Claudia Valdés, basado en su libro homónimo, que narra con humor, emoción y honestidad su experiencia personal al descubrir el autismo de su hija.
 

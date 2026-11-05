@@ -174,6 +174,7 @@ avisoCa: "Avís de repartiment: del 19 al 22 i del 26 al 29 de novembre, la Mai
 aviso: "Aviso de reparto: del 19 al 22 y del 26 al 29 de noviembre, Mai
   Boncompte no estará en el reparto."
 avisoHasta: 2026-11-29
+ventaQwantic: []
 ---
 Funciones desde 12 de noviembre desactivada venta, durante la mañana de hoy las volveremos a abrir. Disculpen las molestias.
 

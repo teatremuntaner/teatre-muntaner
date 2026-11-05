@@ -11,14 +11,14 @@ ratings: []
 accent: "#c4b05a"
 accentInk: "#0c0a0f"
 dates:
-  - date: 2026-11-07
-    time: 23:00
-  - date: 2026-11-21
-    time: 23:00
+  - date: "2026-11-07"
+    time: "23:00"
+  - date: "2026-11-21"
+    time: "23:00"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22138
 qwanticEventId: "22138"
 priceFrom: 17
-saleStart: 2026-10-07T22:11
+saleStart: "2026-10-07T22:11"
 youtube: https://www.youtube.com/watch?v=d4NKIxURrZA
 links:
   - label: Inatagram
@@ -30,6 +30,7 @@ duration: 80 minutos
 price: Desde 17 €
 cast: []
 draft: false
+ventaQwantic: []
 ---
 
 Barcelona, años 80. Tres jóvenes que no encajan. Una época empeñada en que encajen. Y muchas razones para reírse.

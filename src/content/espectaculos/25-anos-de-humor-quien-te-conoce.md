@@ -30,6 +30,7 @@ cast:
     name: Pablo Picotto
     photo: pablo-picotto.webp
 draft: false
+ventaQwantic: []
 ---
 Pablo Picotto llega con su nuevo show "25 AÑOS DE HUMOR ¿Quién te conoce?".
 

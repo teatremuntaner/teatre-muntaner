@@ -28,6 +28,7 @@ cast:
 draft: false
 groups:
   enabled: false
+ventaQwantic: []
 ---
 
 Flamenco y rumba con alma de ciudad

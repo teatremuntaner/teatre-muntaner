@@ -19,6 +19,7 @@ saleStart: "2026-07-20T09:52"
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 30 €
 draft: false
+ventaQwantic: []
 ---
 **SPETTACOLO IN ITALIANO**
 

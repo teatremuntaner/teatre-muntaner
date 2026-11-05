@@ -41,6 +41,7 @@ cast:
     name: Mag Stigman
     photo: mag-stigman-teatre-muntaner.avif
 draft: false
+ventaQwantic: []
 ---
 
 El  Mag Stigman , ganador del  Premio Teatro Barcelona 2022  al  mejor espectáculo de magia , llega ahora al  Muntaner Teatre  con una fiesta para  toda la familia . Un espectáculo completo: con mucho  ritmo , entretenimiento y,  sobre todo , muy  buen rollo .

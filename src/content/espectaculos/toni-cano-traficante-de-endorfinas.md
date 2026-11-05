@@ -24,6 +24,7 @@ priceFrom: 12.8
 price: "Desde 14 €"
 venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
 draft: false
+ventaQwantic: []
 ---
 
 Alguien dijo que si eres un chaval de barrio tus salidas en la vida son las que son, que eres carne de cañón para el menudeo de lo ilegal. Toni Cano quiso darle la razón al cuñado de turno que aseveró tan afortunada afirmación, él lo tuvo claro: si hay que traficar que sea con cosa fina. Así que, hace años comenzó a vivir al margen del sistema trapicheando con dopamina, serotonina, oxitocinas y especializándose en el humor de contrabando, llegando a montar una red internacional de tráfico de endorfinas.

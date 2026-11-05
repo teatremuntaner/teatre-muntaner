@@ -20,6 +20,7 @@ saleStart: "2026-03-10T06:28"
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 12 €
 draft: false
+ventaQwantic: []
 ---
 
 EL PEQUEÑO PRÍNCIPE es un espectáculo de danza para público familiar inspirado en el cuento poético de El Principito de Antoine de Saint-Exupéry. A través del movimiento, la música y los objetos, la escena se transforma en un viaje interior donde el cuerpo se convierte en lenguaje para hablar de la amistad, la curiosidad, el amor y el descubrimiento.

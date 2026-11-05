@@ -23,6 +23,7 @@ saleStart: "2026-06-19T02:12"
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 18 €
 draft: false
+ventaQwantic: []
 ---
 
 Marcel Tomàs, artífice de Cascai Teatre con 25 años de trayectoria, tiene un talento excepcional: un artista total capaz de cantar, bailar e interpretar a un infinito elenco de personajes, siempre bajo el tamiz de un humor cuidado, con la combinación perfecta de ternura, picardía y sorna. Su presencia en escena convierte cada espectáculo en una experiencia única e inolvidable.

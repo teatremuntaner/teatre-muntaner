@@ -23,6 +23,7 @@ priceFrom: 16
 price: "Desde 16 €"
 venue: "Teatre Muntaner · Carrer de Muntaner 4, Barcelona"
 draft: false
+ventaQwantic: []
 ---
 
 En Saludos Cordiales, Edu Mutante nos presenta un espectáculo de imitaciones cargado de humor y diversión. Con 100 voces de personajes diferentes, el público no podrá parar de reír en ningún momento. Desde el síndrome del impostor hasta cómo conoció a su chica, cada historia explicada por Mutante promete arrancar carcajadas. Con la mezcla de stand-up comedy, interacción con el público y la imitación de famosos como José María García y Mario Casas, este show promete ser explosivo y entretenido. Con más de 20 años de experiencia en el circuito nacional de comedia, Edu Mutante ha demostrado su talento en diferentes medios y eventos. No te pierdas la oportunidad de disfrutar de este cómico todoterreno. ¡Prepárate para reír como nunca antes!

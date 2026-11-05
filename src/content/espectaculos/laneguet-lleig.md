@@ -21,6 +21,7 @@ venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 12 €
 draft: false
 artist: NS Dansa
+ventaQwantic: []
 ---
 
 L’ANEGUET LLEIG es un espectáculo de danza para el público familiar inspirado en el cuento clásico El Patito Feo de Hans Christian Andersen, reconocido en todo el mundo como uno de los grandes autores de cuentos infantiles. A través del movimiento, la música y los objetos, la escena se transforma en un universo poético donde el cuerpo se convierte en lenguaje para contar la historia de un pequeño patito que se siente diferente y que inicia un viaje lleno de descubrimientos, emociones y aprendizajes.

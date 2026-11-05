@@ -30,6 +30,7 @@ cast:
     name: Alex Vega
     photo: alex-vega-teatre-muntaner.avif
 draft: false
+ventaQwantic: []
 ---
 
 Tras 5 Temporadas de éxito absoluto por toda España.  ALEX VEGA  aterriza con su nueva, increíble y maravillosa creación:  ¡DESAHÓGATE!

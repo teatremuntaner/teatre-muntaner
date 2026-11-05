@@ -22,6 +22,7 @@ venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 15 €
 draft: false
 artist: Albert Boira
+ventaQwantic: []
 ---
 
 
