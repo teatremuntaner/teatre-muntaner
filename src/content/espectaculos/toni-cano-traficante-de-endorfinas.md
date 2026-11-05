@@ -11,6 +11,8 @@ kitClave: "a2fa17cdf92f93666cf9961acfc948e8"
 accent: "#8f60be"
 accentInk: "#ffffff"
 dates:
+  - date: "2026-11-14"
+    time: "21:00"
   - date: "2026-12-12"
     time: "21:00"
   - date: "2026-12-26"

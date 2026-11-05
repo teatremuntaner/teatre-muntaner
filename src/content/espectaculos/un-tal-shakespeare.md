@@ -18,7 +18,7 @@ dates:
     time: "12:30"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21451
 qwanticEventId: "21451"
-priceFrom: 18
+priceFrom: 13.5
 saleStart: "2026-06-19T02:12"
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 18 €
