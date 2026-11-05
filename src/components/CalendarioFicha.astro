@@ -21,6 +21,7 @@
 // horas salen debajo al tocarlo. Y si el JavaScript no llega a ejecutarse, las horas se
 // quedan dentro de la casilla como en pantalla grande: apretadas, pero se pueden pulsar.
 import type { MesConFunciones, Pase } from '../lib/schedule';
+import type { Venta } from '../lib/disponibilidad';
 
 interface Props {
   meses: MesConFunciones[];
@@ -32,6 +33,10 @@ interface Props {
   /** Las siete columnas, en el idioma de la página. */
   dows: string[];
   textos: { anterior: string; siguiente: string; toca: string; vacio: string };
+  /** La venta de esa función (src/lib/disponibilidad.ts): agotada no enlaza a la venta. */
+  venta?: (date: string, time: string) => Venta;
+  /** Las palabras de los sellos de venta, en el idioma de la página. */
+  textosVenta?: { agotada: string; ultimas: string; conUltimas: (etiqueta: string) => string };
 }
 
 const {
@@ -42,6 +47,8 @@ const {
   etiquetaCompra,
   dows,
   textos,
+  venta = () => null,
+  textosVenta = { agotada: 'Agotada', ultimas: 'Últimas', conUltimas: (e: string) => `${e} (últimas entradas)` },
 } = Astro.props;
 
 const enlace = (pase: Pase) => urlDelPase?.(pase) ?? ticketUrl;
@@ -88,9 +95,11 @@ const semanas = (mes: MesConFunciones) => Math.ceil((mes.huecoInicial + mes.celd
                           </button>
                           <span class="calf__horas">
                             {pases.map((pase) => (
-                              enlace(pase)
-                                ? <a class="calf__hora" href={enlace(pase)} target="_blank" rel="noopener"
-                                     aria-label={etiquetaCompra(celda.dia!.dow, celda.dia!.dayMonth, pase.time)}>{pase.time}</a>
+                              venta(celda.date, pase.time) === 'agotada'
+                                ? <span class="calf__hora calf__hora--agotada"><s>{pase.time}</s><span>{textosVenta.agotada}</span></span>
+                                : enlace(pase)
+                                ? <a class:list={['calf__hora', { 'calf__hora--ultimas': venta(celda.date, pase.time) === 'ultimas' }]} href={enlace(pase)} target="_blank" rel="noopener"
+                                     aria-label={venta(celda.date, pase.time) === 'ultimas' ? textosVenta.conUltimas(etiquetaCompra(celda.dia!.dow, celda.dia!.dayMonth, pase.time)) : etiquetaCompra(celda.dia!.dow, celda.dia!.dayMonth, pase.time)}>{pase.time}{venta(celda.date, pase.time) === 'ultimas' && <span>{textosVenta.ultimas}</span>}</a>
                                 : <span class="calf__hora calf__hora--sin-venta">{pase.time}</span>
                             ))}
                           </span>
@@ -162,6 +171,17 @@ const semanas = (mes: MesConFunciones) => Math.ceil((mes.huecoInicial + mes.celd
   }
   a.calf__hora:hover, a.calf__hora:focus-visible { background: var(--accent); color: var(--accent-ink); }
   .calf__hora--sin-venta { color: var(--paper-dim); }
+  /* Venta por función (src/lib/disponibilidad.ts): rojo de la casa para lo agotado, oro del
+     logo con texto oscuro para las últimas. */
+  .calf__hora--agotada { display: flex; flex-direction: column; gap: 2px; background: none; box-shadow: inset 0 0 0 1px var(--c-red); }
+  .calf__hora--agotada s { color: var(--paper-faint); }
+  .calf__hora--ultimas { display: flex; flex-direction: column; gap: 2px; box-shadow: inset 0 0 0 1px var(--c-gold); }
+  .calf__hora--agotada span, .calf__hora--ultimas span {
+    font-family: var(--f-display); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    border-radius: 2px; margin: 0 2px; padding: 1px 0;
+  }
+  .calf__hora--agotada span { background: var(--c-red); color: #fff; }
+  .calf__hora--ultimas span { background: var(--c-gold); color: var(--paper); }
 
   /* El punto y el panel son del móvil, y SOLO cuando el JavaScript ha llegado: sin él las
      horas se quedan dentro de la casilla, apretadas pero pulsables. */
@@ -191,6 +211,10 @@ const semanas = (mes: MesConFunciones) => Math.ceil((mes.huecoInicial + mes.celd
   .calf__panel-vacio { font-family: var(--f-body); font-size: 13px; color: var(--paper-faint); margin: 0; }
   .calf__panel .calf__horas { flex-direction: row; flex-wrap: wrap; gap: 6px; }
   .calf__panel .calf__hora { padding: 6px 10px; font-size: 13px; border: 1px solid var(--line); }
+  .calf__panel .calf__hora--agotada, .calf__panel .calf__hora--ultimas { flex-direction: row; align-items: center; gap: 6px; }
+  .calf__panel .calf__hora--agotada { border-color: var(--c-red); }
+  .calf__panel .calf__hora--ultimas { border-color: var(--c-gold); }
+  .calf__panel .calf__hora--agotada span, .calf__panel .calf__hora--ultimas span { font-size: 10px; padding: 3px 5px 2px; margin: 0; }
 
   @media (prefers-reduced-motion: reduce) {
     .calf__hora { transition: none; }

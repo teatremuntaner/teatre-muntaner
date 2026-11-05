@@ -1,0 +1,101 @@
+---
+/**
+ * Sello de venta sobre el cartel, en la portada y en la ficha (Carlos, 05/11/2026; el mismo
+ * que en la web del Sofía, con los colores del Muntaner). Va dentro de un contenedor con
+ * `position: relative` (el hueco del cartel), como la etiqueta de campaña, pero abajo, donde
+ * los carteles llevan los créditos y no el título, para que no tape lo que se tiene que leer
+ * ni se pise con la etiqueta de campaña ni con la del idioma (que van arriba).
+ *
+ * Tres casos, del más fuerte al más suave (solo se pinta uno):
+ *  - Todas las funciones por venir agotadas: sello grande en el centro, «Agotado».
+ *  - Alguna agotada y otras a la venta: sello rojo con su fecha («Agotada · sáb 16 ene ·
+ *    17:00»). El resto se sigue vendiendo.
+ *  - Ninguna agotada y alguna en últimas entradas: sello oro «Últimas entradas».
+ * Qué dice cada función lo decide src/lib/disponibilidad.ts (Qwantic y lo puesto a mano).
+ */
+import { avisosPorVenir, todoAgotado, fechaCorta, type ConVenta } from '../lib/disponibilidad';
+import type { Session } from '../lib/schedule';
+import { useT, type Lang } from '../i18n';
+
+interface Props {
+  show: ConVenta;
+  hoy: string;
+  lang?: Lang;
+  grande?: boolean; // el de la ficha, un punto mayor que el de la cartelera
+}
+const { show, hoy, lang = 'es', grande = false } = Astro.props;
+const t = useT(lang);
+const { agotadas, ultimas } = avisosPorVenir(show, hoy);
+const todo = todoAgotado(show, hoy);
+// En el sello caben dos fechas; con más, se dice cuántas.
+const fechas = (l: Session[]) =>
+  l.length <= 2 ? l.map((s) => fechaCorta(s, lang)) : [t('venta.nFunciones', { n: l.length })];
+---
+{todo ? (
+  <span class:list={['sello-venta', 'sello-venta--todo', { 'sello-venta--grande': grande }]}>
+    <span class="sello-venta__rotulo">{t('venta.agotado')}</span>
+    <span class="sello-venta__fecha">{t('venta.noQuedan')}</span>
+  </span>
+) : agotadas.length > 0 ? (
+  <span class:list={['sello-venta', { 'sello-venta--grande': grande }]}>
+    <span class="sello-venta__rotulo">{agotadas.length === 1 ? t('venta.agotada') : t('venta.agotadas')}</span>
+    {fechas(agotadas).map((f) => <span class="sello-venta__fecha">{f}</span>)}
+  </span>
+) : ultimas.length > 0 ? (
+  <span class:list={['sello-venta', 'sello-venta--ultimas', { 'sello-venta--grande': grande }]}>
+    <span class="sello-venta__rotulo">{t('venta.ultimasEntradas')}</span>
+    {fechas(ultimas).map((f) => <span class="sello-venta__fecha">{f}</span>)}
+  </span>
+) : null}
+
+<style is:global>
+  /* Un sello de taquilla: rojo de la casa sobre crema, con doble filete, algo girado. El
+     fondo crema casi opaco hace que se lea sobre cualquier cartel, también los rojos. */
+  .sello-venta {
+    position: absolute; bottom: 14px; right: 10px; z-index: 3;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    max-width: calc(100% - 20px);
+    padding: 8px 14px 7px;
+    background: rgba(251, 246, 234, 0.95); /* --ink, el crema de la página */
+    color: var(--c-red);
+    border: 2px solid var(--c-red);
+    outline: 1px solid var(--c-red); outline-offset: 2px;
+    border-radius: 4px;
+    transform: rotate(-5deg);
+    box-shadow: 0 6px 18px rgba(42, 20, 16, 0.4);
+    pointer-events: none;
+    text-align: center;
+  }
+  .sello-venta__rotulo {
+    font-family: var(--f-display); font-weight: 700; font-size: 21px; line-height: 1;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    padding-left: 0.16em; /* compensa el espaciado de la última letra */
+  }
+  .sello-venta__fecha {
+    font-family: var(--f-display); font-weight: 500; font-size: 11px; line-height: 1.15;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--paper);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+  }
+  .sello-venta--grande { bottom: 20px; right: 16px; padding: 10px 18px 9px; gap: 4px; }
+  .sello-venta--grande .sello-venta__rotulo { font-size: 28px; }
+  .sello-venta--grande .sello-venta__fecha { font-size: 13px; }
+
+  /* Todo agotado: el sello va al centro del cartel, grande y torcido, como el de la taquilla. */
+  .sello-venta--todo {
+    top: 50%; bottom: auto; right: auto; left: 50%;
+    transform: translate(-50%, -50%) rotate(-10deg);
+    padding: 12px 22px 10px;
+  }
+  .sello-venta--todo .sello-venta__rotulo { font-size: 30px; }
+  .sello-venta--todo.sello-venta--grande { top: 50%; bottom: auto; right: auto; padding: 16px 30px 13px; }
+  .sello-venta--todo.sello-venta--grande .sello-venta__rotulo { font-size: 44px; }
+
+  /* Últimas entradas: el oro del logo de fondo y el texto oscuro de la página encima (el oro
+     como letra sobre crema no se lee). El rojo queda para lo agotado. */
+  .sello-venta--ultimas { background: var(--c-gold); color: var(--paper); border-color: var(--paper); outline-color: var(--c-gold); }
+  .sello-venta--ultimas .sello-venta__rotulo { font-size: 16px; letter-spacing: 0.12em; padding-left: 0.12em; }
+  .sello-venta--ultimas.sello-venta--grande .sello-venta__rotulo { font-size: 21px; }
+
+  /* Sin reducción en el móvil a propósito: ahí la cartelera va a una columna y la tarjeta
+     es más ancha que en el escritorio. */
+</style>

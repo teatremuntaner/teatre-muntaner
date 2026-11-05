@@ -18,7 +18,7 @@ Modo "seguro + crear borradores":
 Uso:  python scripts/sync_qwantic.py            (aplica cambios)
       python scripts/sync_qwantic.py --dry      (solo informe, no escribe)
 """
-import os, re, json, sys, subprocess, colorsys, unicodedata, datetime, urllib.request, urllib.error, shutil, html, hashlib
+import os, re, json, sys, subprocess, colorsys, unicodedata, datetime, urllib.request, urllib.error, shutil, html, hashlib, math
 
 # La consola de Windows usa cp1252 y revienta con emojis/·/→. Forzamos UTF-8.
 try:
@@ -131,8 +131,36 @@ def fetch_feed():
                 })
     return out
 
-def fetch_sessions(eid):
-    """([(YYYY-MM-DD, HH:MM)] futuras, ordenadas, máx 24; inicio de venta más antiguo)."""
+# VENTA POR FUNCIÓN (Carlos, 05/11/2026; igual que en la web del Sofía): «Agotada» y
+# «Últimas entradas» salen solos de lo que queda a la venta en Qwantic. Libres = aforo -
+# vendidas - reservadas - bloqueadas (las bloqueadas tampoco las puede comprar el público).
+# Últimas: quedan el 10 % del aforo o menos, y nunca menos de 10 butacas de umbral. Se
+# escribe SOLO el estado, nunca el número de libres: el número cambia con cada venta y cada
+# cambio en la ficha es un despliegue. Lo que se ponga a mano en el gestor («Venta por
+# función», campo `ventaManual`) manda sobre esto; la web decide en src/lib/disponibilidad.ts.
+ULTIMAS_PCT = 0.10
+ULTIMAS_MIN = 10
+
+def estado_venta(sesion):
+    """'agotada', 'ultimas' o None para una sesión del JSON de Qwantic. Sin aforo, None:
+    no se sabe y no se promete nada."""
+    try:
+        aforo = int(sesion.get("aforo") or 0)
+        ocupadas = sum(int(sesion.get(k) or 0) for k in ("entradasVendidas", "entradasReservadas", "entradasBloqueadas"))
+    except (TypeError, ValueError):
+        return None
+    if aforo <= 0:
+        return None
+    libres = aforo - ocupadas
+    if libres <= 0:
+        return "agotada"
+    if libres <= max(ULTIMAS_MIN, math.ceil(aforo * ULTIMAS_PCT)):
+        return "ultimas"
+    return None
+
+def fetch_sessions(eid, venta=None):
+    """([(YYYY-MM-DD, HH:MM)] futuras, ordenadas, máx 1 año; inicio de venta más antiguo).
+    Si se pasa `venta` (un dict), se rellena con {(fecha, hora): 'agotada'|'ultimas'}."""
     try:
         raw = get(EVENT_URL.format(eid))
     except Exception:
@@ -143,13 +171,21 @@ def fetch_sessions(eid):
     out, seen, venta_desde = [], set(), None
     try:
         for s in json.loads(m.group(1)):
-            fc = s.get("fechaCelebracionStr", "")
-            mm = re.match(r"(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})", fc)
+            if not isinstance(s, dict):
+                continue
+            # Una sesión con la fecha vacía o rara se salta; si no, hacía fallar la lectura
+            # entera y el espectáculo se quedaba sin actualizar fechas ni avisos de venta
+            # (Codex en el Sofía, 05/11/2026).
+            fc = s.get("fechaCelebracionStr") or ""
+            mm = re.match(r"(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})", fc) if isinstance(fc, str) else None
             if mm and (mm.group(1), mm.group(2)) not in seen:
                 seen.add((mm.group(1), mm.group(2)))
                 out.append((mm.group(1), mm.group(2)))
+                est = estado_venta(s)
+                if est and venta is not None:
+                    venta[(mm.group(1), mm.group(2))] = est
             fv = s.get("fechaInicioVentaStr")
-            if fv and (venta_desde is None or fv < venta_desde):
+            if isinstance(fv, str) and fv and (venta_desde is None or fv < venta_desde):
                 venta_desde = fv
     except Exception:
         return [], None
@@ -188,6 +224,30 @@ def dates_block(sessions):
         if t:
             lines.append(f'    time: "{t}"')
     return "\n".join(lines) + "\n"
+
+def venta_block(venta, sessions):
+    """El bloque `ventaQwantic:` con las funciones agotadas o en últimas entradas, en el orden
+    de `sessions`. Vacío, `ventaQwantic: []`: así una función que vuelve a tener entradas
+    (devoluciones) deja de salir como agotada en la pasada siguiente."""
+    filas = [(f, h, venta[(f, h)]) for f, h in sessions if (f, h) in venta]
+    if not filas:
+        return "ventaQwantic: []\n"
+    lineas = ["ventaQwantic:"]
+    for f, h, est in filas:
+        lineas += [f'  - date: "{f}"', f'    time: "{h}"', f'    estado: "{est}"']
+    return "\n".join(lineas) + "\n"
+
+VENTA_RE = re.compile(r'^ventaQwantic:[^\n]*\n(?:[ \t-][^\n]*\n)*', re.M)
+
+def con_venta(t, bloque):
+    """Sustituye el bloque `ventaQwantic:` del frontmatter (lo escriba como lo escriba el
+    gestor al guardar) o lo añade antes del `---` de cierre. No toca nada más."""
+    m = re.match(r"---\n(.*?\n)---", t, re.S)
+    if not m:
+        return t
+    fm = m.group(1)
+    nuevo = VENTA_RE.sub(lambda _: bloque, fm, count=1) if VENTA_RE.search(fm) else fm + bloque
+    return t[:m.start(1)] + nuevo + t[m.end(1):]
 
 DATES_RE = re.compile(r'^dates:\n(?:[ ]{2}- date:.*\n(?:[ ]{4}time:.*\n)?)+', re.M)
 
@@ -359,7 +419,8 @@ def main(argv=None):
         if eid in SKIP_IDS or SKIP_TITLE.search(title) or not e.get("activo", True):
             report["skip"].append((eid, title)); continue
         feed_ids.add(eid)
-        sessions, venta_desde = fetch_sessions(eid)
+        venta = {}
+        sessions, venta_desde = fetch_sessions(eid, venta)
 
         if eid in existing:
             path, t = existing[eid]
@@ -373,6 +434,7 @@ def main(argv=None):
                 new_t = upsert_field(new_t, "priceFrom", f"priceFrom: {fmt_precio(e['precioMinimo'])}")
             if venta_desde:
                 new_t = upsert_field(new_t, "saleStart", f'saleStart: "{venta_desde}"')
+            new_t = con_venta(new_t, venta_block(venta, sessions))
             if new_t != t:
                 if not DRY:
                     open(path, "w", encoding="utf-8").write(new_t)
@@ -384,6 +446,11 @@ def main(argv=None):
         # pega en la ficha después (cuando madteatro tenga la tanda) y la pasada de
         # carteles del kit lo cambia en la siguiente sincronización.
         slug = slugify(title)
+        # Si ya hay una ficha con ese nombre (otro evento de Qwantic con el mismo título), el
+        # alta va con el id detrás: escribir encima borraría la ficha de verdad, con sus textos
+        # y sus marcas de venta (Codex en el Sofía, 05/11/2026).
+        if os.path.exists(os.path.join(DEST, slug + ".md")) or os.path.exists(os.path.join(DEST, slug + ".jpg")):
+            slug = f"{slug}-{eid}"
         duracion = e.get("duracion", 0)
         precio = e.get("precioMinimoComision") or e.get("precioMinimo") or 0
         accent, ink = "#bd221f", "#ffffff"
@@ -410,6 +477,7 @@ def main(argv=None):
         fm += [f'accent: "{accent}"', f'accentInk: "{ink}"']
         if sessions:
             fm.append(dates_block(sessions).rstrip("\n"))
+            fm.append(venta_block(venta, sessions).rstrip("\n"))
         fm += [f'ticketUrl: "{TICKET_URL.format(eid)}"', f'qwanticEventId: "{eid}"']
         if e.get("precioMinimo"):
             fm.append(f"priceFrom: {fmt_precio(e['precioMinimo'])}")

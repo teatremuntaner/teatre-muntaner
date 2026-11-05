@@ -52,5 +52,17 @@
   "promo.campana.navidad": "Regala per Nadal",
   "promo.campana.sanValentin": "Sant Valentí",
   "promo.validaPara": "Vàlida per a: {funciones}",
-  "promo.comprandoHasta": "Comprant fins al {fecha}"
+  "promo.comprandoHasta": "Comprant fins al {fecha}",
+
+  "_notaVenta": "Venta por función (05/11/2026): «Agotada» / «Últimas entradas», fijados a mano para que Apertium no los cambie.",
+  "venta.agotada": "Esgotada",
+  "venta.agotadas": "Esgotades",
+  "venta.agotado": "Esgotat",
+  "venta.noQuedan": "No queden entrades",
+  "venta.ultimas": "Últimes",
+  "venta.ultimasEntradas": "Últimes entrades",
+  "venta.nFunciones": "{n} funcions",
+  "venta.entradasAgotadas": "Entrades esgotades",
+  "venta.conAgotada": "{texto} (esgotada)",
+  "venta.conUltimas": "{texto} (últimes entrades)"
 }

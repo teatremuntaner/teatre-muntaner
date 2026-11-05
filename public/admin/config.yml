@@ -134,6 +134,29 @@ collections:
         fields:
           - { name: "date", label: "Fecha", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: true }
           - { name: "time", label: "Hora (HH:MM)", widget: "string", required: false }
+      # Venta por función: «Agotada» / «Últimas entradas». La web lo pone SOLA con lo que queda
+      # en Qwantic (campo oculto ventaQwantic, lo escribe el sincronizador cada hora); esta lista
+      # es para corregirlo a mano y manda sobre lo automático. Va aparte de «Funciones» porque
+      # esa lista la reescribe el sincronizador; esta no la toca.
+      - name: "ventaManual"
+        label: "Venta por función (a mano)"
+        label_singular: "aviso de venta"
+        hint: "La web ya pone sola «Agotada» cuando no quedan entradas en Qwantic y «Últimas entradas» cuando queda el 10 % del aforo o menos, en castellano y en catalán. Aquí se corrige a mano y lo de aquí manda: escribe la fecha y la hora de la función tal como aparecen en «Funciones» y elige qué debe decir. «A la venta, sin aviso» quita el aviso automático de esa función. Sin hora, vale para el día entero. Para volver a lo automático, borra la línea."
+        widget: "list"
+        required: false
+        summary: "{{fields.date}} {{fields.time}} · {{fields.estado}}"
+        fields:
+          - { name: "date", label: "Fecha", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: true }
+          - { name: "time", label: "Hora (HH:MM)", widget: "string", required: false }
+          - name: "estado"
+            label: "Qué debe decir"
+            widget: "select"
+            default: "agotada"
+            options:
+              - { label: "Agotada", value: "agotada" }
+              - { label: "Últimas entradas", value: "ultimas" }
+              - { label: "A la venta, sin aviso (quita el automático)", value: "normal" }
+      - { name: "ventaQwantic", widget: "hidden", required: false }
       - { name: "ticketUrl", label: "Enlace de entradas (Qwantic)", widget: "string", required: false }
       - { name: "qwanticEventId", widget: "hidden", required: false }
       - { name: "priceFrom", widget: "hidden", required: false }

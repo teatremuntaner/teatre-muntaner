@@ -8,6 +8,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import VideoYoutube from '../../components/VideoYoutube.astro';
 import { summarize, hoyEnMadrid } from '../../lib/schedule';
+import { todoAgotado } from '../../lib/disponibilidad';
 import { limpiaEspacios } from '../../lib/espacios.mjs';
 
 export async function getStaticPaths() {
@@ -28,6 +29,8 @@ const d = show.data;
 const sch = d.dates.length ? summarize(d.dates) : null;
 const today = hoyEnMadrid();
 const archived = d.dates.length > 0 && !d.dates.some((x) => x.date >= today);
+// Todas las funciones por venir agotadas: los botones no llevan a la venta (src/lib/disponibilidad.ts).
+const sinEntradas = todoAgotado(d, today);
 const genre = d.genres.length ? d.genres.join(' · ') : d.category;
 const ytId = d.youtube
   ? (d.youtube.match(/(?:youtu\.be\/|v=|embed\/|shorts\/|^)([A-Za-z0-9_-]{11})/)?.[1] ?? '')
@@ -84,9 +87,13 @@ const desc =
 
           {!archived && (
             <div class="lp__cta">
-              <a class="btn btn--accent lp__buy" data-buy href={d.ticketUrl} target="_blank" rel="noopener">
-                Comprar entradas{d.price ? ` · ${d.price.toLowerCase()}` : ''}
-              </a>
+              {sinEntradas ? (
+                <span class="btn btn--agotado lp__buy" aria-disabled="true">Entradas agotadas</span>
+              ) : (
+                <a class="btn btn--accent lp__buy" data-buy href={d.ticketUrl} target="_blank" rel="noopener">
+                  Comprar entradas{d.price ? ` · ${d.price.toLowerCase()}` : ''}
+                </a>
+              )}
             </div>
           )}
           <ul class="lp__facts">
@@ -134,9 +141,13 @@ const desc =
     {!archived && (
       <section class="wrap lp__final">
         <p class="lp__final-lead">{sch?.full || sch?.card || d.dateText || ''}</p>
-        <a class="btn btn--accent lp__buy lp__buy--big" data-buy href={d.ticketUrl} target="_blank" rel="noopener">
-          Comprar entradas{d.price ? ` · ${d.price.toLowerCase()}` : ''}
-        </a>
+        {sinEntradas ? (
+          <span class="btn btn--agotado lp__buy lp__buy--big" aria-disabled="true">Entradas agotadas</span>
+        ) : (
+          <a class="btn btn--accent lp__buy lp__buy--big" data-buy href={d.ticketUrl} target="_blank" rel="noopener">
+            Comprar entradas{d.price ? ` · ${d.price.toLowerCase()}` : ''}
+          </a>
+        )}
       </section>
     )}
 
@@ -151,9 +162,13 @@ const desc =
 
   {!archived && (
     <div class="lp__sticky" aria-hidden="false">
-      <a class="btn btn--accent lp__buy" data-buy href={d.ticketUrl} target="_blank" rel="noopener">
-        Comprar entradas{d.price ? ` · ${d.price.toLowerCase()}` : ''}
-      </a>
+      {sinEntradas ? (
+        <span class="btn btn--agotado lp__buy" aria-disabled="true">Entradas agotadas</span>
+      ) : (
+        <a class="btn btn--accent lp__buy" data-buy href={d.ticketUrl} target="_blank" rel="noopener">
+          Comprar entradas{d.price ? ` · ${d.price.toLowerCase()}` : ''}
+        </a>
+      )}
     </div>
   )}
 </BaseLayout>

@@ -22,6 +22,18 @@ const dateString = z.preprocess(toDateString, z.string());
 const isoString = z.preprocess(toIsoString, z.string());
 const timeString = z.preprocess(toTimeString, z.string());
 
+/** Lista de marcas de venta por función (ver src/lib/disponibilidad.ts). Vacía o null → []. */
+const marcasVenta = z.preprocess(
+  (v) => (v === null || v === undefined || v === '' ? [] : v),
+  z.array(
+    z.object({
+      date: dateString, // YYYY-MM-DD
+      time: z.preprocess((v) => (v === null || v === '' ? undefined : v), timeString.optional()), // HH:MM; sin hora, el día entero
+      estado: z.preprocess((v) => (v === null || v === undefined ? '' : String(v)), z.string()),
+    }),
+  ),
+);
+
 /**
  * Colección "espectaculos": cada archivo .md en src/content/espectaculos
  * es una ficha. Estos son los campos que aparecerán en el CMS.
@@ -139,6 +151,13 @@ const espectaculos = defineCollection({
           }),
         )
         .default([]),
+      // Venta por función (Carlos, 05/11/2026): «Agotada» / «Últimas entradas». `ventaQwantic`
+      // lo escribe el sincronizador; `ventaManual` se pone en el gestor y manda sobre el otro.
+      // Van aparte de `dates` porque el sincronizador reescribe ese bloque entero. Nada de lo
+      // que guarde el gestor (null, fecha u hora sin comillas, estado vacío) tumba el build.
+      // Qué hace la web con ellos: src/lib/disponibilidad.ts.
+      ventaManual: marcasVenta,
+      ventaQwantic: marcasVenta,
       dateText: z.string().optional(), // horario recurrente en texto ("Viernes y Sábados")
       ticketUrl: z.string().url().optional(),
       qwanticEventId: z.string().optional(),

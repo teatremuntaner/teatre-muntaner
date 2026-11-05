@@ -1,0 +1,12 @@
+{
+  "venta.agotada": "Agotada",
+  "venta.agotadas": "Agotadas",
+  "venta.agotado": "Agotado",
+  "venta.noQuedan": "No quedan entradas",
+  "venta.ultimas": "Últimas",
+  "venta.ultimasEntradas": "Últimas entradas",
+  "venta.nFunciones": "{n} funciones",
+  "venta.entradasAgotadas": "Entradas agotadas",
+  "venta.conAgotada": "{texto} (agotada)",
+  "venta.conUltimas": "{texto} (últimas entradas)"
+}

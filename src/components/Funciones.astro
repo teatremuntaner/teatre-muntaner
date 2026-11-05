@@ -17,6 +17,7 @@
 // dirección aquí dentro porque el formato de compra directa es cosa de la taquilla, no de la
 // web, y no está confirmado en las dos casas.
 import type { DiaConFuncion, Pase } from '../lib/schedule';
+import type { Venta } from '../lib/disponibilidad';
 
 interface Props {
   dias: DiaConFuncion[];
@@ -35,6 +36,11 @@ interface Props {
   /** Dirección de compra de UN pase concreto. Si no se pasa, todas las horas llevan al
    *  calendario de venta del espectáculo. */
   urlDelPase?: (pase: Pase) => string | undefined;
+  /** La venta de esa función (src/lib/disponibilidad.ts). Agotada: su hora no enlaza a la
+   *  venta y lleva el sello «Agotada». Últimas: sigue enlazando y lleva «Últimas». */
+  venta?: (date: string, time: string) => Venta;
+  /** Las palabras de esos dos sellos, en el idioma de la página. */
+  textosVenta?: { agotada: string; ultimas: string; conUltimas: (etiqueta: string) => string };
 }
 
 const {
@@ -49,6 +55,8 @@ const {
   etiquetaCompra = (dia: string, fecha: string, hora: string) =>
     `Comprar entradas para el ${dia} ${fecha} a las ${hora}`,
   urlDelPase,
+  venta = () => null,
+  textosVenta = { agotada: 'Agotada', ultimas: 'Últimas', conUltimas: (e: string) => `${e} (últimas entradas)` },
 } = Astro.props;
 
 const primeros = dias.slice(0, visibles);
@@ -78,9 +86,13 @@ const hayCalendario = conCalendario;
           </time>
           <span class="funcion__horas">
             {conHora(dia).map((pase) => (
-              enlace(pase)
-                ? <a class="hora" href={enlace(pase)} target="_blank" rel="noopener"
-                     aria-label={etiquetaCompra(dia.dow, dia.dayMonth, pase.time)}>{pase.time}</a>
+              venta(dia.date, pase.time) === 'agotada'
+                ? <span class="hora hora--agotada">
+                    <s class="hora__tachada">{pase.time}</s><span class="hora__sello">{textosVenta.agotada}</span>
+                  </span>
+                : enlace(pase)
+                ? <a class:list={['hora', { 'hora--ultimas': venta(dia.date, pase.time) === 'ultimas' }]} href={enlace(pase)} target="_blank" rel="noopener"
+                     aria-label={venta(dia.date, pase.time) === 'ultimas' ? textosVenta.conUltimas(etiquetaCompra(dia.dow, dia.dayMonth, pase.time)) : etiquetaCompra(dia.dow, dia.dayMonth, pase.time)}>{pase.time}{venta(dia.date, pase.time) === 'ultimas' && <span class="hora__ultimas">{textosVenta.ultimas}</span>}</a>
                 : <span class="hora hora--sin-venta">{pase.time}</span>
             ))}
           </span>
@@ -106,9 +118,13 @@ const hayCalendario = conCalendario;
               </time>
               <span class="funcion__horas">
                 {conHora(dia).map((pase) => (
-                  enlace(pase)
-                    ? <a class="hora" href={enlace(pase)} target="_blank" rel="noopener"
-                         aria-label={etiquetaCompra(dia.dow, dia.dayMonth, pase.time)}>{pase.time}</a>
+                  venta(dia.date, pase.time) === 'agotada'
+                    ? <span class="hora hora--agotada">
+                        <s class="hora__tachada">{pase.time}</s><span class="hora__sello">{textosVenta.agotada}</span>
+                      </span>
+                    : enlace(pase)
+                    ? <a class:list={['hora', { 'hora--ultimas': venta(dia.date, pase.time) === 'ultimas' }]} href={enlace(pase)} target="_blank" rel="noopener"
+                         aria-label={venta(dia.date, pase.time) === 'ultimas' ? textosVenta.conUltimas(etiquetaCompra(dia.dow, dia.dayMonth, pase.time)) : etiquetaCompra(dia.dow, dia.dayMonth, pase.time)}>{pase.time}{venta(dia.date, pase.time) === 'ultimas' && <span class="hora__ultimas">{textosVenta.ultimas}</span>}</a>
                     : <span class="hora hora--sin-venta">{pase.time}</span>
                 ))}
               </span>
@@ -135,6 +151,12 @@ const hayCalendario = conCalendario;
   .funcion__dia { font-family: var(--f-body); font-size: 15px; color: var(--paper); }
   .funcion__dow { color: var(--paper-dim); }
   .funcion__horas { display: flex; gap: 6px; flex-shrink: 0; }
+  /* Con los sellos de venta una fila puede no caber en el móvil: entonces la fecha se queda
+     entera en su renglón y las horas bajan al siguiente, a la derecha, en vez de partir
+     «sábado 7 de noviembre» en tres líneas. */
+  .funcion { flex-wrap: wrap; row-gap: 6px; }
+  .funcion__dia { white-space: nowrap; }
+  .funcion__horas { flex-wrap: wrap; justify-content: flex-end; margin-left: auto; }
   .hora {
     font-family: var(--f-body); font-variant-numeric: tabular-nums;
     font-size: 13px; font-weight: 600; text-decoration: none; color: var(--paper);
@@ -143,6 +165,23 @@ const hayCalendario = conCalendario;
   }
   a.hora:hover, a.hora:focus-visible { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
   .hora--sin-venta { color: var(--paper-dim); }
+  /* Agotada: la hora tachada y el sello en el rojo de la casa, que se ve sin tener que
+     buscarlo. No es un enlace: esa función ya no lleva a la venta. */
+  .hora--agotada {
+    display: inline-flex; align-items: center; gap: 7px;
+    border-color: var(--c-red); padding: 3px 4px 3px 9px; cursor: default;
+  }
+  .hora__tachada { color: var(--paper-faint); text-decoration-thickness: 1px; }
+  .hora__sello, .hora__ultimas {
+    font-family: var(--f-display); font-size: 11px; font-weight: 700; line-height: 1;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    border-radius: 3px; padding: 4px 6px 3px;
+  }
+  .hora__sello { background: var(--c-red); color: #fff; }
+  /* Últimas entradas: sigue siendo un enlace a la venta, con la etiqueta en el oro del logo
+     y el texto oscuro (el oro como letra sobre crema no se lee). */
+  .hora--ultimas { display: inline-flex; align-items: center; gap: 7px; border-color: var(--c-gold); padding: 3px 4px 3px 9px; }
+  .hora__ultimas { background: var(--c-gold); color: var(--paper); }
   .funciones__aviso {
     font-family: var(--f-body); font-size: 14px; margin: 12px 0 0;
     color: var(--accent); border-left: 2px solid var(--accent); padding-left: 10px;

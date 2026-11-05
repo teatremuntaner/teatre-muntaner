@@ -343,5 +343,15 @@
   "terceros.reels": "Per veure els vídeos aquí, accepta les cookies de màrqueting (Instagram i TikTok). També pots obrir-los a la xarxa, a sota de cadascun.",
   "terceros.verEnMaps": "Veure a Google Maps",
   "terceros.verEnYoutube": "Veure a YouTube",
-  "terceros.video": "Per veure el vídeo aquí, accepta les cookies de màrqueting (YouTube)."
+  "terceros.video": "Per veure el vídeo aquí, accepta les cookies de màrqueting (YouTube).",
+  "venta.agotada": "Esgotada",
+  "venta.agotadas": "Esgotades",
+  "venta.agotado": "Esgotat",
+  "venta.conAgotada": "{texto} (esgotada)",
+  "venta.conUltimas": "{texto} (últimes entrades)",
+  "venta.entradasAgotadas": "Entrades esgotades",
+  "venta.nFunciones": "{n} funcions",
+  "venta.noQuedan": "No queden entrades",
+  "venta.ultimas": "Últimes",
+  "venta.ultimasEntradas": "Últimes entrades"
 }

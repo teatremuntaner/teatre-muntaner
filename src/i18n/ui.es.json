@@ -343,5 +343,15 @@
   "terceros.reels": "Para ver los vídeos aquí, acepta las cookies de marketing (Instagram y TikTok). También puedes abrirlos en la red, debajo de cada uno.",
   "terceros.verEnMaps": "Ver en Google Maps",
   "terceros.verEnYoutube": "Ver en YouTube",
-  "terceros.video": "Para ver el vídeo aquí, acepta las cookies de marketing (YouTube)."
+  "terceros.video": "Para ver el vídeo aquí, acepta las cookies de marketing (YouTube).",
+  "venta.agotada": "Agotada",
+  "venta.agotadas": "Agotadas",
+  "venta.agotado": "Agotado",
+  "venta.conAgotada": "{texto} (agotada)",
+  "venta.conUltimas": "{texto} (últimas entradas)",
+  "venta.entradasAgotadas": "Entradas agotadas",
+  "venta.nFunciones": "{n} funciones",
+  "venta.noQuedan": "No quedan entradas",
+  "venta.ultimas": "Últimas",
+  "venta.ultimasEntradas": "Últimas entradas"
 }

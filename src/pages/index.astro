@@ -5,6 +5,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Flag from '../components/Flag.astro';
 import Calendario from '../components/Calendario.astro';
 import PromoEtiqueta from '../components/PromoEtiqueta.astro';
+import SelloVenta from '../components/SelloVenta.astro';
+import { todoAgotado } from '../lib/disponibilidad';
 import { summarize, hoyEnMadrid, sumaDias } from '../lib/schedule';
 import { GENRE_ORDER } from '../lib/generos';
 import { useT, langFromPath } from '../i18n';
@@ -226,6 +228,7 @@ const gallery = [
               <div class="show-card__img">
                 <Image src={d.poster} alt={t('home.alt.cartel', { titulo: d.title })} widths={[300, 500]} sizes="(max-width: 600px) 50vw, 280px" />
                 <PromoEtiqueta promo={d.promoCampana} hoy={today} lang={lang} />
+                <SelloVenta show={show.data} hoy={today} lang={lang} />
                 {d.lang && (
                   <span class={`show-card__lang ${d.lang === 'Catalán' ? 'is-ca' : d.lang === 'Bilingüe' ? 'is-bi' : d.lang === 'Inglés' ? 'is-en' : 'is-es'}`}>
                     {d.lang === 'Catalán' ? t('home.idioma.ca') : d.lang === 'Bilingüe' ? t('home.idioma.bi') : d.lang === 'Inglés' ? t('home.idioma.en') : t('home.idioma.es')}
@@ -243,9 +246,11 @@ const gallery = [
               <a class="show-card__more" href={d.externalUrl ?? `${rutaBase}espectaculos/${show.id}/`}>{t('home.card.vermas')}</a>
               {d.ticketAlarm ? (
                 <a class="show-card__buy" href={`${rutaBase}espectaculos/${show.id}/`}>{t('home.card.avisame')}</a>
-              ) : d.ticketUrl && (
+              ) : d.ticketUrl && (todoAgotado(show.data, today) ? (
+                <span class="show-card__buy show-card__buy--agotado" aria-disabled="true">{t('venta.agotado')}</span>
+              ) : (
                 <a class="show-card__buy" href={d.ticketUrl} target="_blank" rel="noopener">{t('home.card.comprar')}</a>
-              )}
+              ))}
             </div>
           </article>
         );

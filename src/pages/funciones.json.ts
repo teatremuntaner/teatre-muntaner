@@ -10,6 +10,7 @@ import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { summarize, hoyEnMadrid } from '../lib/schedule';
 import { GENRE_ORDER } from '../lib/generos';
+import { ventaDe } from '../lib/disponibilidad';
 
 export const GET: APIRoute = async ({ site }) => {
   const base = site ?? new URL('https://teatremuntaner.com');
@@ -43,6 +44,8 @@ export const GET: APIRoute = async ({ site }) => {
       ticketAlarm: d.ticketAlarm,            // true = próximamente, sin venta aún
       dates: d.dates,                        // todas [{date:"YYYY-MM-DD", time:"HH:MM"}]
       future,                                // solo futuras, ordenadas
+      // venta de cada función por venir: 'agotada' | 'ultimas' | null (src/lib/disponibilidad.ts)
+      venta: future.map((x) => ({ date: x.date, time: x.time ?? null, estado: ventaDe(d, x.date, x.time) })),
       nextDate: future[0]?.date ?? null,     // para priorizar (ASC)
       nextTime: future[0]?.time ?? null,
       nextLabel: sched.card,                 // compacto: "Sábados · 22:30" / "22 de junio"

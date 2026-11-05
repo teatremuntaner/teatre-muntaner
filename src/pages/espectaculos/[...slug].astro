@@ -8,6 +8,8 @@ import Funciones from '../../components/Funciones.astro';
 import CalendarioFicha from '../../components/CalendarioFicha.astro';
 import PromoEtiqueta from '../../components/PromoEtiqueta.astro';
 import PromoCaja from '../../components/PromoCaja.astro';
+import SelloVenta from '../../components/SelloVenta.astro';
+import { ventaDe, todoAgotado } from '../../lib/disponibilidad';
 import { summarize, hoyEnMadrid, mesesDe } from '../../lib/schedule';
 import { limpiaEspacios } from '../../lib/espacios.mjs';
 import { useT, langFromPath } from '../../i18n';
@@ -77,6 +79,16 @@ const VISIBLES = 6;
    Los meses salen de los mismos días que la lista, así que no hay dos sitios contando. */
 const meses = sch?.periodico ? mesesDe(sch.dias, lang) : [];
 const archived = d.dates.length > 0 && !d.dates.some((x) => x.date >= today);
+// Venta por función (src/lib/disponibilidad.ts): la hora agotada no lleva a la venta, y si
+// están agotadas todas las que quedan, el botón de comprar tampoco. Se lee de la ficha
+// castellana: la catalana solo trae texto.
+const venta = (date: string, time?: string) => ventaDe(show.data, date, time);
+const sinEntradas = todoAgotado(show.data, today);
+const textosVenta = {
+  agotada: t('venta.agotada'),
+  ultimas: t('venta.ultimas'),
+  conUltimas: (texto: string) => t('venta.conUltimas', { texto }),
+};
 const genre = d.genres.length ? d.genres.join(' · ') : d.category;
 // Acepta ID o cualquier URL de YouTube (watch, youtu.be, embed, shorts)
 const ytId = d.youtube
@@ -126,6 +138,13 @@ const offer = d.ticketUrl
       ...(d.saleStart ? { validFrom: d.saleStart } : {}),
     }
   : null;
+// La venta de cada función se la dice también a Google: SoldOut o LimitedAvailability.
+const offerDe = (dt: { date: string; time?: string }) =>
+  offer && venta(dt.date, dt.time) === 'agotada'
+    ? { ...offer, availability: 'https://schema.org/SoldOut' }
+    : offer && venta(dt.date, dt.time) === 'ultimas'
+      ? { ...offer, availability: 'https://schema.org/LimitedAvailability' }
+      : offer;
 
 // La descripción del evento: la sinopsis (más larga que la de buscadores, que se corta a
 // 155); si no hay sinopsis, el lema; y si tampoco, título, teatro y fecha de esa función.
@@ -154,7 +173,7 @@ const mkEvent = (dt: { date: string; time?: string }) => ({
     address: { '@type': 'PostalAddress', streetAddress: 'Carrer de Muntaner 4', addressLocality: 'Barcelona', postalCode: '08011', addressCountry: 'ES' },
   },
   organizer: { '@type': 'Organization', name: 'Teatre Muntaner', url: 'https://teatremuntaner.com' },
-  ...(offer ? { offers: offer } : {}),
+  ...(offer ? { offers: offerDe(dt) } : {}),
 });
 // Limitamos los TheaterEvent del JSON-LD a las próximas ~50 funciones: shows con
 // muchísimas fechas (Corta el cable rojo) inflarían el HTML sin aportar a SEO.
@@ -204,6 +223,7 @@ const videoLd = (ytId || d.video) && videoUploadDate
           <Image src={d.poster} alt={t('show.cartelDe', { titulo: d.title })} widths={[400, 700]} sizes="(max-width: 760px) 70vw, 360px" />
           <span class="show__poster-sheen" aria-hidden="true"></span>
           <PromoEtiqueta promo={d.promoCampana} hoy={today} lang={lang} grande />
+          <SelloVenta show={show.data} hoy={today} lang={lang} grande />
         </div>
         <div class="show__head">
           <p class="eyebrow">{genre}</p>
@@ -229,6 +249,8 @@ const videoLd = (ytId || d.video) && videoUploadDate
                   etiquetaCompra={(dia, fecha, hora) => t('show.comprarPara', { dia, fecha, hora })}
                   verCalendario={t('show.verCalendario')}
                   conCalendario={meses.length > 0}
+                  venta={venta}
+                  textosVenta={textosVenta}
                 >
                   {meses.length > 0 && (
                     <CalendarioFicha
@@ -244,6 +266,8 @@ const videoLd = (ytId || d.video) && videoUploadDate
                         toca: t('show.verHorasDelDia'),
                         vacio: t('show.tocaUnDia'),
                       }}
+                      venta={venta}
+                      textosVenta={textosVenta}
                     />
                   )}
                 </Funciones>
@@ -267,9 +291,11 @@ const videoLd = (ytId || d.video) && videoUploadDate
             </form>
           ) : (
             <div class="show__cta">
-              {!archived && d.ticketUrl && (
+              {!archived && d.ticketUrl && (sinEntradas ? (
+                <span class="btn btn--agotado" aria-disabled="true">{t('venta.entradasAgotadas')}</span>
+              ) : (
                 <a class="btn btn--accent" href={d.ticketUrl} target="_blank" rel="noopener">{t('show.comprarEntradas')}</a>
-              )}
+              ))}
               <a class="btn btn--ghost" href={`${import.meta.env.BASE_URL}#espectaculos`}>{t('show.volverCartelera')}</a>
             </div>
           )}
@@ -412,9 +438,11 @@ const videoLd = (ytId || d.video) && videoUploadDate
   </article>
 
   <!-- Barra de compra fija (solo móvil): "Comprar" siempre al alcance al leer la ficha -->
-  {!d.ticketAlarm && !archived && d.ticketUrl && (
+  {!d.ticketAlarm && !archived && d.ticketUrl && (sinEntradas ? (
+    <span class="show__buybar show__buybar--agotado" aria-disabled="true">{t('venta.entradasAgotadas')}</span>
+  ) : (
     <a class="show__buybar" href={d.ticketUrl} target="_blank" rel="noopener">{t('show.comprarEntradas')}</a>
-  )}
+  ))}
 
   <!-- SEO: datos estructurados (un TheaterEvent por función) -->
   {eventsLd.length > 0 && (
@@ -574,6 +602,7 @@ const videoLd = (ytId || d.video) && videoUploadDate
       padding: 16px 22px; border-radius: 999px;
       box-shadow: 0 12px 30px -8px rgba(0,0,0,0.55), 0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent);
     }
+    .show__buybar--agotado { background: var(--ink-soft); color: var(--c-red); box-shadow: 0 12px 30px -8px rgba(42,20,16,0.45), inset 0 0 0 2px var(--c-red); }
   }
 </style>
 

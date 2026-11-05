@@ -65,6 +65,9 @@ h1, h2, h3 { font-family: var(--f-title); font-weight: 600; line-height: 1.05; m
 .btn--accent:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -10px var(--accent); }
 .btn--ghost { border-color: var(--line); color: var(--paper); }
 .btn--ghost:hover { border-color: var(--c-gold); color: var(--c-gold); transform: translateY(-2px); }
+/* Sin entradas: se ve dónde estaba el botón de comprar, pero no se pulsa (src/lib/disponibilidad.ts). */
+.btn--agotado { border: 2px solid var(--c-red); color: var(--c-red); cursor: default; font-weight: 700; }
+.btn--agotado:hover { transform: none; }
 /* Brillo dorado que barre el botón al pasar el ratón */
 .btn::after {
   content: ""; position: absolute; inset: 0; pointer-events: none;
@@ -200,6 +203,8 @@ h1, h2, h3 { font-family: var(--f-title); font-weight: 600; line-height: 1.05; m
    contrastar. Ocupa el espacio sobrante para pesar más que "Ver más". */
 .show-card__buy { flex: 1 1 auto; color: var(--card-ink, #fff); background: var(--card-accent, var(--c-red)); }
 .show-card__buy:hover { filter: brightness(1.08); }
+.show-card__buy--agotado { background: none; color: var(--c-red); box-shadow: inset 0 0 0 2px var(--c-red); cursor: default; }
+.show-card__buy--agotado:hover { filter: none; }
 /* Si la tarjeta solo tiene "Ver más" (sin venta), que ocupe todo el ancho. */
 .show-card__more:only-child { flex: 1; }
 
