@@ -21,8 +21,6 @@ ratings:
 accent: "#ef2e31"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-11-05"
-    time: "20:00"
   - date: "2026-11-06"
     time: "18:30"
   - date: "2026-11-06"
@@ -174,7 +172,10 @@ avisoCa: "Avís de repartiment: del 19 al 22 i del 26 al 29 de novembre, la Mai
 aviso: "Aviso de reparto: del 19 al 22 y del 26 al 29 de noviembre, Mai
   Boncompte no estará en el reparto."
 avisoHasta: 2026-11-29
-ventaQwantic: []
+ventaQwantic:
+  - date: "2026-11-07"
+    time: "19:00"
+    estado: "ultimas"
 ---
 Funciones desde 12 de noviembre desactivada venta, durante la mañana de hoy las volveremos a abrir. Disculpen las molestias.
 
