@@ -21,10 +21,6 @@ ratings:
 accent: "#ef2e31"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-11-06"
-    time: "18:30"
-  - date: "2026-11-06"
-    time: "20:30"
   - date: "2026-11-07"
     time: "17:00"
   - date: "2026-11-07"
@@ -158,7 +154,7 @@ dates:
 ticketUrl: https://lamuntaner.entradas.plus/entradas/es/calendario-corta-cable-rojo
 qwanticEventId: "20529"
 priceFrom: 18.7
-saleStart: "2026-02-26T12:03"
+saleStart: "2026-02-26T12:05"
 links:
   - label: Web oficial
     url: https://www.cortaelcablerojo.com/CCRBarna.html
@@ -173,6 +169,9 @@ aviso: "Aviso de reparto: del 19 al 22 y del 26 al 29 de noviembre, Mai
   Boncompte no estará en el reparto."
 avisoHasta: 2026-11-29
 ventaQwantic:
+  - date: "2026-11-07"
+    time: "17:00"
+    estado: "ultimas"
   - date: "2026-11-07"
     time: "19:00"
     estado: "ultimas"
