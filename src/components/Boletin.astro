@@ -68,6 +68,8 @@ const id = `boletin-${variante}`;
       e.preventDefault();
       const trampa = f.elements.namedItem('bot-field') as HTMLInputElement | null;
       if (trampa?.value) return;
+      if (f.dataset.enviando) return;
+      f.dataset.enviando = '1';
       const boton = f.querySelector('button');
       const estado = f.querySelector<HTMLElement>('.boletin__estado');
       const correo = (f.elements.namedItem('email') as HTMLInputElement).value.trim();
@@ -76,9 +78,13 @@ const id = `boletin-${variante}`;
       datos.append('fields[email]', correo);
       datos.append('ml-submit', '1');
       datos.append('anticsrf', 'true');
+      // Si MailerLite tarda más de 8 segundos, se da por caído y va al respaldo.
+      const corte = new AbortController();
+      const reloj = setTimeout(() => corte.abort(), 8000);
       try {
-        const r = await fetch(url, { method: 'POST', body: datos });
+        const r = await fetch(url, { method: 'POST', body: datos, signal: corte.signal });
         const j = await r.json();
+        clearTimeout(reloj);
         if (!j || !j.success) throw new Error('sin alta');
         f.classList.add('boletin--hecho');
         if (estado) {
@@ -86,6 +92,7 @@ const id = `boletin-${variante}`;
           estado.hidden = false;
         }
       } catch {
+        clearTimeout(reloj);
         // MailerLite no ha contestado: se guarda en Netlify para no perder el correo.
         f.submit();
       }
