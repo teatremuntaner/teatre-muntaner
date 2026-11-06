@@ -66,6 +66,8 @@
   "venta.conAgotada": "{texto} (esgotada)",
   "venta.conUltimas": "{texto} (últimes entrades)",
 
+  "legal.privacidad.boletin.h": "Butlletí",
+  "legal.privacidad.boletin.p": "Si et subscrius al butlletí des d'aquesta web, {empresa} farà servir el teu correu electrònic només per enviar-te la programació del {teatro} i avisar-te de quan surten les entrades. La base és el teu consentiment, que dones en marcar la casella i en confirmar la subscripció al correu que t'enviem. El butlletí l'envia, per encàrrec nostre, MailerLite (UAB MailerLite, amb seu a Vílnius, Lituània, a la Unió Europea), que tracta el teu correu només per a això, com a encarregat del tractament. Si en el moment de subscriure't MailerLite no respon, el teu correu queda desat a Netlify, el servei que allotja aquesta web, i el passem nosaltres a la llista. Et pots donar de baixa quan vulguis amb un clic, a l'enllaç que hi ha al final de cada butlletí, o escrivint a info@teatremuntaner.com. Conservem el teu correu mentre continuïs subscrit.",
   "_nota_boletin": "Formulario de suscripcion al boletin (pie y /ca/boletin/): fijado a mano para que diga butlleti y no newsletter.",
   "boletin.titulo": "Rep la programació",
   "boletin.campo": "El teu correu electrònic",
