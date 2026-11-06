@@ -1,0 +1,138 @@
+---
+/**
+ * Suscripción al boletín: un solo campo (correo) + la casilla de privacidad.
+ * Se usa en el pie de todas las páginas (castellano y catalán) (variante "pie") y en /boletin/
+ * (variante "pagina", la dirección corta para Instagram y los carteles).
+ *
+ * A dónde va el correo:
+ *  - Con los dos datos de MailerLite rellenos (abajo), el navegador lo manda
+ *    directamente al formulario público de MailerLite. No hay ninguna clave:
+ *    esos dos números son públicos, salen en cualquier formulario incrustado.
+ *    MailerLite manda entonces el correo de confirmación (doble confirmación).
+ *  - Si están vacíos, o MailerLite no contesta, el formulario se envía a
+ *    Netlify Forms como hasta ahora («newsletter»), para no perder a nadie.
+ *
+ * Dónde se sacan: MailerLite > Formularios > Incrustados > (el formulario) >
+ * «Incrustar» > HTML. En el código aparece
+ *   https://assets.mailerlite.com/jsonp/<CUENTA>/forms/<FORMULARIO>/subscribe
+ */
+import { useT, langFromPath, localePath } from '../i18n';
+
+interface Props {
+  variante?: 'pie' | 'pagina';
+}
+const { variante = 'pie' } = Astro.props;
+const lang = langFromPath(Astro.url.pathname);
+const t = useT(lang);
+
+const ML_CUENTA = '1813116';
+const ML_FORMULARIO = '203430620814116345';
+const mlUrl =
+  ML_CUENTA && ML_FORMULARIO
+    ? `https://assets.mailerlite.com/jsonp/${ML_CUENTA}/forms/${ML_FORMULARIO}/subscribe`
+    : '';
+const id = `boletin-${variante}`;
+---
+<form
+  class={`boletin boletin--${variante}`}
+  name="newsletter"
+  method="POST"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+  action={localePath(lang, '/aviso-recibido/')}
+  data-mailerlite={mlUrl}
+>
+  <input type="hidden" name="form-name" value="newsletter" />
+  <p hidden><label>{t('footer.noRellenar')} <input name="bot-field" /></label></p>
+  {variante === 'pie' && <p class="boletin__titulo">{t('boletin.titulo')}</p>}
+  <div class="boletin__fila">
+    <label class="boletin__oculto" for={`${id}-email`}>{t('boletin.campo')}</label>
+    <input id={`${id}-email`} type="email" name="email" required autocomplete="email" placeholder={t('boletin.placeholder')} />
+    <button type="submit" class="btn btn--accent">{t('boletin.boton')}</button>
+  </div>
+  <label class="boletin__priv">
+    <input type="checkbox" name="privacidad" value="acepto" required />
+    <span>{t('boletin.priv.antes')} <a href={localePath(lang, '/politica-de-privacidad/')}>{t('boletin.priv.enlace')}</a> {t('boletin.priv.despues')}</span>
+  </label>
+  <p class="boletin__nota">{t('boletin.nota')}</p>
+  <p class="boletin__estado" role="status" aria-live="polite" data-ok={t('boletin.ok')} hidden></p>
+</form>
+
+<script>
+  // Solo actúa si el formulario lleva la dirección de MailerLite; si no, el
+  // navegador lo envía a Netlify Forms de la forma normal.
+  document.querySelectorAll<HTMLFormElement>('form.boletin').forEach((f) => {
+    const url = f.dataset.mailerlite;
+    if (!url) return;
+    f.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const trampa = f.elements.namedItem('bot-field') as HTMLInputElement | null;
+      if (trampa?.value) return;
+      if (f.dataset.enviando) return;
+      f.dataset.enviando = '1';
+      const boton = f.querySelector('button');
+      const estado = f.querySelector<HTMLElement>('.boletin__estado');
+      const correo = (f.elements.namedItem('email') as HTMLInputElement).value.trim();
+      if (boton) boton.disabled = true;
+      const datos = new FormData();
+      datos.append('fields[email]', correo);
+      datos.append('ml-submit', '1');
+      datos.append('anticsrf', 'true');
+      // Si MailerLite tarda más de 8 segundos, se da por caído y va al respaldo.
+      const corte = new AbortController();
+      const reloj = setTimeout(() => corte.abort(), 8000);
+      try {
+        const r = await fetch(url, { method: 'POST', body: datos, signal: corte.signal });
+        const j = await r.json();
+        clearTimeout(reloj);
+        if (!j || !j.success) throw new Error('sin alta');
+        f.classList.add('boletin--hecho');
+        if (estado) {
+          estado.textContent = estado.dataset.ok ?? '';
+          estado.hidden = false;
+        }
+      } catch {
+        clearTimeout(reloj);
+        // MailerLite no ha contestado: se guarda en Netlify para no perder el correo.
+        f.submit();
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Dos fondos: el pie es oscuro (damasco) y la página /boletin/, crema. */
+  .boletin { max-width: 360px; }
+  .boletin--pagina { max-width: 460px; margin: 0 auto; }
+  .boletin__titulo {
+    font-family: var(--f-display); font-size: 12px; letter-spacing: .16em; text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6); margin: 0 0 8px;
+  }
+  .boletin__oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .boletin__fila { display: flex; gap: 8px; flex-wrap: wrap; }
+  .boletin__fila input {
+    flex: 1 1 170px; min-width: 0; padding: 10px 12px; border-radius: 8px;
+    border: 1px solid var(--line); background: #fff; color: var(--paper); font: inherit;
+  }
+  .boletin__fila input::placeholder { color: var(--paper-faint); }
+  .boletin__fila input:focus { outline: none; border-color: var(--c-gold); box-shadow: 0 0 0 3px rgba(213, 168, 70, 0.35); }
+  .boletin__fila .btn { padding: 10px 16px; }
+  .boletin--pagina .boletin__fila input { padding: 14px 16px; font-size: 17px; border-color: rgba(42, 20, 16, 0.25); }
+  .boletin--pagina .boletin__fila .btn { padding: 14px 22px; }
+  .boletin__priv {
+    display: flex; gap: 8px; align-items: flex-start; margin-top: 10px;
+    font-size: 13px; line-height: 1.45; color: rgba(255, 255, 255, 0.72); cursor: pointer;
+  }
+  .boletin__priv input { margin: 2px 0 0; accent-color: var(--c-gold); flex: none; width: 15px; height: 15px; }
+  /* El pie pone sus enlaces en bloque; aquí va dentro de la frase. */
+  .boletin__priv a { display: inline; padding: 0; font-size: inherit; color: inherit; text-decoration: underline; }
+  .boletin__nota { margin: 6px 0 0 23px; font-size: 12px; color: rgba(255, 255, 255, 0.5); }
+  .boletin__estado { margin: 4px 0 0; font-size: 15px; line-height: 1.5; color: #fff; }
+  .boletin--pagina .boletin__priv { color: var(--paper-dim); text-align: left; }
+  .boletin--pagina .boletin__priv input { accent-color: var(--c-red); }
+  .boletin--pagina .boletin__nota { color: var(--paper-faint); text-align: left; }
+  .boletin--pagina .boletin__estado { color: var(--paper); }
+  .boletin--hecho .boletin__fila,
+  .boletin--hecho .boletin__priv,
+  .boletin--hecho .boletin__nota { display: none; }
+</style>

@@ -64,5 +64,25 @@
   "venta.nFunciones": "{n} funcions",
   "venta.entradasAgotadas": "Entrades esgotades",
   "venta.conAgotada": "{texto} (esgotada)",
-  "venta.conUltimas": "{texto} (últimes entrades)"
+  "venta.conUltimas": "{texto} (últimes entrades)",
+
+  "legal.privacidad.boletin.h": "Butlletí",
+  "legal.privacidad.boletin.p": "Si et subscrius al butlletí des d'aquesta web, {empresa} farà servir el teu correu electrònic només per enviar-te la programació del {teatro} i avisar-te de quan surten les entrades. La base és el teu consentiment, que dones en marcar la casella. Normalment, en aquell moment t'arriba un correu perquè confirmis la subscripció; si llavors MailerLite no respon, el teu correu queda desat a Netlify, el servei que allotja aquesta web, i l'afegim nosaltres a la llista. El butlletí l'envia, per encàrrec nostre, MailerLite, empresa establerta a la Unió Europea, que tracta el teu correu només per a això, com a encarregat del tractament. Et pots donar de baixa quan vulguis amb l'enllaç que hi ha al final de cada butlletí, o escrivint a info@teatremuntaner.com. Conservem el teu correu mentre continuïs subscrit. Per al butlletí val el que diu aquest apartat, i no el que diuen en general la resta de paràgrafs sobre la finalitat i el temps de conservació.",
+  "_nota_boletin": "Formulario de suscripcion al boletin (pie y /ca/boletin/): fijado a mano para que diga butlleti y no newsletter.",
+  "boletin.titulo": "Rep la programació",
+  "boletin.campo": "El teu correu electrònic",
+  "boletin.placeholder": "el.teu@correu.cat",
+  "boletin.boton": "Subscriure'm",
+  "boletin.priv.antes": "He llegit la",
+  "boletin.priv.enlace": "política de privacitat",
+  "boletin.priv.despues": "i vull rebre el butlletí.",
+  "boletin.nota": "Un correu al mes. Et dones de baixa quan vulguis.",
+  "boletin.ok": "Gairebé fet. T'hem enviat un correu: prem «Confirmar» i ja hi seràs.",
+  "boletin.meta.titulo": "Butlletí · Teatre Muntaner",
+  "boletin.meta.descripcion": "Rep un cop al mes la programació del Teatre Muntaner (Carrer de Muntaner 4, Barcelona) i l'avís de quan surten les entrades.",
+  "boletin.pagina.eyebrow": "Butlletí",
+  "boletin.pagina.titulo1": "La cartellera,",
+  "boletin.pagina.titulo2": "al teu correu",
+  "boletin.pagina.lead": "Un cop al mes t'expliquem què arriba al Muntaner i quan surten les entrades.",
+  "boletin.pagina.volver": "Veure la cartellera"
 }

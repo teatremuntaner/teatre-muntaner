@@ -1,0 +1,31 @@
+---
+// Direccion corta para enlazar desde Instagram, la firma del correo o un QR
+// en el cartel: teatremuntaner.com/boletin (y /ca/boletin/). No esta en el
+// menu a proposito; en la web, la suscripcion esta en el pie de todas las paginas.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Boletin from '../components/Boletin.astro';
+import { useT, langFromPath, localePath } from '../i18n';
+
+const lang = langFromPath(Astro.url.pathname);
+const t = useT(lang);
+---
+<BaseLayout title={t('boletin.meta.titulo')} description={t('boletin.meta.descripcion')}>
+  <section class="bol">
+    <div class="bol__bar" aria-hidden="true"></div>
+    <p class="eyebrow">{t('boletin.pagina.eyebrow')}</p>
+    <h1>{t('boletin.pagina.titulo1')}<br />{t('boletin.pagina.titulo2')}</h1>
+    <p class="bol__lead">{t('boletin.pagina.lead')}</p>
+    <Boletin variante="pagina" />
+    <p class="bol__volver"><a href={`${localePath(lang, '/')}#cartelera`}>{t('boletin.pagina.volver')}</a></p>
+  </section>
+</BaseLayout>
+
+<style>
+  .bol { max-width: 640px; margin: 0 auto; padding: clamp(56px, 11vw, 130px) 20px clamp(64px, 10vw, 120px); text-align: center; }
+  .bol__bar { width: 96px; height: 4px; margin: 0 auto 26px; border-radius: 2px; background: linear-gradient(90deg, var(--c-red) 0 50%, var(--c-gold) 50% 100%); }
+  .bol h1 { font-size: clamp(36px, 7vw, 64px); margin: 12px 0 18px; text-transform: uppercase; }
+  .bol__lead { color: var(--paper-dim); font-size: 18px; line-height: 1.6; max-width: 40ch; margin: 0 auto 30px; }
+  .bol__volver { margin-top: 40px; font-size: 14px; }
+  .bol__volver a { color: var(--paper-faint); text-decoration: underline; }
+  .bol__volver a:hover { color: var(--paper); }
+</style>

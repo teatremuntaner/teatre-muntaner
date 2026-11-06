@@ -1,10 +1,13 @@
 ---
+import Boletin from './Boletin.astro';
 import damasco from '../assets/venue/damasco.jpg';
 import { useT, langFromPath, localePath } from '../i18n';
 
 const year = new Date().getFullYear();
 const lang = langFromPath(Astro.url.pathname);
 const t = useT(lang);
+// En /boletin/ el formulario ya ocupa la pagina: no se repite en el pie.
+const conBoletin = !/^\/(ca\/)?boletin/.test(Astro.url.pathname);
 // La raiz de cada idioma: "/" en castellano, "/ca/" en catalan.
 const home = lang === 'ca' ? '/ca/' : import.meta.env.BASE_URL;
 const footerBg = `linear-gradient(rgba(22,7,5,0.62), rgba(32,10,8,0.66)), url(${damasco.src}) center/cover`;
@@ -18,15 +21,7 @@ const footerBg = `linear-gradient(rgba(22,7,5,0.62), rgba(32,10,8,0.66)), url(${
         <p style="color:rgba(255,255,255,0.78);max-width:34ch">
           {t('footer.claim')}
         </p>
-        <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/aviso-recibido/" style="margin-top:18px;max-width:320px">
-          <input type="hidden" name="form-name" value="newsletter" />
-          <p hidden><label>{t('footer.noRellenar')} <input name="bot-field" /></label></p>
-          <label for="nl-email" style="display:block;font-family:var(--f-display);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:8px">{t('footer.newsletter')}</label>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <input id="nl-email" type="email" name="email" required placeholder="tu@email.com" style="flex:1 1 150px;min-width:0;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--paper);font:inherit" />
-            <button type="submit" class="btn btn--accent" style="padding:10px 16px">{t('footer.suscribirme')}</button>
-          </div>
-        </form>
+        {conBoletin && <div style="margin-top:18px"><Boletin /></div>}
       </div>
       <div>
         <h4>{t('footer.visitar')}</h4>
