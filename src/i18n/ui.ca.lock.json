@@ -64,5 +64,23 @@
   "venta.nFunciones": "{n} funcions",
   "venta.entradasAgotadas": "Entrades esgotades",
   "venta.conAgotada": "{texto} (esgotada)",
-  "venta.conUltimas": "{texto} (últimes entrades)"
+  "venta.conUltimas": "{texto} (últimes entrades)",
+
+  "_nota_boletin": "Formulario de suscripcion al boletin (pie y /ca/boletin/): fijado a mano para que diga butlleti y no newsletter.",
+  "boletin.titulo": "Rep la programació",
+  "boletin.campo": "El teu correu electrònic",
+  "boletin.placeholder": "el.teu@correu.cat",
+  "boletin.boton": "Subscriure'm",
+  "boletin.priv.antes": "He llegit la",
+  "boletin.priv.enlace": "política de privacitat",
+  "boletin.priv.despues": "i vull rebre el butlletí.",
+  "boletin.nota": "Un correu al mes. Et dones de baixa amb un clic.",
+  "boletin.ok": "Gairebé fet. T'hem enviat un correu: prem «Confirmar» i ja hi seràs.",
+  "boletin.meta.titulo": "Butlletí · Teatre Muntaner",
+  "boletin.meta.descripcion": "Rep un cop al mes la programació del Teatre Muntaner (Carrer de Muntaner 4, Barcelona) i l'avís de quan surten les entrades.",
+  "boletin.pagina.eyebrow": "Butlletí",
+  "boletin.pagina.titulo1": "La cartellera,",
+  "boletin.pagina.titulo2": "al teu correu",
+  "boletin.pagina.lead": "Un cop al mes t'expliquem què arriba al Muntaner i quan surten les entrades.",
+  "boletin.pagina.volver": "Veure la cartellera"
 }
