@@ -9,8 +9,6 @@ poster: ./sobria-y-serena-el-chou.jpg
 accent: "#be607d"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-11-06"
-    time: "22:30"
   - date: "2027-02-18"
     time: "20:00"
   - date: "2027-02-19"
@@ -18,15 +16,12 @@ dates:
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21707
 qwanticEventId: "21707"
 priceFrom: 20
-saleStart: "2026-07-28T07:59"
+saleStart: "2026-11-03T13:27"
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 duration: 90 Minutos
 price: Desde 20 €
 draft: false
-ventaQwantic:
-  - date: "2026-11-06"
-    time: "22:30"
-    estado: "ultimas"
+ventaQwantic: []
 ---
 
 Arantxa y Jazmín, a las que también podéis dirigiros como Sobria y Serena, aunque nunca han sido ni lo uno ni lo otro, os invitan a acompañarlas por un recorrido de su vida y su visión del mundo, y, sobre todo, a reír. A reír mucho. Para ello, se han inspirado en las mejores parejas cómicas de la historia, como Rajoy y la dicción, Paquirrín y el SEPE o Shakira y hacienda.
