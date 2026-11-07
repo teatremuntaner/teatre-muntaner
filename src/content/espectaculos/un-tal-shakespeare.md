@@ -10,8 +10,6 @@ poster: ./un-tal-shakespeare.jpg
 accent: "#be6060"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-11-07"
-    time: "21:00"
   - date: "2026-11-15"
     time: "12:30"
   - date: "2026-12-13"
