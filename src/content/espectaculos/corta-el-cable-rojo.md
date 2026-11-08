@@ -21,10 +21,6 @@ ratings:
 accent: "#ef2e31"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-11-08"
-    time: "17:00"
-  - date: "2026-11-08"
-    time: "19:00"
   - date: "2026-11-12"
     time: "20:00"
   - date: "2026-11-13"
@@ -150,7 +146,7 @@ dates:
 ticketUrl: https://lamuntaner.entradas.plus/entradas/es/calendario-corta-cable-rojo
 qwanticEventId: "20529"
 priceFrom: 18.7
-saleStart: "2026-02-26T12:05"
+saleStart: "2026-10-28T07:07"
 links:
   - label: Web oficial
     url: https://www.cortaelcablerojo.com/CCRBarna.html

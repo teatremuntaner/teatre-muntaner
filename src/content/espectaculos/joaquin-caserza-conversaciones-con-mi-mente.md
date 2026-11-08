@@ -55,7 +55,10 @@ cast:
       toda España con su Show \"Conversaciones con su mente\" que está colgando
       el cartel de \"Sold Out\" por la mayoría de los teatros por los que está
       pasando."
-ventaQwantic: []
+ventaQwantic:
+  - date: "2026-11-29"
+    time: "12:30"
+    estado: "ultimas"
 ---
 
 «Conversaciones con mi mente» es un show de humor sobre la salud mental, pero que va muy en serio. Joaquín Caserza invita al público a explorar, de manera divertida, lo que ocurre dentro de su cabeza, teniendo conversaciones con su mente, su ansiedad, su miedo, su cuerpo y otros personajes que cobrarán vida en el escenario. A través de estas interacciones cómicas y cercanas, el show no solo te sacará una risa, sino que también te acompañará a casa con una reflexión profunda sobre tu propia relación con tu mente”.
