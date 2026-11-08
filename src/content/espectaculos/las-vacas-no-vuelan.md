@@ -11,8 +11,6 @@ ratings: []
 accent: "#c4b05a"
 accentInk: "#0c0a0f"
 dates:
-  - date: "2026-11-07"
-    time: "23:00"
   - date: "2026-11-21"
     time: "23:00"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22138

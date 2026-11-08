@@ -9,8 +9,6 @@ poster: ./laneguet-lleig.jpg
 accent: "#6060be"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-11-08"
-    time: "12:00"
   - date: "2026-12-27"
     time: "12:00"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20723
