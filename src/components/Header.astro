@@ -1,19 +1,18 @@
 ---
-import Flag from './Flag.astro';
-import { useT, langFromPath, equivalentPath, LANG_NAME } from '../i18n';
+import { useT, langFromPath, equivalentPath, homePath, localePath, LANG_NAME } from '../i18n';
 
 const path = Astro.url.pathname;
 const lang = langFromPath(path);
 const t = useT(lang);
 
-// La raiz de cada idioma: "/" en castellano, "/ca/" en catalan.
-const home = lang === 'ca' ? '/ca/' : import.meta.env.BASE_URL;
+// La portada de cada idioma: "/ca/" en catalan, "/es/" en castellano (ver homePath).
+const home = homePath(lang);
 const items = [
   { href: home, label: t('nav.inicio') },
   { href: `${home}#cartelera`, label: t('nav.cartelera') },
   { href: `${home}#calendario`, label: t('nav.calendario') },
   { href: `${home}#galeria`, label: t('nav.galeria') },
-  { href: `${home}alquiler/`, label: t('nav.alquiler') },
+  { href: localePath(lang, '/alquiler/'), label: t('nav.alquiler') },
   { href: `${home}#contacto`, label: t('nav.contacto') },
 ];
 
@@ -35,23 +34,26 @@ const hrefCa = equivalentPath(path, 'ca');
         >{i.label}</a>
       ))}
     </nav>
+    <!-- Idioma en texto, no con banderas (09/11/2026): una bandera es un pais, no una
+         lengua, y es lo que hacen todos los teatros de Barcelona. -->
     <div class="lang-switch" role="group" aria-label={t('nav.idioma')}>
-      <a
-        class:list={['lang-switch__btn', { 'is-active': lang === 'es' }]}
-        href={hrefEs}
-        hreflang="es"
-        aria-label={LANG_NAME.es}
-        title={LANG_NAME.es}
-        aria-current={lang === 'es' ? 'true' : undefined}
-      ><Flag lang="es" class="lang-switch__flag" /></a>
       <a
         class:list={['lang-switch__btn', { 'is-active': lang === 'ca' }]}
         href={hrefCa}
         hreflang="ca"
-        aria-label={LANG_NAME.ca}
+        lang="ca"
         title={LANG_NAME.ca}
         aria-current={lang === 'ca' ? 'true' : undefined}
-      ><Flag lang="ca" class="lang-switch__flag" /></a>
+      >CA</a>
+      <span class="lang-switch__sep" aria-hidden="true">|</span>
+      <a
+        class:list={['lang-switch__btn', { 'is-active': lang === 'es' }]}
+        href={hrefEs}
+        hreflang="es"
+        lang="es"
+        title={LANG_NAME.es}
+        aria-current={lang === 'es' ? 'true' : undefined}
+      >ES</a>
     </div>
     <button class="site-nav__burger" aria-label={t('nav.abrirMenu')} aria-expanded="false">
       <span></span><span></span><span></span>

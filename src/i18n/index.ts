@@ -62,13 +62,25 @@ export function langFromPath(pathname: string): Lang {
  */
 export function localePath(lang: Lang, path: string): string {
   const clean = path.startsWith('/') ? path : `/${path}`;
+  if (clean === '/') return homePath(lang);
   if (lang === DEFAULT_LANG) return clean;
   return `${LANG_PREFIX[lang]}${clean}`;
 }
 
+/**
+ * Portada de cada idioma. Desde el 09/11/2026 (Carlos, a propuesta de Jordi Sans) la web
+ * se abre en CATALAN, como la mayoria de teatros de Barcelona: la raiz "/" redirige a
+ * "/ca/" (public/_redirects) y la portada en castellano vive en "/es/". El resto de
+ * paginas en castellano siguen en la raiz ("/alquiler/", "/espectaculos/x/") para no
+ * romper ningun enlace que ya circula.
+ */
+export function homePath(lang: Lang): string {
+  return lang === 'ca' ? '/ca/' : '/es/';
+}
+
 /** Quita el prefijo de idioma de una ruta ("/ca/alquiler/" -> "/alquiler/"). */
 export function stripLocale(pathname: string): string {
-  if (pathname === '/ca' || pathname === '/ca/') return '/';
+  if (pathname === '/ca' || pathname === '/ca/' || pathname === '/es' || pathname === '/es/') return '/';
   if (pathname.startsWith('/ca/')) return pathname.slice(3);
   return pathname;
 }
