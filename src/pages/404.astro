@@ -1,10 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { useT, langFromPath } from '../i18n';
+import { useT, langFromPath, homePath } from '../i18n';
 
 const lang = langFromPath(Astro.url.pathname);
 const t = useT(lang);
-const base = import.meta.env.BASE_URL;
+const base = homePath(lang);
 ---
 <BaseLayout title={t('e404.meta.titulo')} description={t('e404.meta.descripcion')}>
   <section class="nf">
