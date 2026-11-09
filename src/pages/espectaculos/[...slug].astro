@@ -12,7 +12,7 @@ import SelloVenta from '../../components/SelloVenta.astro';
 import { ventaDe, todoAgotado } from '../../lib/disponibilidad';
 import { summarize, hoyEnMadrid, mesesDe } from '../../lib/schedule';
 import { limpiaEspacios } from '../../lib/espacios.mjs';
-import { useT, langFromPath } from '../../i18n';
+import { useT, langFromPath, homePath } from '../../i18n';
 
 export async function getStaticPaths() {
   const shows = await getCollection('espectaculos', ({ data }) => !data.draft && !data.externalUrl);
@@ -296,7 +296,7 @@ const videoLd = (ytId || d.video) && videoUploadDate
               ) : (
                 <a class="btn btn--accent" href={d.ticketUrl} target="_blank" rel="noopener">{t('show.comprarEntradas')}</a>
               ))}
-              <a class="btn btn--ghost" href={`${import.meta.env.BASE_URL}#espectaculos`}>{t('show.volverCartelera')}</a>
+              <a class="btn btn--ghost" href={`${homePath(lang)}#cartelera`}>{t('show.volverCartelera')}</a>
             </div>
           )}
         </div>

@@ -4,7 +4,7 @@
 // color del cartel; al pulsar un día se muestran sus funciones + botón Comprar.
 // Se alimenta de los mismos datos de cada espectáculo (fechas + hora + entradas).
 import { getCollection } from 'astro:content';
-import { useT, langFromPath } from '../i18n';
+import { useT, langFromPath, localePath } from '../i18n';
 import { ventaDe } from '../lib/disponibilidad';
 
 const lang = langFromPath(Astro.url.pathname);
@@ -28,7 +28,7 @@ type Fn = { date: string; time: string; title: string; accent: string; ink: stri
 const fns: Fn[] = [];
 for (const s of shows) {
   const d = s.data;
-  const href = d.externalUrl ?? `${base}espectaculos/${s.id}/`; // "Ver más" → ficha (o landing)
+  const href = d.externalUrl ?? localePath(lang, `/espectaculos/${s.id}/`); // "Ver más" → ficha (o landing)
   const buy = d.ticketUrl ?? null;                              // compra real (o null)
   for (const dt of d.dates) {
     if (dt.date >= todayStr) {

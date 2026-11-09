@@ -12,7 +12,8 @@ export default defineConfig({
   // Los landings de campaña y las confirmaciones de formularios son noindex:
   // no deben consumir rastreo ni aparecer en el sitemap.
   integrations: [sitemap({
-    filter: (page) => !page.includes('/landing/') && !page.includes('/aviso-recibido/'),
+    // La raiz "/" redirige a la portada en catalan (/ca/) desde el 09/11/2026: fuera del sitemap.
+    filter: (page) => !page.includes('/landing/') && !page.includes('/aviso-recibido/') && new URL(page).pathname !== '/',
   })],
   // Las sinopsis se pegan en el gestor desde Word o Google Docs y traen espacios duros
   // y espacios delante de coma o punto. Se limpian al publicar, no en el archivo, y así

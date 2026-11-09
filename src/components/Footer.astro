@@ -1,7 +1,7 @@
 ---
 import Boletin from './Boletin.astro';
 import damasco from '../assets/venue/damasco.jpg';
-import { useT, langFromPath, localePath } from '../i18n';
+import { useT, langFromPath, localePath, homePath } from '../i18n';
 
 const year = new Date().getFullYear();
 const lang = langFromPath(Astro.url.pathname);
@@ -9,7 +9,7 @@ const t = useT(lang);
 // En /boletin/ el formulario ya ocupa la pagina: no se repite en el pie.
 const conBoletin = !/^\/(ca\/)?boletin/.test(Astro.url.pathname);
 // La raiz de cada idioma: "/" en castellano, "/ca/" en catalan.
-const home = lang === 'ca' ? '/ca/' : import.meta.env.BASE_URL;
+const home = homePath(lang); // portada: "/ca/" o "/es/"
 const footerBg = `linear-gradient(rgba(22,7,5,0.62), rgba(32,10,8,0.66)), url(${damasco.src}) center/cover`;
 ---
 <footer class="site-footer site-footer--damask" style={`background:${footerBg}`}>
@@ -28,7 +28,7 @@ const footerBg = `linear-gradient(rgba(22,7,5,0.62), rgba(32,10,8,0.66)), url(${
         <a href={`${home}#cartelera`}>{t('nav.cartelera')}</a>
         <a href={`${home}#calendario`}>{t('nav.calendario')}</a>
         <a href={`${home}#galeria`}>{t('nav.galeria')}</a>
-        <a href={`${home}alquiler/`}>{t('nav.alquiler')}</a>
+        <a href={localePath(lang, '/alquiler/')}>{t('nav.alquiler')}</a>
         <a href={`${home}#contacto`}>{t('nav.contacto')}</a>
       </div>
       <div>

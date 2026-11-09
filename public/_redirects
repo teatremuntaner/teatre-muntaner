@@ -1,3 +1,11 @@
+# --- Portada en catalan por defecto (09/11/2026) ---
+# La raiz va a la portada catalana; la castellana esta en /es/. 302 y no 301: es una
+# decision de idioma, no un traslado, y asi se puede deshacer sin que se quede en cache.
+# El «!» es obligatorio: existe /index.html y sin el Netlify lo serviria tal cual.
+# Destino ABSOLUTO: esta regla se aplica antes que las de netlify.toml y tambien a
+# teatremuntaner.cat y cat.teatremuntaner.com; con «/ca/» relativo acabarian en /ca/ca/ (Codex).
+/                            https://teatremuntaner.com/ca/   302!
+
 # Redirecciones 301 de las URLs antiguas del Mobirise a las nuevas (Astro).
 # Generadas por scripts/gen_redirects.py (cruce por idEvento de Qwantic).
 
