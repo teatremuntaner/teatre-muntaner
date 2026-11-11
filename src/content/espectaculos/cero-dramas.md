@@ -11,13 +11,13 @@ poster: ./cero-dramas.jpg
 accent: "#e099a8"
 accentInk: "#0c0a0f"
 dates:
-  - date: 2027-01-02
-    time: 21:00
+  - date: "2027-01-02"
+    time: "21:00"
 ventaQwantic: []
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22373
 qwanticEventId: "22373"
 priceFrom: 15.3
-saleStart: 2026-11-11T09:15
+saleStart: "2026-11-11T09:15"
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 15 €
 draft: false
