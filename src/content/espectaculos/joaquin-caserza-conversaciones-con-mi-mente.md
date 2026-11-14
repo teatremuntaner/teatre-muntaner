@@ -56,6 +56,9 @@ cast:
       el cartel de \"Sold Out\" por la mayoría de los teatros por los que está
       pasando."
 ventaQwantic:
+  - date: "2026-11-28"
+    time: "21:00"
+    estado: "ultimas"
   - date: "2026-11-29"
     time: "12:30"
     estado: "ultimas"
