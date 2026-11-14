@@ -10,8 +10,6 @@ poster: ./como-pasar-de-los-60-sin-morir-en-el-intento.jpg
 accent: "#6062be"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-11-14"
-    time: "23:00"
   - date: "2026-12-26"
     time: "23:00"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20534
