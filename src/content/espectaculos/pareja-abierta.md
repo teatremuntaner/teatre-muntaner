@@ -10,8 +10,6 @@ poster: teatremuntaner_parejaabierta_venta_qwantic_400x600.jpg.jpg
 accent: "#e58f39"
 accentInk: "#0c0a0f"
 dates:
-  - date: "2026-12-05"
-    time: "23:00"
   - date: "2026-12-12"
     time: "23:00"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21893
