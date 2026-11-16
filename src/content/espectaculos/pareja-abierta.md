@@ -12,6 +12,10 @@ accentInk: "#0c0a0f"
 dates:
   - date: "2026-12-12"
     time: "23:00"
+  - date: "2026-12-12"
+    time: "23:01"
+  - date: "2026-12-19"
+    time: "23:00"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21893
 qwanticEventId: "21893"
 priceFrom: 17.6
