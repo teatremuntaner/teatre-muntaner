@@ -148,6 +148,9 @@ const espectaculos = defineCollection({
           z.object({
             date: dateString, // YYYY-MM-DD
             time: timeString.optional(), // HH:MM
+            // Número de la función en Qwantic (idSesion). Lo escribe el sincronizador; con él
+            // cada hora enlaza a comprar ESA función. Texto o número, según lo escriba quien sea.
+            session: z.union([z.string(), z.number()]).transform(String).optional(),
           }),
         )
         .default([]),

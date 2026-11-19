@@ -134,6 +134,8 @@ collections:
         fields:
           - { name: "date", label: "Fecha", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: true }
           - { name: "time", label: "Hora (HH:MM)", widget: "string", required: false }
+          # Número de la función en Qwantic: lo escribe el sincronizador (oculto en el editor).
+          - { name: "session", widget: "hidden", required: false }
       # Venta por función: «Agotada» / «Últimas entradas». La web lo pone SOLA con lo que queda
       # en Qwantic (campo oculto ventaQwantic, lo escribe el sincronizador cada hora); esta lista
       # es para corregirlo a mano y manda sobre lo automático. Va aparte de «Funciones» porque

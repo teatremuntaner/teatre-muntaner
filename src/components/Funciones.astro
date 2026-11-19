@@ -8,14 +8,12 @@
 // Se ven `visibles` días y el resto se despliega. Sin JavaScript: <details> ya es accesible
 // con teclado y respeta que alguien haya pedido menos animación.
 //
-// LAS HORAS ENLAZAN HOY AL CALENDARIO DE VENTA DEL ESPECTÁCULO, no a la sesión concreta, y
-// conviene ser exactos sobre lo que falta para lo segundo. `pase.sessionId` llega hasta aquí
-// pero siempre vacío, porque no lo traen ni el esquema (`src/content.config.ts`, que solo
-// admite `date` y `time`) ni el sincronizador (`scripts/sync_qwantic.py`, que escribe esos
-// dos campos). El día que se quiera, hay que tocar esos dos sitios y pasar aquí `urlDelPase`;
-// esta plantilla ya no habrá que rehacerla. Se deja `urlDelPase` como prop en vez de armar la
-// dirección aquí dentro porque el formato de compra directa es cosa de la taquilla, no de la
-// web, y no está confirmado en las dos casas.
+// CADA HORA ENLAZA A COMPRAR ESA FUNCIÓN (desde el 19/11/2026): el sincronizador escribe el
+// número de la función de Qwantic en la ficha (`session:`), y la ficha pasa aquí `urlDelPase`,
+// que arma la dirección con src/lib/compra.ts. Si la fecha no trae número, o el enlace de
+// entradas de la ficha no es de la venta de ese mismo espectáculo, la hora lleva al
+// calendario de venta del espectáculo, como antes. La dirección no se arma aquí dentro porque
+// el formato de compra directa es cosa de la taquilla, no de esta plantilla.
 import type { DiaConFuncion, Pase } from '../lib/schedule';
 import type { Venta } from '../lib/disponibilidad';
 
