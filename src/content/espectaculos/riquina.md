@@ -14,6 +14,7 @@ accentInk: "#ffffff"
 dates:
   - date: "2027-01-08"
     time: "22:30"
+    session: "458863"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20645
 qwanticEventId: "20645"
 priceFrom: 18

@@ -13,6 +13,7 @@ accentInk: "#0c0a0f"
 dates:
   - date: "2027-01-02"
     time: "21:00"
+    session: "460867"
 ventaQwantic: []
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22373
 qwanticEventId: "22373"

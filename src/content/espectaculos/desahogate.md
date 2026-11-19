@@ -18,6 +18,7 @@ saleStart: "2026-10-10T08:50"
 dates:
   - date: "2027-02-26"
     time: "22:30"
+    session: "458903"
 priceFrom: 13.6
 links:
   - label: Instagram

@@ -12,6 +12,7 @@ accentInk: "#0c0a0f"
 dates:
   - date: "2027-01-15"
     time: "22:30"
+    session: "457266"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21917
 qwanticEventId: "21917"
 priceFrom: 15.3

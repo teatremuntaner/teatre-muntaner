@@ -13,6 +13,7 @@ accentInk: "#ffffff"
 dates:
   - date: "2026-12-06"
     time: "12:00"
+    session: "452381"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20722
 qwanticEventId: "20722"
 priceFrom: 12

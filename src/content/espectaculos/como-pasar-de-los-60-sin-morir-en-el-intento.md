@@ -12,6 +12,7 @@ accentInk: "#ffffff"
 dates:
   - date: "2026-12-26"
     time: "23:00"
+    session: "457254"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20534
 qwanticEventId: "20534"
 priceFrom: 15.3

@@ -13,6 +13,7 @@ accentInk: "#ffffff"
 dates:
   - date: "2026-11-27"
     time: "16:30"
+    session: "460549"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20644
 qwanticEventId: "20644"
 priceFrom: 14

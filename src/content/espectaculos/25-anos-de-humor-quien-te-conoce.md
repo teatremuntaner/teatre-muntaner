@@ -11,6 +11,7 @@ accentInk: "#ffffff"
 dates:
   - date: "2026-11-20"
     time: "22:30"
+    session: "458208"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22009
 qwanticEventId: "22009"
 priceFrom: 30

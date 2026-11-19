@@ -13,8 +13,10 @@ accentInk: "#0c0a0f"
 dates:
   - date: "2026-12-04"
     time: "22:30"
+    session: "453788"
   - date: "2026-12-05"
     time: "21:00"
+    session: "453789"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20536
 qwanticEventId: "20536"
 priceFrom: 18

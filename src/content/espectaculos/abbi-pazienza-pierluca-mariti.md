@@ -12,6 +12,7 @@ accentInk: "#ffffff"
 dates:
   - date: "2027-01-29"
     time: "22:30"
+    session: "454218"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21672
 qwanticEventId: "21672"
 priceFrom: 30

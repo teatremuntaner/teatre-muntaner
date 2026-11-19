@@ -13,10 +13,13 @@ accentInk: "#0c0a0f"
 dates:
   - date: "2026-11-21"
     time: "23:00"
+    session: "458821"
   - date: "2026-12-11"
     time: "22:30"
+    session: "460865"
   - date: "2026-12-18"
     time: "22:30"
+    session: "460866"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22138
 qwanticEventId: "22138"
 priceFrom: 17
