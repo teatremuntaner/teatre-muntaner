@@ -26,11 +26,13 @@
 
 import type { Lang } from '../i18n';
 
-export type Session = { date: string; time?: string; sessionId?: string };
+/** `session` es como lo guarda la ficha (lo escribe el sincronizador desde el 19/11/2026);
+ *  `sessionId`, como lo llaman los pases. Vale cualquiera de los dos. */
+export type Session = { date: string; time?: string; session?: string; sessionId?: string };
 
-/** Un pase concreto. `sessionId` viaja vacío hoy: la ficha solo guarda fecha y hora. Cuando
- *  el sincronizador de Qwantic lo traiga, cada hora podrá enlazar a comprar ESA función sin
- *  tener que rehacer nada de aquí. */
+/** Un pase concreto. `sessionId` es el número de la función en Qwantic, si la ficha lo trae:
+ *  con él la hora enlaza a comprar ESA función (ver src/lib/compra.ts). Sin él, al calendario
+ *  de venta del espectáculo. */
 export interface Pase { time: string; sessionId?: string }
 
 export interface DiaConFuncion {
@@ -362,7 +364,7 @@ export function summarize(sessions: Session[] = [], lang: Lang = 'es', hoy: stri
     const mapa = new Map<string, Pase[]>();
     for (const s of lista) {
       const pases = mapa.get(s.date) ?? mapa.set(s.date, []).get(s.date)!;
-      pases.push({ time: s.time || '', sessionId: s.sessionId });
+      pases.push({ time: s.time || '', sessionId: s.sessionId ?? s.session });
     }
     return [...mapa.keys()].sort().map((date) => ({
       date,

@@ -158,9 +158,14 @@ def estado_venta(sesion):
         return "ultimas"
     return None
 
-def fetch_sessions(eid, venta=None):
+def fetch_sessions(eid, venta=None, ids=None):
     """([(YYYY-MM-DD, HH:MM)] futuras, ordenadas, máx 1 año; inicio de venta más antiguo).
-    Si se pasa `venta` (un dict), se rellena con {(fecha, hora): 'agotada'|'ultimas'}."""
+    Si se pasa `venta` (un dict), se rellena con {(fecha, hora): 'agotada'|'ultimas'}.
+    Si se pasa `ids` (un dict), se rellena con {(fecha, hora): idSesion}: el número de la
+    función en Qwantic. Con él cada hora de la web abre la compra de ESA función
+    (`comprarEvento?idEvento=…&idSesion=…`; Carlos lo pidió el 19/11/2026 y ese día se
+    comprobó en la venta del Sofía y del Muntaner: la página llega con la función elegida).
+    Si dos funciones comparten fecha y hora, vale la primera, como para las fechas."""
     try:
         raw = get(EVENT_URL.format(eid))
     except Exception:
@@ -181,6 +186,9 @@ def fetch_sessions(eid, venta=None):
             if mm and (mm.group(1), mm.group(2)) not in seen:
                 seen.add((mm.group(1), mm.group(2)))
                 out.append((mm.group(1), mm.group(2)))
+                sid = str(s.get("idSesion") or "")
+                if ids is not None and sid.isdigit():
+                    ids[(mm.group(1), mm.group(2))] = sid
                 est = estado_venta(s)
                 if est and venta is not None:
                     venta[(mm.group(1), mm.group(2))] = est
@@ -217,12 +225,16 @@ def fetch_synopsis(friendly):
         r"(event information|informaci[oó]n sobre el evento)", l, re.I)]
     return "\n\n".join(lines).strip()
 
-def dates_block(sessions):
+def dates_block(sessions, ids=None):
+    """El bloque `dates:`. Cada función lleva `session:` (su número en Qwantic) si se conoce."""
+    ids = ids or {}
     lines = ["dates:"]
     for iso, t in sessions:
         lines.append(f'  - date: "{iso}"')
         if t:
             lines.append(f'    time: "{t}"')
+        if (iso, t) in ids:
+            lines.append(f'    session: "{ids[(iso, t)]}"')
     return "\n".join(lines) + "\n"
 
 def venta_block(venta, sessions):
@@ -249,7 +261,8 @@ def con_venta(t, bloque):
     nuevo = VENTA_RE.sub(lambda _: bloque, fm, count=1) if VENTA_RE.search(fm) else fm + bloque
     return t[:m.start(1)] + nuevo + t[m.end(1):]
 
-DATES_RE = re.compile(r'^dates:\n(?:[ ]{2}- date:.*\n(?:[ ]{4}time:.*\n)?)+', re.M)
+# `session:` es opcional: las fichas escritas antes del 19/11/2026 no lo llevan.
+DATES_RE = re.compile(r'^dates:\n(?:[ ]{2}- date:.*\n(?:[ ]{4}time:.*\n)?(?:[ ]{4}session:.*\n)?)+', re.M)
 
 def fmt_precio(p):
     """15.0 -> '15' · 15.3 -> '15.3' (YAML numérico, sin ceros sobrantes)."""
@@ -419,16 +432,16 @@ def main(argv=None):
         if eid in SKIP_IDS or SKIP_TITLE.search(title) or not e.get("activo", True):
             report["skip"].append((eid, title)); continue
         feed_ids.add(eid)
-        venta = {}
-        sessions, venta_desde = fetch_sessions(eid, venta)
+        venta, ids = {}, {}
+        sessions, venta_desde = fetch_sessions(eid, venta, ids)
 
         if eid in existing:
             path, t = existing[eid]
             if not sessions:
                 report["nodate"].append((eid, title)); continue
-            new_t, n = DATES_RE.subn(dates_block(sessions), t, count=1)
+            new_t, n = DATES_RE.subn(dates_block(sessions, ids), t, count=1)
             if n == 0:  # ficha sin bloque dates: lo insertamos tras qwanticEventId
-                new_t = re.sub(r'(qwanticEventId:.*\n)', r'\1' + dates_block(sessions), t, count=1)
+                new_t = re.sub(r'(qwanticEventId:.*\n)', r'\1' + dates_block(sessions, ids), t, count=1)
             # Datos del Offer del JSON-LD (Search Console): precio mínimo e inicio de venta
             if e.get("precioMinimo"):
                 new_t = upsert_field(new_t, "priceFrom", f"priceFrom: {fmt_precio(e['precioMinimo'])}")
@@ -476,7 +489,7 @@ def main(argv=None):
         fm.append(f'poster: "{poster_rel or "./" + slug + ".jpg"}"')
         fm += [f'accent: "{accent}"', f'accentInk: "{ink}"']
         if sessions:
-            fm.append(dates_block(sessions).rstrip("\n"))
+            fm.append(dates_block(sessions, ids).rstrip("\n"))
             fm.append(venta_block(venta, sessions).rstrip("\n"))
         fm += [f'ticketUrl: "{TICKET_URL.format(eid)}"', f'qwanticEventId: "{eid}"']
         if e.get("precioMinimo"):

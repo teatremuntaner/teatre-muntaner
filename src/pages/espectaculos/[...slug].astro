@@ -11,6 +11,8 @@ import PromoCaja from '../../components/PromoCaja.astro';
 import SelloVenta from '../../components/SelloVenta.astro';
 import { ventaDe, todoAgotado } from '../../lib/disponibilidad';
 import { summarize, hoyEnMadrid, mesesDe } from '../../lib/schedule';
+import type { Pase } from '../../lib/schedule';
+import { urlDeLaFuncion } from '../../lib/compra';
 import { limpiaEspacios } from '../../lib/espacios.mjs';
 import { useT, langFromPath, homePath } from '../../i18n';
 
@@ -83,6 +85,8 @@ const archived = d.dates.length > 0 && !d.dates.some((x) => x.date >= today);
 // están agotadas todas las que quedan, el botón de comprar tampoco. Se lee de la ficha
 // castellana: la catalana solo trae texto.
 const venta = (date: string, time?: string) => ventaDe(show.data, date, time);
+// Cada hora enlaza a comprar ESA función cuando la ficha trae su número (src/lib/compra.ts).
+const urlDelPase = (pase: Pase) => urlDeLaFuncion(show.data.ticketUrl, show.data.qwanticEventId, pase.sessionId);
 const sinEntradas = todoAgotado(show.data, today);
 const textosVenta = {
   agotada: t('venta.agotada'),
@@ -156,7 +160,7 @@ const fechaLarga = (iso: string) =>
 const descEvento = (dt: { date: string }) =>
   (plain ? recorta(plain, 300) : '') || lema || `${t('show.descFallback', { titulo: d.title })}, ${fechaLarga(dt.date)}`;
 
-const mkEvent = (dt: { date: string; time?: string }) => ({
+const mkEvent = (dt: { date: string; time?: string; session?: string }) => ({
   '@context': 'https://schema.org',
   '@type': 'TheaterEvent',
   name: d.title,
@@ -173,7 +177,7 @@ const mkEvent = (dt: { date: string; time?: string }) => ({
     address: { '@type': 'PostalAddress', streetAddress: 'Carrer de Muntaner 4', addressLocality: 'Barcelona', postalCode: '08011', addressCountry: 'ES' },
   },
   organizer: { '@type': 'Organization', name: 'Teatre Muntaner', url: 'https://teatremuntaner.com' },
-  ...(offer ? { offers: offerDe(dt) } : {}),
+  ...(offer ? { offers: { ...offerDe(dt), url: urlDeLaFuncion(show.data.ticketUrl, show.data.qwanticEventId, dt.session) } } : {}),
 });
 // Limitamos los TheaterEvent del JSON-LD a las próximas ~50 funciones: shows con
 // muchísimas fechas (Corta el cable rojo) inflarían el HTML sin aportar a SEO.
@@ -243,6 +247,7 @@ const videoLd = (ytId || d.video) && videoUploadDate
                   dias={sch.dias}
                   aviso={sch.aviso}
                   ticketUrl={d.ticketUrl}
+                  urlDelPase={urlDelPase}
                   visibles={VISIBLES}
                   rotulo={t('show.proximasFunciones')}
                   verTodas={(n) => t('show.verFechas', { n })}
@@ -258,6 +263,7 @@ const videoLd = (ytId || d.video) && videoUploadDate
                       meses={meses}
                       hoy={today}
                       ticketUrl={d.ticketUrl}
+                      urlDelPase={urlDelPase}
                       etiquetaCompra={(dia, fecha, hora) => t('show.comprarPara', { dia, fecha, hora })}
                       dows={['cal.diaCorto.lunes', 'cal.diaCorto.martes', 'cal.diaCorto.miercoles', 'cal.diaCorto.jueves', 'cal.diaCorto.viernes', 'cal.diaCorto.sabado', 'cal.diaCorto.domingo'].map((k) => t(k))}
                       textos={{

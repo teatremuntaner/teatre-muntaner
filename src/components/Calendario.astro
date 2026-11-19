@@ -6,6 +6,7 @@
 import { getCollection } from 'astro:content';
 import { useT, langFromPath, localePath } from '../i18n';
 import { ventaDe } from '../lib/disponibilidad';
+import { urlDeLaFuncion } from '../lib/compra';
 
 const lang = langFromPath(Astro.url.pathname);
 const t = useT(lang);
@@ -35,7 +36,8 @@ for (const s of shows) {
       fns.push({
         date: dt.date, time: dt.time ?? '',
         title: d.title, accent: d.accent ?? '#bd221f', ink: d.accentInk ?? '#ffffff',
-        poster: d.poster.src, href, buy, alarm: !!d.ticketAlarm,
+        // «Comprar» de un día abre esa función en la venta si la ficha trae su número.
+        poster: d.poster.src, href, buy: buy && urlDeLaFuncion(buy, d.qwanticEventId, dt.session), alarm: !!d.ticketAlarm,
         venta: ventaDe(d, dt.date, dt.time), // 'agotada' | 'ultimas' | null (src/lib/disponibilidad.ts)
       });
     }
