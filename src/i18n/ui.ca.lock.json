@@ -84,5 +84,14 @@
   "boletin.pagina.titulo1": "La cartellera,",
   "boletin.pagina.titulo2": "al teu correu",
   "boletin.pagina.lead": "Un cop al mes t'expliquem què arriba al Muntaner i quan surten les entrades.",
-  "boletin.pagina.volver": "Veure la cartellera"
+  "boletin.pagina.volver": "Veure la cartellera",
+
+  "_notaCampanaBF": "Página /entradas-black-friday/ (20/11/2026): textos fijados a mano.",
+  "campana.bf.meta.titulo": "Entrades Black Friday",
+  "campana.bf.meta.descripcion": "Els espectacles del Teatre Muntaner (Carrer de Muntaner 4, Barcelona) amb descompte de Black Friday. Cada promoció val només durant els seus dies de compra.",
+  "campana.bf.eyebrow": "Black Friday",
+  "campana.bf.titulo": "Entrades amb descompte",
+  "campana.bf.lead": "Els espectacles del Teatre Muntaner amb promoció de Black Friday. Cada descompte val només els dies de compra que indica la seva targeta.",
+  "campana.bf.vacio": "Ara mateix no hi ha cap espectacle amb promoció de Black Friday.",
+  "campana.bf.verCartelera": "Veure la cartellera"
 }
