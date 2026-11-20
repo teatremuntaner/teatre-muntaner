@@ -27,12 +27,6 @@ ratings:
 accent: "#ef2e31"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-11-20"
-    time: "18:30"
-    session: "459688"
-  - date: "2026-11-20"
-    time: "20:30"
-    session: "459690"
   - date: "2026-11-21"
     time: "17:00"
     session: "459692"
