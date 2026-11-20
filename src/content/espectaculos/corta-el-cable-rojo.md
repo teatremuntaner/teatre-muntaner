@@ -4,7 +4,7 @@ promo: ""
 promoCampana:
   campana: Black Friday
   texto: 30% descuento
-  funciones: Funciones Diciembre, ¡Corre que vuelan!
+  funciones: Funciones Jueves y viernes, ¡Corre que vuelan!
   desde: 2026-11-20
   hasta: 2026-11-27
 category: Comedia
