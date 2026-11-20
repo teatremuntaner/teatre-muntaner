@@ -14,19 +14,19 @@ poster: ./sobria-y-serena-el-chou.jpg
 accent: "#be607d"
 accentInk: "#ffffff"
 dates:
-  - date: 2027-02-18
-    time: 20:00
+  - date: "2027-02-18"
+    time: "20:00"
     session: "460552"
-  - date: 2027-02-19
-    time: 22:30
+  - date: "2027-02-19"
+    time: "22:30"
     session: "460553"
 ventaQwantic: []
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21707
 qwanticEventId: "21707"
 draft: false
 artist: Arantxa y Jazmín
-priceFrom: 20
-saleStart: 2026-11-03T13:27
+priceFrom: 14
+saleStart: "2026-11-03T13:27"
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 duration: 90 Minutos
 price: Desde 20 €

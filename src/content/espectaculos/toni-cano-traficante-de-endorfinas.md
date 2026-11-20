@@ -16,19 +16,19 @@ kitClave: a2fa17cdf92f93666cf9961acfc948e8
 accent: "#8f60be"
 accentInk: "#ffffff"
 dates:
-  - date: 2026-12-12
-    time: 21:00
+  - date: "2026-12-12"
+    time: "21:00"
     session: "459816"
-  - date: 2026-12-26
-    time: 21:00
+  - date: "2026-12-26"
+    time: "21:00"
     session: "459817"
 ventaQwantic: []
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=20530
 draft: false
 artist: Toni Cano
 qwanticEventId: "20530"
-priceFrom: 16
-saleStart: 2026-10-29T09:44
+priceFrom: 11.2
+saleStart: "2026-10-29T09:44"
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 price: Desde 14 €
 ---
