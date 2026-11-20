@@ -1,0 +1,188 @@
+---
+/**
+ * Página de campaña: todos los espectáculos con la campaña de Black Friday activa.
+ * Propuesta de Lucas (Nave8), 20/11/2026; montada el mismo día. La versión catalana
+ * (/ca/entradas-black-friday/) reutiliza esta misma página; el idioma sale de la URL.
+ *
+ * La lista se rellena sola desde el gestor: sale todo espectáculo publicado que tenga
+ * «Campaña de promoción» = Black Friday con sus dos fechas (src/lib/promo.ts). No se
+ * teclea aquí ningún espectáculo.
+ *
+ * Fechas: la web es estática y solo se recompila cuando alguien publica o el sincronizador
+ * sube fechas. Por eso el corte se decide dos veces, como en la etiqueta del cartel:
+ *  - al compilar, fuera lo que ya caducó; lo que aún no ha empezado sale oculto;
+ *  - en el navegador, cada tarjeta se enseña o se oculta con la fecha de hoy en Madrid
+ *    (data-promo-desde / data-promo-hasta), y si no queda ninguna, sale el aviso de vacío.
+ */
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PromoEtiqueta from '../components/PromoEtiqueta.astro';
+import SelloVenta from '../components/SelloVenta.astro';
+import { todoAgotado } from '../lib/disponibilidad';
+import { summarize, hoyEnMadrid } from '../lib/schedule';
+import { estadoPromo, fechaCorta, type Campana } from '../lib/promo';
+import { useT, langFromPath, localePath } from '../i18n';
+
+const CAMPANA: Campana = 'Black Friday';
+
+const lang = langFromPath(Astro.url.pathname);
+const t = useT(lang);
+const today = hoyEnMadrid();
+const isArchived = (d: { dates: { date: string }[] }) =>
+  d.dates.length > 0 && !d.dates.some((x) => x.date >= today);
+const nextDate = (d: { dates: { date: string }[] }) => {
+  const all = d.dates.map((x) => x.date).sort();
+  return all.find((x) => x >= today) ?? all[all.length - 1] ?? '9999';
+};
+
+// Publicados (ni borrador ni oculto), con funciones por venir y la campaña sin caducar.
+const shows = (
+  await getCollection(
+    'espectaculos',
+    ({ data }) =>
+      !data.draft &&
+      !data.unlisted &&
+      !isArchived(data) &&
+      data.promoCampana?.campana === CAMPANA &&
+      estadoPromo(data.promoCampana, today) !== null,
+  )
+).sort(
+  (a, b) =>
+    (b.data.priority ?? 0) - (a.data.priority ?? 0) ||
+    nextDate(a.data).localeCompare(nextDate(b.data)),
+);
+const visibles = shows.filter((s) => estadoPromo(s.data.promoCampana, today) === 'activa').length;
+
+// En catalán, el texto de la ficha que genera scripts/translate_ca.py (como en la portada);
+// títulos y artistas no se traducen nunca.
+const caById = new Map(
+  (lang === 'ca' ? await getCollection('espectaculosCa') : []).map((e) => [e.id, e.data]),
+);
+const usar = <T,>(v: T | undefined, alt: T | undefined) => (v !== undefined && v !== '' ? v : alt);
+---
+
+<BaseLayout title={t('campana.bf.meta.titulo')} description={t('campana.bf.meta.descripcion')}>
+  <section class="wrap bf">
+    <header class="bf__head">
+      <div class="bf__bar" aria-hidden="true"></div>
+      <p class="eyebrow">{t('campana.bf.eyebrow')}</p>
+      <h1 class="bf__title">{t('campana.bf.titulo')}</h1>
+      <p class="bf__lead">{t('campana.bf.lead')}</p>
+    </header>
+
+    {shows.length > 0 && (
+      <div class="shows-grid">
+        {shows.map((show) => {
+          const d = show.data;
+          const ca = caById.get(show.id);
+          const p = d.promoCampana!;
+          const ficha = d.externalUrl ?? localePath(lang, `/espectaculos/${show.id}/`);
+          const sub = d.artist ?? usar(ca?.tagline, d.tagline);
+          const generos = ca?.genres?.length ? ca.genres : d.genres;
+          const genre = (generos.length ? generos : [usar(ca?.category, d.category)]).join(' · ');
+          const when = d.ticketAlarm
+            ? t('home.card.proximamente')
+            : d.dates.length
+              ? summarize(d.dates, lang).card
+              : (usar(ca?.dateText, d.dateText) ?? t('home.card.consultar'));
+          const texto = lang === 'ca' ? (p.textoCa ?? p.texto) : p.texto;
+          const funciones = lang === 'ca' ? (p.funcionesCa ?? p.funciones) : p.funciones;
+          return (
+            <article
+              class="show-card bf-card"
+              style={`--card-accent:${d.accent};--card-ink:${d.accentInk}`}
+              data-promo-desde={p.desde}
+              data-promo-hasta={p.hasta}
+              hidden={estadoPromo(p, today) === 'futura'}
+            >
+              <a class="show-card__main" href={ficha}>
+                <div class="show-card__bar"></div>
+                <div class="show-card__img">
+                  <Image src={d.poster} alt={t('home.alt.cartel', { titulo: d.title })} widths={[300, 500]} sizes="(max-width: 600px) 50vw, 280px" />
+                  <PromoEtiqueta promo={p} hoy={today} lang={lang} />
+                  <SelloVenta show={d} hoy={today} lang={lang} />
+                </div>
+                <div class="show-card__body">
+                  <span class="show-card__cat">{genre}</span>
+                  <h2 class="show-card__title">{d.title}</h2>
+                  {sub && <p class="show-card__artist">{sub}</p>}
+                  {when && <p class="show-card__date">{when}</p>}
+                </div>
+              </a>
+              <div class="bf-card__promo">
+                {texto && <strong class="bf-card__texto">{texto}</strong>}
+                {funciones && <span class="bf-card__linea">{t('promo.validaPara', { funciones })}</span>}
+                <span class="bf-card__linea bf-card__plazo">{t('promo.comprandoHasta', { fecha: fechaCorta(p.hasta, today, lang) })}</span>
+              </div>
+              <div class="show-card__actions">
+                <a class="show-card__more" href={ficha}>{t('home.card.vermas')}</a>
+                {d.ticketAlarm ? (
+                  <a class="show-card__buy" href={ficha}>{t('home.card.avisame')}</a>
+                ) : d.ticketUrl && (todoAgotado(d, today) ? (
+                  <span class="show-card__buy show-card__buy--agotado" aria-disabled="true">{t('venta.agotado')}</span>
+                ) : (
+                  <a class="show-card__buy" href={d.ticketUrl} target="_blank" rel="noopener">{t('home.card.comprar')}</a>
+                ))}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    )}
+
+    <div class="bf__vacio" data-bf-vacio hidden={visibles > 0}>
+      <p>{t('campana.bf.vacio')}</p>
+      <a class="btn btn--accent" href={`${localePath(lang, '/')}#cartelera`}>{t('campana.bf.verCartelera')}</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  // Cada tarjeta se enseña solo entre sus fechas de compra, con la fecha de hoy en Madrid,
+  // aunque la web no se haya recompilado. Si no queda ninguna, el aviso de vacío.
+  const revisa = () => {
+    const hoy = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date());
+    let quedan = 0;
+    document.querySelectorAll<HTMLElement>('.bf-card').forEach((el) => {
+      const ok = (el.dataset.promoDesde ?? '') <= hoy && hoy <= (el.dataset.promoHasta ?? '');
+      el.hidden = !ok;
+      if (ok) quedan++;
+    });
+    const vacio = document.querySelector<HTMLElement>('[data-bf-vacio]');
+    if (vacio) vacio.hidden = quedan > 0;
+  };
+  revisa();
+  setInterval(revisa, 60_000);
+  window.addEventListener('pageshow', revisa);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') revisa();
+  });
+</script>
+
+<style>
+  /* Solo arriba y abajo: los lados los pone .wrap. */
+  .bf { padding-top: clamp(110px, 14vw, 170px); padding-bottom: clamp(64px, 9vw, 110px); }
+  .bf__head { max-width: 720px; margin-bottom: clamp(30px, 5vw, 52px); }
+  .bf__bar { width: 96px; height: 4px; margin-bottom: 24px; border-radius: 2px; background: linear-gradient(90deg, var(--c-red) 0 50%, var(--c-gold) 50% 100%); }
+  .bf__title { font-size: clamp(36px, 6vw, 68px); text-transform: uppercase; line-height: 1; margin: 12px 0 18px; }
+  .bf__lead { color: var(--paper-dim); font-size: 18px; line-height: 1.6; max-width: 52ch; margin: 0; }
+
+  .bf-card[hidden] { display: none; }
+  .bf-card .show-card__title { font-size: 22px; }
+  .bf-card .show-card__actions { margin-top: 0; }
+  /* La caja de promo de la ficha (PromoCaja), en pequeño. margin-top: auto lleva la promo
+     y los botones al pie: quedan alineados en la fila. */
+  .bf-card__promo {
+    display: flex; flex-direction: column; gap: 3px;
+    margin: auto 18px 16px; padding: 12px 14px; border-radius: 8px;
+    border: 1px solid var(--c-gold); background: color-mix(in srgb, var(--c-gold) 12%, var(--ink-soft));
+  }
+  .bf-card__texto { font-family: var(--f-display); font-size: 20px; font-weight: 700; color: var(--paper); line-height: 1.15; }
+  .bf-card__linea { font-size: 14px; color: var(--paper); line-height: 1.4; }
+  .bf-card__plazo { color: var(--paper-dim); font-size: 13px; }
+
+  .bf__vacio { max-width: 560px; padding: 28px; border: 1px solid var(--line); border-radius: 12px; background: var(--ink-soft); }
+  .bf__vacio[hidden] { display: none; }
+  .bf__vacio p { margin: 0 0 20px; font-size: 18px; line-height: 1.5; color: var(--paper); }
+</style>
