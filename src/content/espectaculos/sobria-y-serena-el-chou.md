@@ -4,6 +4,8 @@ promoCampana:
   campana: Black Friday
   texto: 30% descuento - 20 Entradas máximo por función - Introducir código BFSOB
   funciones: "Funciones Febrero - "
+  desde: 2026-11-20
+  hasta: 2026-11-27
 category: Comedia
 genres:
   - Humor
