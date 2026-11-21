@@ -1,5 +1,5 @@
 ---
-title: Mi hija astronauta
+title: Mi hija es astronauta
 category: Espectáculo
 genres:
   - Humor
