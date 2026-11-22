@@ -19,7 +19,7 @@ dates:
     session: "460866"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22138
 qwanticEventId: "22138"
-priceFrom: 17
+priceFrom: 20
 saleStart: "2026-11-11T08:46"
 youtube: https://www.youtube.com/watch?v=d4NKIxURrZA
 links:

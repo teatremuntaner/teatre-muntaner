@@ -10,9 +10,6 @@ poster: ./fabulos.jpg
 accent: "#cc5154"
 accentInk: "#ffffff"
 dates:
-  - date: "2026-11-22"
-    time: "12:00"
-    session: "458905"
   - date: "2026-12-28"
     time: "17:00"
     session: "459196"
@@ -31,7 +28,7 @@ dates:
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22188
 qwanticEventId: "22188"
 priceFrom: 9.6
-saleStart: "2026-10-11T10:41"
+saleStart: "2026-10-20T00:00"
 links:
   - label: Web
     url: https://www.magstigman.com/es/
