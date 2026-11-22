@@ -11,9 +11,6 @@ ratings: []
 accent: "#c4b05a"
 accentInk: "#0c0a0f"
 dates:
-  - date: "2026-11-21"
-    time: "23:00"
-    session: "458821"
   - date: "2026-12-11"
     time: "22:30"
     session: "460865"
@@ -23,7 +20,7 @@ dates:
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22138
 qwanticEventId: "22138"
 priceFrom: 17
-saleStart: "2026-10-07T22:11"
+saleStart: "2026-11-11T08:46"
 youtube: https://www.youtube.com/watch?v=d4NKIxURrZA
 links:
   - label: Inatagram
