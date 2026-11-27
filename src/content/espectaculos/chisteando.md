@@ -24,7 +24,7 @@ links:
     label: Juancho Bernabe
 venue: Teatre Muntaner · Carrer de Muntaner 4, Barcelona
 duration: 90 minutos
-price: Desde 15 €
+price: Desde 18 €
 cast:
   - offstage: false
     name: Fernando Bernal
