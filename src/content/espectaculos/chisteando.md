@@ -11,12 +11,13 @@ poster: ./chisteando.jpg
 accent: "#dca87b"
 accentInk: "#0c0a0f"
 dates:
-  - date: 2026-10-02
-    time: 22:30
+  - date: "2027-03-05"
+    time: "22:30"
+    session: "462662"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=21755
 qwanticEventId: "21755"
-priceFrom: 15.3
-saleStart: 2026-08-16T18:23
+priceFrom: 18
+saleStart: "2026-11-27T10:27"
 links:
   - label: "Fernando Bernal "
     url: https://www.instagram.com/pichacomico/?hl=es
@@ -33,6 +34,7 @@ cast:
     name: Juancho Bernabe
     photo: juancho-bernabe.jpg
 draft: false
+ventaQwantic: []
 ---
 Tras triunfar con el show "Nos Vemos en las Redes" por diversas ciudades de toda España, los cómicos gaditanos Fernando Bernal y Juancho Bernabé presentan un show completamente nuevo: "CHISTEANDO".
 
