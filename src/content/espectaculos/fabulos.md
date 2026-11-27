@@ -25,6 +25,9 @@ dates:
   - date: "2027-01-10"
     time: "12:00"
     session: "459199"
+  - date: "2027-03-07"
+    time: "12:00"
+    session: "462661"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22188
 qwanticEventId: "22188"
 priceFrom: 9.6
