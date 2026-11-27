@@ -21,6 +21,9 @@ dates:
   - date: "2026-11-27"
     time: "22:30"
     session: "458901"
+  - date: "2027-03-06"
+    time: "23:00"
+    session: "462660"
 ticketUrl: https://lamuntaner.entradas.plus/entradas/comprarEvento?idEvento=22183
 qwanticEventId: "22183"
 priceFrom: 15.3
